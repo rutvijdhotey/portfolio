@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creative — Rutvij Dhotey</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --text: #f0ede8;
+    --muted: rgba(240,237,232,0.35);
+    --faint: rgba(240,237,232,0.10);
+    --sans: 'Helvetica Neue', Arial, sans-serif;
+    --serif: 'Georgia', 'Times New Roman', serif;
+    --gap: 4px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--serif);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 48px;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95) 0%, transparent 100%);
+  }
+
+  .nav-back {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s, transform 0.3s;
+  }
+  .nav-back:hover { color: var(--text); transform: translateX(-3px); }
+
+  .nav-name {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+  }
+
+  .nav-section {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    padding: 140px 48px 60px;
+    border-bottom: 1px solid var(--faint);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .page-title {
+    font-size: clamp(56px, 9vw, 108px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  .page-sub {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: right;
+    line-height: 2;
+  }
+
+  /* ── GALLERY ── */
+  .gallery {
+    padding: var(--gap);
+    padding-top: 0;
+  }
+
+  .gallery-row {
+    display: grid;
+    gap: var(--gap);
+    margin-bottom: var(--gap);
+  }
+
+  .gallery-row.r-full       { grid-template-columns: 1fr; }
+  .gallery-row.r-halves     { grid-template-columns: 1fr 1fr; }
+  .gallery-row.r-large-sm   { grid-template-columns: 2fr 1fr; }
+  .gallery-row.r-sm-large   { grid-template-columns: 1fr 2fr; }
+  .gallery-row.r-thirds     { grid-template-columns: 1fr 1fr 1fr; }
+
+  /* row heights */
+  .gallery-row.r-full     .gallery-cell { height: 65vh; }
+  .gallery-row.r-halves   .gallery-cell { height: 48vh; }
+  .gallery-row.r-large-sm .gallery-cell { height: 52vh; }
+  .gallery-row.r-sm-large .gallery-cell { height: 52vh; }
+  .gallery-row.r-thirds   .gallery-cell { height: 40vh; }
+
+  .gallery-cell {
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    background: #111;
+  }
+
+  .gallery-cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.5s ease;
+    filter: brightness(0.9);
+  }
+
+  .gallery-cell:hover img {
+    transform: scale(1.04);
+    filter: brightness(1);
+  }
+
+  /* play icon for video cells */
+  .gallery-cell .play-icon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  .gallery-cell:hover .play-icon { opacity: 1; }
+
+  .play-icon svg {
+    width: 48px;
+    height: 48px;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+  }
+
+  /* ── FULLSCREEN OVERLAY ── */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(10,10,10,0.97);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+  }
+
+  .overlay.active { display: flex; }
+
+  .overlay-img {
+    max-width: 90vw;
+    max-height: 88vh;
+    object-fit: contain;
+    display: block;
+  }
+
+  .overlay-close {
+    position: fixed;
+    top: 32px; right: 48px;
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.3s;
+    z-index: 1001;
+  }
+  .overlay-close:hover { color: var(--text); }
+
+  .overlay-arrow {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--sans);
+    font-size: 22px;
+    color: rgba(240,237,232,0.25);
+    cursor: pointer;
+    transition: color 0.3s;
+    z-index: 1001;
+    padding: 24px 20px;
+    user-select: none;
+  }
+  .overlay-arrow:hover { color: var(--text); }
+  .overlay-arrow.prev { left: 16px; }
+  .overlay-arrow.next { right: 16px; }
+
+  .overlay-counter {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: rgba(240,237,232,0.2);
+    z-index: 1001;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--faint);
+    margin-top: var(--gap);
+  }
+
+  .footer-name {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(240,237,232,0.2);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 32px;
+  }
+
+  .footer-link {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(240,237,232,0.25);
+    text-decoration: none;
+    transition: color 0.3s;
+    cursor: pointer;
+  }
+  .footer-link:hover { color: rgba(240,237,232,0.7); }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .nav-section { display: none; }
+    .page-header { padding: 100px 24px 40px; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .page-sub { text-align: left; }
+    .gallery-row.r-halves,
+    .gallery-row.r-large-sm,
+    .gallery-row.r-sm-large,
+    .gallery-row.r-thirds { grid-template-columns: 1fr; }
+    .gallery-row.r-full     .gallery-cell { height: 55vw; }
+    .gallery-row.r-halves   .gallery-cell,
+    .gallery-row.r-large-sm .gallery-cell,
+    .gallery-row.r-sm-large .gallery-cell,
+    .gallery-row.r-thirds   .gallery-cell { height: 65vw; }
+    .overlay-arrow.prev { left: 4px; }
+    .overlay-arrow.next { right: 4px; }
+    footer { padding: 32px 24px; flex-direction: column; gap: 20px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-back" onclick="history.back()">← Home</span>
+  <span class="nav-name">Rutvij Dhotey</span>
+  <span class="nav-section">Creative</span>
+</nav>
+
+<!-- PAGE HEADER -->
+<header class="page-header">
+  <h1 class="page-title">Creative</h1>
+  <div class="page-sub">
+    Travel Photography &amp; Film<br>
+    Japan · Switzerland · California
+  </div>
+</header>
+
+<!-- GALLERY -->
+<main class="gallery">
+
+  <!-- Row 1: Full-width hero -->
+  <div class="gallery-row r-full">
+    <div class="gallery-cell" data-index="0">
+      <img src="../../Edited Photos/Photos for Website/dji_fly_20230512_173012_662_1684010304506_photo_optimized.jpg" alt="Aerial">
+    </div>
+  </div>
+
+  <!-- Row 2: Two halves -->
+  <div class="gallery-row r-halves">
+    <div class="gallery-cell" data-index="1">
+      <img src="../../Edited Photos/Photos for Website/Japan/RJ405649.jpg" alt="Japan">
+    </div>
+    <div class="gallery-cell" data-index="2">
+      <img src="../../Edited Photos/Photos for Website/Japan/RJ405760.jpg" alt="Japan">
+    </div>
+  </div>
+
+  <!-- Row 3: Large left + small right -->
+  <div class="gallery-row r-large-sm">
+    <div class="gallery-cell" data-index="3">
+      <img src="../../Edited Photos/Photos for Website/Switzerland/RJ400991.jpg" alt="Switzerland">
+    </div>
+    <div class="gallery-cell" data-index="4">
+      <img src="../../Edited Photos/Photos for Website/Japan/RJ405651.jpg" alt="Japan">
+    </div>
+  </div>
+
+  <!-- Row 4: Thirds -->
+  <div class="gallery-row r-thirds">
+    <div class="gallery-cell" data-index="5">
+      <img src="../../Edited Photos/Photos for Website/Japan/RJ405690.jpg" alt="Japan">
+    </div>
+    <div class="gallery-cell" data-index="6">
+      <img src="../../Edited Photos/Photos for Website/Japan/RJ405702.jpg" alt="Japan">
+    </div>
+    <div class="gallery-cell" data-index="7">
+      <img src="../../Edited Photos/Photos for Website/DSC04641.jpg" alt="Photo">
+    </div>
+  </div>
+
+  <!-- Row 5: Small left + large right -->
+  <div class="gallery-row r-sm-large">
+    <div class="gallery-cell" data-index="8">
+      <img src="../../Edited Photos/Photos for Website/IMG_8880.jpg" alt="Photo">
+    </div>
+    <div class="gallery-cell" data-index="9">
+      <img src="../../Edited Photos/Photos for Website/Japan/RJ405720.jpg" alt="Japan">
+    </div>
+  </div>
+
+  <!-- Row 6: Full-width -->
+  <div class="gallery-row r-full">
+    <div class="gallery-cell" data-index="10">
+      <img src="../../Edited Photos/Photos for Website/Japan/RJ405757.jpg" alt="Japan">
+    </div>
+  </div>
+
+  <!-- Row 7: Two halves -->
+  <div class="gallery-row r-halves">
+    <div class="gallery-cell" data-index="11">
+      <img src="../../Edited Photos/Photos for Website/Switzerland/RJ401212.jpg" alt="Switzerland">
+    </div>
+    <div class="gallery-cell" data-index="12">
+      <img src="../../Edited Photos/Photos for Website/Japan/RJ405808.jpg" alt="Japan">
+    </div>
+  </div>
+
+  <!-- Row 8: Thirds -->
+  <div class="gallery-row r-thirds">
+    <div class="gallery-cell" data-index="13">
+      <img src="../../Edited Photos/Photos for Website/Japan/RJ405817.jpg" alt="Japan">
+    </div>
+    <div class="gallery-cell" data-index="14">
+      <img src="../../Edited Photos/Photos for Website/Japan/RJ405829.jpg" alt="Japan">
+    </div>
+    <div class="gallery-cell" data-index="15">
+      <img src="../../Edited Photos/Photos for Website/Switzerland/RJ401219.jpg" alt="Switzerland">
+    </div>
+  </div>
+
+  <!-- Row 9: Large right + small left -->
+  <div class="gallery-row r-large-sm">
+    <div class="gallery-cell" data-index="16">
+      <img src="../../Edited Photos/Photos for Website/Japan/RJ405850.jpg" alt="Japan">
+    </div>
+    <div class="gallery-cell" data-index="17">
+      <img src="../../Edited Photos/Photos for Website/DSC07277.jpg" alt="Photo">
+    </div>
+  </div>
+
+  <!-- Row 10: Two halves -->
+  <div class="gallery-row r-halves">
+    <div class="gallery-cell" data-index="18">
+      <img src="../../Edited Photos/Photos for Website/Japan/RJ405873.jpg" alt="Japan">
+    </div>
+    <div class="gallery-cell" data-index="19">
+      <img src="../../Edited Photos/Photos for Website/Japan/RJ405894.jpg" alt="Japan">
+    </div>
+  </div>
+
+</main>
+
+<!-- FULLSCREEN OVERLAY -->
+<div class="overlay" id="overlay">
+  <span class="overlay-close" id="overlayClose">✕ Close</span>
+  <span class="overlay-arrow prev" id="prevBtn">←</span>
+  <img class="overlay-img" id="overlayImg" src="" alt="">
+  <span class="overlay-arrow next" id="nextBtn">→</span>
+  <span class="overlay-counter" id="overlayCounter"></span>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-name">© 2026 Rutvij Dhotey</span>
+  <nav class="footer-links">
+    <a href="https://linkedin.com/in/rutvij-dhotey" class="footer-link" target="_blank">LinkedIn</a>
+    <a href="https://github.com/rutvijdhotey" class="footer-link" target="_blank">GitHub</a>
+    <span class="footer-link" onclick="history.back()">← Home</span>
+  </nav>
+</footer>
+
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ── OVERLAY ──
+  const cells = Array.from(document.querySelectorAll('.gallery-cell'));
+  const srcs = cells.map(c => c.querySelector('img').src);
+  let currentIndex = 0;
+
+  const overlay = document.getElementById('overlay');
+  const overlayImg = document.getElementById('overlayImg');
+  const overlayCounter = document.getElementById('overlayCounter');
+
+  function openOverlay(index) {
+    currentIndex = index;
+    overlayImg.src = srcs[index];
+    overlayCounter.textContent = `${index + 1} / ${srcs.length}`;
+    overlay.classList.add('active');
+    gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power2.out' });
+    gsap.fromTo(overlayImg, { scale: 0.95, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: 'power2.out' });
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeOverlay() {
+    gsap.to(overlay, {
+      opacity: 0, duration: 0.3, ease: 'power2.in',
+      onComplete: () => { overlay.classList.remove('active'); document.body.style.overflow = ''; }
+    });
+  }
+
+  function navigate(dir) {
+    currentIndex = (currentIndex + dir + srcs.length) % srcs.length;
+    const sign = dir > 0 ? 1 : -1;
+    gsap.to(overlayImg, {
+      opacity: 0, x: sign * -40, duration: 0.2, ease: 'power2.in',
+      onComplete: () => {
+        overlayImg.src = srcs[currentIndex];
+        overlayCounter.textContent = `${currentIndex + 1} / ${srcs.length}`;
+        gsap.fromTo(overlayImg, { opacity: 0, x: sign * 40 }, { opacity: 1, x: 0, duration: 0.3, ease: 'power2.out' });
+      }
+    });
+  }
+
+  cells.forEach((cell, i) => cell.addEventListener('click', () => openOverlay(i)));
+  document.getElementById('overlayClose').addEventListener('click', closeOverlay);
+  document.getElementById('prevBtn').addEventListener('click', () => navigate(-1));
+  document.getElementById('nextBtn').addEventListener('click', () => navigate(1));
+  document.addEventListener('keydown', e => {
+    if (!overlay.classList.contains('active')) return;
+    if (e.key === 'Escape') closeOverlay();
+    if (e.key === 'ArrowLeft') navigate(-1);
+    if (e.key === 'ArrowRight') navigate(1);
+  });
+
+  // ── ENTRANCE ANIMATIONS ──
+  gsap.from('nav > *', { opacity: 0, y: -10, duration: 1, ease: 'power3.out', delay: 0.2, stagger: 0.08 });
+  gsap.from('.page-title', { opacity: 0, y: 30, duration: 1.2, ease: 'power3.out', delay: 0.3 });
+  gsap.from('.page-sub', { opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.5 });
+
+  // ── SCROLL REVEALS ──
+  document.querySelectorAll('.gallery-row').forEach(row => {
+    gsap.from(row.querySelectorAll('.gallery-cell'), {
+      scrollTrigger: { trigger: row, start: 'top 88%' },
+      opacity: 0, y: 28, duration: 0.9, ease: 'power3.out', stagger: 0.1
+    });
+  });
+
+  gsap.from('footer > *', {
+    scrollTrigger: { trigger: 'footer', start: 'top 90%' },
+    opacity: 0, y: 16, duration: 0.8, ease: 'power3.out', stagger: 0.1
+  });
+</script>
+
+</body>
+</html>
