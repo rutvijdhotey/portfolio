@@ -1,0 +1,71 @@
+/* components/overlay.css */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(10,10,10,0.97);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.overlay.overlay--open {
+  pointer-events: auto;
+}
+
+.overlay-img {
+  max-width: 90vw;
+  max-height: 88vh;
+  object-fit: contain;
+  display: block;
+}
+
+.overlay-close {
+  position: fixed;
+  top: 32px; right: 48px;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.3s;
+  z-index: 1001;
+  background: none;
+  border: none;
+}
+.overlay-close:hover { color: var(--text); }
+
+.overlay-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--sans);
+  font-size: 22px;
+  color: rgba(240,237,232,0.25);
+  cursor: pointer;
+  transition: color 0.3s;
+  z-index: 1001;
+  padding: 24px 20px;
+  user-select: none;
+  background: none;
+  border: none;
+}
+.overlay-arrow:hover { color: var(--text); }
+.overlay-arrow--prev { left: 16px; }
+.overlay-arrow--next { right: 16px; }
+
+.overlay-counter {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: rgba(240,237,232,0.2);
+  z-index: 1001;
+}
