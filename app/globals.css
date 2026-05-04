@@ -9,8 +9,8 @@
   --muted: rgba(240,237,232,0.35);
   --faint: rgba(240,237,232,0.10);
   --accent: rgba(240,237,232,0.06);
-  --serif: 'Georgia', 'Times New Roman', serif;
-  --sans: 'Helvetica Neue', Arial, sans-serif;
+  --serif: var(--font-serif), 'Georgia', serif;
+  --sans: var(--font-sans), 'Helvetica Neue', Arial, sans-serif;
   --gap: 4px;
 }
 
