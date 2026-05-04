@@ -55,7 +55,7 @@ export default function Creative() {
     <>
       <nav className="creative-nav">
         <Link href="/" className="nav-back">← Home</Link>
-        <span className="nav-name">Rutvij Dhotey</span>
+        <Link href="/" className="nav-name">Rutvij Dhotey</Link>
         <span className="nav-section">Creative</span>
       </nav>
 
@@ -63,8 +63,8 @@ export default function Creative() {
       <section className="video-hero">
         {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
         <video className="video-hero__video" autoPlay muted loop playsInline>
-          <source src={HERO_VIDEO_MOBILE}  media="(max-width: 768px)" type="video/quicktime" />
-          <source src={HERO_VIDEO_DESKTOP} type="video/quicktime" />
+          <source src={HERO_VIDEO_MOBILE}  media="(max-width: 768px)" />
+          <source src={HERO_VIDEO_DESKTOP} />
         </video>
         <div className="video-hero__overlay" />
         <div className="video-hero__content">

@@ -1,6 +1,13 @@
 /* app/creative/creative.css */
 
 /* ── NAV ── */
+a.nav-name {
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.2s;
+}
+a.nav-name:hover { opacity: 0.6; }
+
 .creative-nav {
   position: fixed;
   top: 0; left: 0; right: 0;
