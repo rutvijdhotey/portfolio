@@ -1,5 +1,5 @@
 /* ── NAV ── */
-nav {
+.engineering-nav {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 100;
@@ -430,7 +430,7 @@ nav {
 .contact-email:hover { opacity: 0.5; }
 
 /* ── FOOTER ── */
-footer {
+.engineering-footer {
   padding: 48px;
   display: flex;
   justify-content: space-between;
@@ -464,7 +464,7 @@ footer {
 
 /* ── MOBILE ── */
 @media (max-width: 768px) {
-  nav { padding: 20px 24px; }
+  .engineering-nav { padding: 20px 24px; }
   .nav-section { display: none; }
   .hero { padding: 100px 24px 60px; height: auto; min-height: 100vh; }
   .hero-scroll-hint { display: none; }
@@ -472,5 +472,5 @@ footer {
   .about-location { text-align: left; }
   .credentials { grid-template-columns: 1fr; }
   .cred-col { padding: 48px 24px; border-right: none !important; }
-  footer { padding: 32px 24px; flex-direction: column; gap: 20px; text-align: center; }
+  .engineering-footer { padding: 32px 24px; flex-direction: column; gap: 20px; text-align: center; }
 }

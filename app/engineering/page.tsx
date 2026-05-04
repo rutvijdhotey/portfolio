@@ -95,7 +95,7 @@ export default function EngineeringPage() {
   return (
     <>
       {/* NAV */}
-      <nav>
+      <nav className="engineering-nav">
         <Link href="/" className="nav-back">← Home</Link>
         <Link href="/" className="nav-name">Rutvij Dhotey</Link>
         <span className="nav-section">Engineering</span>
@@ -334,7 +334,7 @@ export default function EngineeringPage() {
       </section>
 
       {/* FOOTER */}
-      <footer>
+      <footer className="engineering-footer">
         <span className="footer-name">© 2026 Rutvij Dhotey</span>
         <nav className="footer-links">
           <a href="https://linkedin.com/in/rutvij-dhotey" className="footer-link" target="_blank" rel="noopener">LinkedIn</a>
