@@ -2,12 +2,14 @@
 
 export type GalleryLayout = 'full' | 'halves' | 'large-small' | 'small-large' | 'thirds'
 export type MediaType = 'photo' | 'video'
+export type GalleryCategory = 'city' | 'nature' | 'random'
 
 export interface GalleryItem {
   src: string
   alt: string
   type: MediaType
-  poster?: string  // optional thumbnail shown in grid before video loads
+  category: GalleryCategory
+  poster?: string
 }
 
 export interface GalleryRow {
@@ -16,82 +18,80 @@ export interface GalleryRow {
 }
 
 const BASE = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Images'
-const VBASE = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Videos'
 
-const jp = (file: string) => `${BASE}/Japan/${file}`
-const ch = (file: string) => `${BASE}/Switzerland/${file}`
-const rn = (file: string) => `${BASE}/Random/${file}`
-const vid = (file: string) => `${VBASE}/${file}`
+const city   = (f: string) => `${BASE}/City/Japan/${f}`
+const nature = (f: string) => `${BASE}/Nature/Bend%20Oregon%20LR%20Edits/${f}`
+const rnd    = (f: string) => `${BASE}/Random/${f}`
 
 export const galleryRows: GalleryRow[] = [
   {
     layout: 'full',
     items: [
-      { src: rn('dji_fly_20230512_173012_662_1684010304506_photo_optimized.jpg'), alt: 'Aerial', type: 'photo' },
+      { src: nature('RJ400615.jpg'), alt: 'Bend Oregon', type: 'photo', category: 'nature' },
     ],
   },
   {
     layout: 'halves',
     items: [
-      { src: jp('RJ405649.jpg'), alt: 'Japan', type: 'photo' },
-      { src: jp('RJ405760.jpg'), alt: 'Japan', type: 'photo' },
+      { src: city('RJ405649.jpg'),  alt: 'Japan',       type: 'photo', category: 'city' },
+      { src: city('RJ405760.jpg'),  alt: 'Japan',       type: 'photo', category: 'city' },
     ],
   },
   {
     layout: 'large-small',
     items: [
-      { src: ch('RJ400991.jpg'), alt: 'Switzerland', type: 'photo' },
-      { src: jp('RJ405651.jpg'), alt: 'Japan', type: 'photo' },
+      { src: nature('RJ400631.jpg'), alt: 'Bend Oregon', type: 'photo', category: 'nature' },
+      { src: rnd('DSC07277.jpg'),    alt: 'Photo',        type: 'photo', category: 'random' },
     ],
   },
   {
     layout: 'thirds',
     items: [
-      { src: jp('RJ405690.jpg'), alt: 'Japan', type: 'photo' },
-      { src: jp('RJ405702.jpg'), alt: 'Japan', type: 'photo' },
-      { src: rn('DSC04641.jpg'), alt: 'Photo', type: 'photo' },
+      { src: city('RJ405690.jpg'),   alt: 'Japan',       type: 'photo', category: 'city' },
+      { src: nature('RJ400656.jpg'), alt: 'Bend Oregon', type: 'photo', category: 'nature' },
+      { src: city('RJ405702.jpg'),   alt: 'Japan',       type: 'photo', category: 'city' },
     ],
   },
   {
     layout: 'small-large',
     items: [
-      { src: rn('IMG_8880.jpg'), alt: 'Photo', type: 'photo' },
-      { src: jp('RJ405720.jpg'), alt: 'Japan', type: 'photo' },
+      { src: rnd('IMG_8880.jpg'),   alt: 'Photo', type: 'photo', category: 'random' },
+      { src: city('RJ405757.jpg'),  alt: 'Japan', type: 'photo', category: 'city' },
     ],
   },
   {
     layout: 'full',
     items: [
-      { src: jp('RJ405757.jpg'), alt: 'Japan', type: 'photo' },
+      { src: nature('RJ400680.jpg'), alt: 'Bend Oregon', type: 'photo', category: 'nature' },
     ],
   },
   {
     layout: 'halves',
     items: [
-      { src: ch('RJ401212.jpg'), alt: 'Switzerland', type: 'photo' },
-      { src: jp('RJ405808.jpg'), alt: 'Japan', type: 'photo' },
-    ],
-  },
-  {
-    layout: 'thirds',
-    items: [
-      { src: jp('RJ405776.jpg'), alt: 'Japan', type: 'photo' },
-      { src: jp('RJ405829.jpg'), alt: 'Japan', type: 'photo' },
-      { src: ch('RJ401219.jpg'), alt: 'Switzerland', type: 'photo' },
+      { src: nature('RJ400695.jpg'), alt: 'Bend Oregon', type: 'photo', category: 'nature' },
+      { src: city('RJ405776.jpg'),   alt: 'Japan',       type: 'photo', category: 'city' },
     ],
   },
   {
     layout: 'large-small',
     items: [
-      { src: jp('RJ405850.jpg'), alt: 'Japan', type: 'photo' },
-      { src: rn('DSC07277.jpg'), alt: 'Photo', type: 'photo' },
+      { src: city('RJ405808.jpg'),   alt: 'Japan',       type: 'photo', category: 'city' },
+      { src: nature('RJ400721.jpg'), alt: 'Bend Oregon', type: 'photo', category: 'nature' },
+    ],
+  },
+  {
+    layout: 'thirds',
+    items: [
+      { src: rnd('dji_fly_20230512_173012_662_1684010304506_photo_optimized.jpg'), alt: 'Aerial', type: 'photo', category: 'random' },
+      { src: nature('RJ400730.jpg'), alt: 'Bend Oregon', type: 'photo', category: 'nature' },
+      { src: rnd('DSC07504.jpg'),    alt: 'Photo',        type: 'photo', category: 'random' },
     ],
   },
   {
     layout: 'halves',
     items: [
-      { src: jp('RJ405873.jpg'), alt: 'Japan', type: 'photo' },
-      { src: jp('RJ405894.jpg'), alt: 'Japan', type: 'photo' },
+      { src: city('RJ405650.jpg'),   alt: 'Japan',       type: 'photo', category: 'city' },
+      { src: nature('RJ400731.jpg'), alt: 'Bend Oregon', type: 'photo', category: 'nature' },
     ],
   },
 ]

@@ -68,7 +68,7 @@ export default function GalleryGrid({ rows, onItemClick }: Props) {
                 </>
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={item.src} alt={item.alt} />
+                <img src={item.src} alt={item.alt} loading="lazy" decoding="async" />
               )}
             </div>
           ))}

@@ -9,7 +9,9 @@ import OverlayViewer from '@/components/OverlayViewer'
 import { galleryRows, allItems } from '@/lib/gallery-items'
 import './creative.css'
 
-const HERO_VIDEO = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Videos/IMG_7855.mov'
+const VBASE = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Videos'
+const HERO_VIDEO_DESKTOP = `${VBASE}/IMG_7855.mov`
+const HERO_VIDEO_MOBILE  = `${VBASE}/IMG_7946%20(1).mov`
 
 export default function Creative() {
   const [overlayOpen, setOverlayOpen] = useState(false)
@@ -35,7 +37,10 @@ export default function Creative() {
 
       <section className="video-hero">
         {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-        <video className="video-hero__video" src={HERO_VIDEO} autoPlay muted loop playsInline />
+        <video className="video-hero__video" autoPlay muted loop playsInline>
+          <source src={HERO_VIDEO_MOBILE}  media="(max-width: 768px)" type="video/quicktime" />
+          <source src={HERO_VIDEO_DESKTOP} type="video/quicktime" />
+        </video>
         <div className="video-hero__overlay" />
         <div className="video-hero__content">
           <h1 className="hero-title">Creative</h1>
