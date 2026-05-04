@@ -1,7 +1,7 @@
 // app/creative/page.tsx
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -16,6 +16,7 @@ import './creative.css'
 gsap.registerPlugin(ScrollTrigger)
 
 const HERO_VIDEO_DESKTOP = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Videos/IMG_7855.mov'
+const HERO_VIDEO_MOBILE  = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Videos/IMG_7946%20(1).mov'
 
 const chapters = [
   { key: 'city',   num: '01', title: 'City',   meta: 'Japan · Street & Architecture', rows: cityRows,   offset: 0 },
@@ -26,11 +27,19 @@ const chapters = [
 export default function Creative() {
   const [overlayOpen, setOverlayOpen]   = useState(false)
   const [overlayIndex, setOverlayIndex] = useState(0)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   function openOverlay(index: number) {
     setOverlayIndex(index)
     setOverlayOpen(true)
   }
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.src = window.innerWidth <= 768 ? HERO_VIDEO_MOBILE : HERO_VIDEO_DESKTOP
+      videoRef.current.load()
+    }
+  }, [])
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -54,13 +63,17 @@ export default function Creative() {
       <nav className="creative-nav">
         <Link href="/" className="nav-back">← Home</Link>
         <Link href="/" className="nav-name">Rutvij Dhotey</Link>
-        <span className="nav-section">Creative</span>
+        <div className="nav-right">
+          <a href="https://instagram.com/intoyourstories" className="nav-social" target="_blank" rel="noopener">@intoyourstories</a>
+          <a href="https://instagram.com/mytadkatruffle" className="nav-social" target="_blank" rel="noopener">@mytadkatruffle</a>
+          <span className="nav-section">Creative</span>
+        </div>
       </nav>
 
       {/* ── Video Hero ── */}
       <section className="video-hero">
         {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-        <video className="video-hero__video" src={HERO_VIDEO_DESKTOP} autoPlay muted loop playsInline />
+        <video ref={videoRef} className="video-hero__video" autoPlay muted loop playsInline />
         <div className="video-hero__overlay" />
         <div className="video-hero__content">
           <h1 className="hero-title">Creative</h1>
@@ -106,8 +119,6 @@ export default function Creative() {
       <footer className="creative-footer">
         <span className="creative-footer-name">© 2026 Rutvij Dhotey</span>
         <nav className="creative-footer-links">
-          <a href="https://instagram.com/intoyourstories" className="creative-footer-link" target="_blank" rel="noopener">Instagram</a>
-          <a href="https://instagram.com/mytadkatruffle" className="creative-footer-link" target="_blank" rel="noopener">Instagram (us)</a>
           <a href="https://linkedin.com/in/rutvij-dhotey" className="creative-footer-link" target="_blank" rel="noopener">LinkedIn</a>
           <a href="https://github.com/rutvijdhotey" className="creative-footer-link" target="_blank" rel="noopener">GitHub</a>
           <Link href="/" className="creative-footer-link">← Home</Link>
