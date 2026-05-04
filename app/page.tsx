@@ -13,8 +13,8 @@ export default function Home() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.to('.panel__content', {
-        opacity: 1,
+      gsap.from('.panel__content', {
+        opacity: 0,
         duration: 1.4,
         ease: 'power3.out',
         stagger: 0.2,
