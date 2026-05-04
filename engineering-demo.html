@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engineering — Rutvij Dhotey</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0e0e0e;
+    --text: #f0ede8;
+    --muted: rgba(240,237,232,0.35);
+    --faint: rgba(240,237,232,0.12);
+    --accent: rgba(240,237,232,0.06);
+    --transition: 0.7s cubic-bezier(0.76, 0, 0.24, 1);
+    --serif: 'Georgia', 'Times New Roman', serif;
+    --sans: 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--serif);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 48px;
+    background: linear-gradient(to bottom, rgba(14,14,14,0.95) 0%, transparent 100%);
+  }
+
+  .nav-back {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s, transform 0.3s;
+    cursor: pointer;
+  }
+
+  .nav-back:hover { color: var(--text); transform: translateX(-3px); }
+
+  .nav-name {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+    mix-blend-mode: difference;
+  }
+
+  .nav-section {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── HERO PROJECT CARD ── */
+  .hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: flex-end;
+    padding: 80px 48px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('https://mskwqqbigtauakojpyhn.supabase.co/storage/v1/object/public/covers/2026-04-19T07:02:20.360Z.png');
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.62) saturate(0.85);
+    transform: scale(1.04);
+    transition: transform 8s ease;
+  }
+
+  .hero:hover .hero-bg {
+    transform: scale(1.0);
+  }
+
+  /* dark gradient overlay so text is always readable */
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top, rgba(14,14,14,0.92) 0%, rgba(14,14,14,0.4) 50%, rgba(14,14,14,0.6) 100%),
+      linear-gradient(to right, rgba(14,14,14,0.5) 0%, transparent 60%);
+  }
+
+  /* subtle grid texture */
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(240,237,232,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,237,232,0.02) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 760px;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .hero-title {
+    font-size: clamp(52px, 8vw, 120px);
+    font-weight: 400;
+    line-height: 0.95;
+    color: var(--text);
+    margin-bottom: 28px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-desc {
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(240,237,232,0.55);
+    max-width: 480px;
+    margin-bottom: 36px;
+  }
+
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 40px;
+  }
+
+  .tag {
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--faint);
+    padding: 6px 14px;
+    transition: color 0.3s, border-color 0.3s;
+  }
+
+  .tag:hover { color: var(--text); border-color: rgba(240,237,232,0.3); }
+
+  .hero-cta {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: gap 0.3s;
+  }
+
+  .hero-cta:hover { gap: 16px; }
+
+  .hero-scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    right: 48px;
+    z-index: 2;
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(240,237,232,0.2);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+
+  /* ── DIVIDER LINE ── */
+  .rule {
+    width: 100%;
+    height: 1px;
+    background: var(--faint);
+  }
+
+  /* ── ABOUT STRIP ── */
+  .about {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 40px;
+    align-items: center;
+    padding: 64px 48px;
+    border-bottom: 1px solid var(--faint);
+  }
+
+  .about-role {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .about-bio {
+    font-size: clamp(16px, 1.5vw, 20px);
+    font-weight: 400;
+    line-height: 1.55;
+    color: rgba(240,237,232,0.8);
+    text-align: center;
+  }
+
+  .about-location {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: right;
+    line-height: 1.8;
+  }
+
+  /* ── CREDENTIALS ── */
+  .credentials {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .cred-col {
+    padding: 72px 48px;
+    border-bottom: 1px solid var(--faint);
+  }
+
+  .cred-col:first-child {
+    border-right: 1px solid var(--faint);
+  }
+
+  .cred-section {
+    margin-bottom: 56px;
+  }
+
+  .cred-section:last-child { margin-bottom: 0; }
+
+  .cred-label {
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(240,237,232,0.25);
+    margin-bottom: 28px;
+  }
+
+  /* Experience */
+  .exp-item {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--accent);
+  }
+
+  .exp-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .entry-logo {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    margin-top: 2px;
+  }
+
+  .entry-info { flex: 1; }
+
+  .exp-company {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .exp-role {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .exp-date {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: rgba(240,237,232,0.2);
+  }
+
+  /* Education */
+  .edu-item {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    margin-bottom: 28px;
+  }
+
+  .edu-item:last-child { margin-bottom: 0; }
+
+  .edu-school {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .edu-degree {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 3px;
+  }
+
+  .edu-date {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: rgba(240,237,232,0.2);
+  }
+
+  /* Skills */
+  .skills-group {
+    margin-bottom: 28px;
+  }
+
+  .skills-group:last-child { margin-bottom: 0; }
+
+  .skills-group-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(240,237,232,0.2);
+    margin-bottom: 12px;
+  }
+
+  .skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .skill-chip {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: rgba(240,237,232,0.55);
+    border: 1px solid var(--faint);
+    padding: 5px 12px;
+    transition: color 0.3s, border-color 0.3s;
+  }
+
+  .skill-chip:hover {
+    color: var(--text);
+    border-color: rgba(240,237,232,0.25);
+  }
+
+  /* Achievements */
+  .achievement-item {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 24px;
+    align-items: flex-start;
+  }
+
+  .achievement-item:last-child { margin-bottom: 0; }
+
+  .achievement-mark {
+    font-family: var(--sans);
+    font-size: 9px;
+    color: rgba(240,237,232,0.2);
+    margin-top: 3px;
+    flex-shrink: 0;
+    letter-spacing: 0.1em;
+  }
+
+  .achievement-text {
+    font-family: var(--sans);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted);
+    letter-spacing: 0.03em;
+  }
+
+  .achievement-text strong {
+    color: rgba(240,237,232,0.75);
+    font-weight: 500;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-name {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(240,237,232,0.2);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 32px;
+  }
+
+  .footer-link {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(240,237,232,0.25);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .footer-link:hover { color: rgba(240,237,232,0.7); }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .nav-section { display: none; }
+    .hero { padding: 100px 24px 60px; height: auto; min-height: 100vh; }
+    .hero-scroll-hint { display: none; }
+    .about { grid-template-columns: 1fr; padding: 48px 24px; gap: 20px; }
+    .about-location { text-align: left; }
+    .credentials { grid-template-columns: 1fr; }
+    .cred-col { padding: 48px 24px; border-right: none !important; }
+    footer { padding: 32px 24px; flex-direction: column; gap: 20px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-back" onclick="history.back()">← Home</span>
+  <span class="nav-name">Rutvij Dhotey</span>
+  <span class="nav-section">Engineering</span>
+</nav>
+
+<!-- HERO: LACURIOSITY -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Featured Project · 01</p>
+    <h1 class="hero-title">La<br>Curiosity</h1>
+    <p class="hero-desc">
+      An AI-powered editorial platform with a fully automated content pipeline.
+      Orchestrates Claude and Gemini to research, write, and publish —
+      with Supabase as the backbone.
+    </p>
+    <div class="hero-tags">
+      <span class="tag">Claude API</span>
+      <span class="tag">Gemini API</span>
+      <span class="tag">Supabase</span>
+      <span class="tag">React</span>
+      <span class="tag">Python</span>
+      <span class="tag">Prompt Engineering</span>
+    </div>
+    <a href="https://lacuriosity.com" class="hero-cta" target="_blank">
+      View Project <span>→</span>
+    </a>
+  </div>
+
+  <span class="hero-scroll-hint">Scroll to explore</span>
+</section>
+
+<!-- ABOUT STRIP -->
+<div class="rule"></div>
+<section class="about">
+  <div class="about-role">
+    Software Engineer<br>
+    YouTube · Google<br>
+    Sunnyvale, CA
+  </div>
+  <p class="about-bio">
+    Building systems that scale to billions at YouTube —
+    and shipping AI products from scratch on the side.
+  </p>
+  <div class="about-location">
+    rutvij.dhotey<br>
+    @gmail.com<br>
+    <a href="https://github.com/rutvijdhotey" style="color:inherit;text-decoration:none;">github ↗</a>
+  </div>
+</section>
+
+<!-- CREDENTIALS -->
+<section class="credentials">
+
+  <!-- LEFT: Experience + Education -->
+  <div class="cred-col">
+
+    <div class="cred-section">
+      <p class="cred-label">Experience</p>
+
+      <div class="exp-item">
+        <img class="entry-logo" src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube" style="object-fit:contain;background:rgba(240,237,232,0.07);border-radius:6px;padding:10px;">
+        <div class="entry-info">
+          <div class="exp-company">YouTube</div>
+          <div class="exp-role">Software Engineer</div>
+          <div class="exp-date">Current · Sunnyvale, CA</div>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <svg class="entry-logo" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="40" height="40" rx="6" fill="rgba(240,237,232,0.07)"/>
+          <!-- Lens / aperture mark for editorial curiosity -->
+          <circle cx="20" cy="19" r="9" stroke="rgba(240,237,232,0.55)" stroke-width="1.2"/>
+          <circle cx="20" cy="19" r="4.5" stroke="rgba(240,237,232,0.35)" stroke-width="1"/>
+          <line x1="20" y1="10" x2="20" y2="14" stroke="rgba(240,237,232,0.4)" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="20" y1="24" x2="20" y2="28" stroke="rgba(240,237,232,0.4)" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="11" y1="19" x2="15" y2="19" stroke="rgba(240,237,232,0.4)" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="25" y1="19" x2="29" y2="19" stroke="rgba(240,237,232,0.4)" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <div class="entry-info">
+          <div class="exp-company">LaCuriosity</div>
+          <div class="exp-role">Founder &amp; Engineer</div>
+          <div class="exp-date">Side Project</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cred-section">
+      <p class="cred-label">Education</p>
+
+      <div class="edu-item">
+        <img class="entry-logo" src="https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/Penn_State_Nittany_Lions_logo.svg/250px-Penn_State_Nittany_Lions_logo.svg.png" alt="Penn State" style="object-fit:contain;background:rgba(240,237,232,0.07);border-radius:6px;padding:4px;">
+        <div class="entry-info">
+          <div class="edu-school">Penn State University</div>
+          <div class="edu-degree">M.Eng. Computer Science &amp; Engineering</div>
+          <div class="edu-date">2015 – 2016 · GPA 3.45 · ML &amp; Computer Vision</div>
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <!-- PICT circular seal SVG -->
+        <svg class="entry-logo" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="40" height="40" rx="6" fill="rgba(240,237,232,0.07)"/>
+          <!-- outer rings -->
+          <circle cx="20" cy="20" r="16" stroke="#8a9bb5" stroke-width="0.9"/>
+          <circle cx="20" cy="20" r="13.8" stroke="#6b7e9a" stroke-width="0.5"/>
+          <!-- globe -->
+          <circle cx="20" cy="20" r="10" stroke="#7a9fc4" stroke-width="0.9"/>
+          <ellipse cx="20" cy="20" rx="5.5" ry="10" stroke="#6b8fb5" stroke-width="0.7"/>
+          <ellipse cx="20" cy="20" rx="10" ry="5.5" stroke="#6b8fb5" stroke-width="0.7"/>
+          <!-- PICT text -->
+          <text x="20" y="22.5" font-family="Helvetica Neue, Arial, sans-serif" font-size="5.5" font-weight="700" fill="#a8bdd4" text-anchor="middle" letter-spacing="1">PICT</text>
+        </svg>
+        <div class="entry-info">
+          <div class="edu-school">Pune Institute of Computer Technology</div>
+          <div class="edu-degree">B.E. Electrical, Electronics &amp; Communications Engineering</div>
+          <div class="edu-date">2011 – 2015 · Grade A+ · Embedded Systems &amp; RTOS</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: Skills + Achievements -->
+  <div class="cred-col">
+
+    <div class="cred-section">
+      <p class="cred-label">Skills</p>
+
+      <div class="skills-group">
+        <div class="skills-group-label">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2.2" stroke="rgba(240,237,232,0.4)" stroke-width="1.1"/><circle cx="1.8" cy="3.5" r="1.3" stroke="rgba(240,237,232,0.25)" stroke-width="1"/><circle cx="12.2" cy="3.5" r="1.3" stroke="rgba(240,237,232,0.25)" stroke-width="1"/><circle cx="1.8" cy="10.5" r="1.3" stroke="rgba(240,237,232,0.25)" stroke-width="1"/><circle cx="12.2" cy="10.5" r="1.3" stroke="rgba(240,237,232,0.25)" stroke-width="1"/><line x1="4.8" y1="5.8" x2="3.1" y2="4.5" stroke="rgba(240,237,232,0.2)" stroke-width="1"/><line x1="9.2" y1="5.8" x2="10.9" y2="4.5" stroke="rgba(240,237,232,0.2)" stroke-width="1"/><line x1="4.8" y1="8.2" x2="3.1" y2="9.5" stroke="rgba(240,237,232,0.2)" stroke-width="1"/><line x1="9.2" y1="8.2" x2="10.9" y2="9.5" stroke="rgba(240,237,232,0.2)" stroke-width="1"/></svg>
+          AI / ML
+        </div>
+        <div class="skills-list">
+          <span class="skill-chip">Claude API</span>
+          <span class="skill-chip">Gemini API</span>
+          <span class="skill-chip">Prompt Engineering</span>
+          <span class="skill-chip">LLM Orchestration</span>
+          <span class="skill-chip">Deep Learning</span>
+          <span class="skill-chip">Computer Vision</span>
+          <span class="skill-chip">Neural Networks</span>
+        </div>
+      </div>
+
+      <div class="skills-group">
+        <div class="skills-group-label">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4.5 3L1 7L4.5 11" stroke="rgba(240,237,232,0.4)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.5 3L13 7L9.5 11" stroke="rgba(240,237,232,0.4)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><line x1="8.5" y1="2" x2="5.5" y2="12" stroke="rgba(240,237,232,0.25)" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Languages
+        </div>
+        <div class="skills-list">
+          <span class="skill-chip">Python</span>
+          <span class="skill-chip">JavaScript</span>
+          <span class="skill-chip">C++</span>
+        </div>
+      </div>
+
+      <div class="skills-group">
+        <div class="skills-group-label">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><ellipse cx="7" cy="4" rx="5" ry="1.8" stroke="rgba(240,237,232,0.4)" stroke-width="1.1"/><path d="M2 4V7.5C2 8.6 4.2 9.5 7 9.5C9.8 9.5 12 8.6 12 7.5V4" stroke="rgba(240,237,232,0.4)" stroke-width="1.1"/><path d="M2 7.5V11C2 12.1 4.2 13 7 13C9.8 13 12 12.1 12 11V7.5" stroke="rgba(240,237,232,0.25)" stroke-width="1.1"/></svg>
+          Web &amp; Data
+        </div>
+        <div class="skills-list">
+          <span class="skill-chip">React.js</span>
+          <span class="skill-chip">Django</span>
+          <span class="skill-chip">Supabase</span>
+          <span class="skill-chip">REST APIs</span>
+          <span class="skill-chip">Tailwind CSS</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cred-section">
+      <p class="cred-label">Recognition</p>
+
+      <div class="achievement-item">
+        <span class="achievement-mark">01</span>
+        <span class="achievement-text">
+          <strong>US Patent</strong> — "Verified Video Reviews" (US 20210158371), filed 2019
+        </span>
+      </div>
+
+      <div class="achievement-item">
+        <span class="achievement-mark">02</span>
+        <span class="achievement-text">
+          <strong>Google Developer Challenge Scholarship</strong> — selected from 100,000+ applicants, 2018
+        </span>
+      </div>
+
+      <div class="achievement-item">
+        <span class="achievement-mark">03</span>
+        <span class="achievement-text">
+          <strong>Robotics National Winner</strong> — IISC Bangalore, 2015
+        </span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-name">© 2026 Rutvij Dhotey</span>
+  <nav class="footer-links">
+    <a href="https://linkedin.com/in/rutvij-dhotey" class="footer-link" target="_blank">LinkedIn</a>
+    <a href="https://github.com/rutvijdhotey" class="footer-link" target="_blank">GitHub</a>
+    <span class="footer-link" style="cursor:pointer" onclick="history.back()">← Home</span>
+  </nav>
+</footer>
+
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Entrance: hero content
+  gsap.from('.hero-eyebrow', {
+    opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.3
+  });
+  gsap.from('.hero-title', {
+    opacity: 0, y: 40, duration: 1.3, ease: 'power3.out', delay: 0.5
+  });
+  gsap.from('.hero-desc', {
+    opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.75
+  });
+  gsap.from('.hero-tags', {
+    opacity: 0, y: 16, duration: 0.9, ease: 'power3.out', delay: 0.9
+  });
+  gsap.from('.hero-cta', {
+    opacity: 0, y: 12, duration: 0.9, ease: 'power3.out', delay: 1.05
+  });
+  gsap.from('.nav-back, .nav-name, .nav-section', {
+    opacity: 0, y: -10, duration: 1, ease: 'power3.out', delay: 0.2, stagger: 0.08
+  });
+
+  // Scroll: about strip
+  gsap.from('.about > *', {
+    scrollTrigger: { trigger: '.about', start: 'top 80%' },
+    opacity: 0, y: 24, duration: 0.9, ease: 'power3.out', stagger: 0.15
+  });
+
+  // Scroll: credentials
+  gsap.from('.cred-section', {
+    scrollTrigger: { trigger: '.credentials', start: 'top 75%' },
+    opacity: 0, y: 30, duration: 1, ease: 'power3.out', stagger: 0.12
+  });
+
+  // Scroll: footer
+  gsap.from('footer > *', {
+    scrollTrigger: { trigger: 'footer', start: 'top 90%' },
+    opacity: 0, y: 16, duration: 0.8, ease: 'power3.out', stagger: 0.1
+  });
+</script>
+
+</body>
+</html>

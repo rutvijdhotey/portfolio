@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concept 2 — Renaissance</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #f2ece3;
+    --parchment: #e8dfd0;
+    --dark: #1a1510;
+    --brown: #5a3e2b;
+    --gold: #c4962a;
+    --warm-grey: #8a7a6a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--dark);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 48px;
+    background: rgba(242, 236, 227, 0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(90,62,43,0.1);
+  }
+
+  .nav-logo {
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    color: var(--dark);
+    text-decoration: none;
+    font-style: italic;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 48px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--dark); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 80px;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 60px 80px 48px;
+    position: relative;
+  }
+
+  .hero-left::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 10%; bottom: 10%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--brown), transparent);
+    opacity: 0.2;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 36px;
+    opacity: 0;
+    animation: fadeIn 1s 0.3s forwards;
+  }
+
+  .hero-name {
+    font-size: clamp(56px, 7vw, 100px);
+    font-weight: 400;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    color: var(--dark);
+    opacity: 0;
+    animation: fadeIn 1s 0.6s forwards;
+  }
+
+  .hero-name .line2 {
+    font-style: italic;
+    color: var(--brown);
+    margin-left: 0.2em;
+  }
+
+  .hero-desc {
+    margin-top: 48px;
+    max-width: 320px;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--warm-grey);
+    letter-spacing: 0.01em;
+    opacity: 0;
+    animation: fadeIn 1s 0.9s forwards;
+  }
+
+  .hero-cta {
+    margin-top: 56px;
+    opacity: 0;
+    animation: fadeIn 1s 1.2s forwards;
+  }
+
+  .hero-cta a {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dark);
+    text-decoration: none;
+    border-bottom: 1px solid var(--brown);
+    padding-bottom: 4px;
+    transition: color 0.3s;
+  }
+
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-image {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    object-fit: cover;
+  }
+
+  .img-hero-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    background: linear-gradient(160deg, #3d2a1a 0%, #5a3d28 25%, #8a6040 45%, #c49a6a 65%, #a07848 80%, #4a3020 100%);
+  }
+
+  /* ── MANIFESTO ── */
+  .manifesto {
+    padding: 120px 48px;
+    background: var(--dark);
+    color: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .manifesto::before {
+    content: '"';
+    position: absolute;
+    top: -40px;
+    left: 24px;
+    font-size: 400px;
+    color: rgba(196,150,42,0.06);
+    line-height: 1;
+    font-family: Georgia, serif;
+    pointer-events: none;
+  }
+
+  .manifesto-text {
+    max-width: 820px;
+    font-size: clamp(26px, 3.5vw, 48px);
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s, transform 0.9s;
+  }
+
+  .manifesto-text.visible { opacity: 1; transform: translateY(0); }
+  .manifesto-text em { color: var(--gold); font-style: italic; }
+
+  .manifesto-attr {
+    margin-top: 48px;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(196,150,42,0.5);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s 0.3s, transform 0.8s 0.3s;
+  }
+
+  .manifesto-attr.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── CHAPTER HEADER ── */
+  .chapter {
+    display: flex;
+    align-items: flex-end;
+    gap: 32px;
+    padding: 100px 48px 60px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s, transform 0.8s;
+  }
+
+  .chapter.visible { opacity: 1; transform: translateY(0); }
+
+  .chapter-num {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding-bottom: 8px;
+  }
+
+  .chapter-title {
+    font-size: clamp(40px, 5.5vw, 72px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .chapter-title em { font-style: italic; color: var(--brown); }
+
+  /* ── GALLERY LAYOUTS ── */
+  .g-full {
+    width: 100%;
+    height: 80vh;
+    overflow: hidden;
+    opacity: 0;
+    transform: scale(0.98);
+    transition: opacity 1s, transform 1s;
+  }
+
+  .g-full.visible { opacity: 1; transform: scale(1); }
+
+  .g-full .ph { width: 100%; height: 100%; display: block; }
+
+  .g-two {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 3px;
+    margin: 3px 0;
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.9s, transform 0.9s;
+  }
+
+  .g-two.visible { opacity: 1; transform: translateY(0); }
+
+  .g-two .ph { height: 55vh; display: block; width: 100%; }
+
+  .g-three {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    margin: 3px 0;
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.9s, transform 0.9s;
+  }
+
+  .g-three.visible { opacity: 1; transform: translateY(0); }
+
+  .g-three .ph { height: 45vh; display: block; width: 100%; }
+
+  /* ── CAPTION ── */
+  .caption-bar {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 48px;
+    border-top: 1px solid rgba(26,21,16,0.1);
+    opacity: 0;
+    transition: opacity 0.7s 0.2s;
+  }
+
+  .caption-bar.visible { opacity: 1; }
+
+  .caption-bar span {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--warm-grey);
+    text-transform: uppercase;
+  }
+
+  .caption-bar i {
+    font-size: 13px;
+    color: var(--warm-grey);
+    opacity: 0.6;
+  }
+
+  /* Placeholder gradients */
+  .ph-land { background: linear-gradient(135deg, #c4a050 0%, #8a7030 25%, #4a5025 50%, #2a3518 75%, #1a2010 100%); }
+  .ph-port { background: linear-gradient(160deg, #3a2020 0%, #6a3535 30%, #c07060 55%, #e8a080 75%, #5a2828 100%); }
+  .ph-street { background: linear-gradient(145deg, #151520 0%, #252535 30%, #505060 55%, #9090a0 75%, #303040 100%); }
+  .ph-travel { background: linear-gradient(120deg, #103040 0%, #1a5070 30%, #2a80a0 55%, #50a0c0 75%, #183550 100%); }
+  .ph-warm { background: linear-gradient(130deg, #2a1810 0%, #503020 30%, #8a5830 55%, #c09060 75%, #e8c090 90%, #4a2a15 100%); }
+
+  /* ── ABOUT STRIP ── */
+  .about-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin-top: 120px;
+    background: var(--parchment);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s, transform 0.9s;
+  }
+
+  .about-strip.visible { opacity: 1; transform: translateY(0); }
+
+  .about-img {
+    height: 70vh;
+    background: linear-gradient(160deg, #2a1a10 0%, #5a3a28 40%, #8a6040 70%, #c49060 100%);
+  }
+
+  .about-text {
+    padding: 80px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .about-label {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+  }
+
+  .about-heading {
+    font-size: clamp(28px, 3vw, 44px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--dark);
+    margin-bottom: 32px;
+  }
+
+  .about-heading em { font-style: italic; color: var(--brown); }
+
+  .about-body {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--warm-grey);
+    max-width: 380px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--dark);
+    color: var(--cream);
+    padding: 80px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .footer-sig {
+    font-size: clamp(28px, 4vw, 60px);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--cream);
+  }
+
+  .footer-sig span { color: var(--gold); }
+
+  .footer-meta {
+    text-align: right;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(242,236,227,0.35);
+    line-height: 2.2;
+  }
+
+  /* ── CONCEPT NAV ── */
+  .concept-badge {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: rgba(196,150,42,0.15);
+    border: 1px solid rgba(196,150,42,0.3);
+    color: var(--gold);
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    backdrop-filter: blur(10px);
+    z-index: 200;
+  }
+
+  .concept-nav {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    display: flex;
+    gap: 8px;
+    z-index: 200;
+  }
+
+  .concept-nav a {
+    background: rgba(26,21,16,0.8);
+    border: 1px solid rgba(196,150,42,0.2);
+    color: var(--warm-grey);
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    text-decoration: none;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s;
+  }
+
+  .concept-nav a:hover, .concept-nav a.active {
+    color: var(--gold);
+    border-color: rgba(196,150,42,0.5);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Rutvij Dhotey</a>
+  <ul class="nav-links">
+    <li><a href="#">Work</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO: Split layout -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Photography · Portfolio</p>
+    <h1 class="hero-name">
+      Rutvij<br>
+      <span class="line2">Dhotey</span>
+    </h1>
+    <p class="hero-desc">
+      Documenting the light between moments — from Himalayan ridgelines to the pulse of urban streets.
+    </p>
+    <div class="hero-cta">
+      <a href="#">View the work →</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="img-hero-placeholder"></div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<div class="manifesto">
+  <p class="manifesto-text reveal">"The photograph is <em>not what was seen</em> — it is what was felt in the half-second before the shutter fell."</p>
+  <p class="manifesto-attr reveal">— Rutvij Dhotey</p>
+</div>
+
+<!-- CHAPTER 1: LANDSCAPE -->
+<div class="chapter reveal">
+  <div>
+    <p class="chapter-num">Chapter I</p>
+    <h2 class="chapter-title">Earth &amp;<br><em>sky</em></h2>
+  </div>
+</div>
+
+<div class="g-full reveal">
+  <div class="ph ph-land"></div>
+</div>
+
+<div class="caption-bar reveal">
+  <span>Ladakh, India — 4,800m</span>
+  <i>Landscape Series, 2023</i>
+</div>
+
+<div class="g-two reveal">
+  <div class="ph ph-travel" style="height:55vh"></div>
+  <div class="ph ph-land" style="height:55vh; filter:brightness(0.7)"></div>
+</div>
+
+<div class="g-three reveal">
+  <div class="ph ph-land" style="height:45vh; filter:brightness(0.85)"></div>
+  <div class="ph ph-travel" style="height:45vh; filter:brightness(1.1)"></div>
+  <div class="ph ph-warm" style="height:45vh; filter:brightness(0.9)"></div>
+</div>
+
+<!-- CHAPTER 2: PORTRAIT -->
+<div class="chapter reveal">
+  <div>
+    <p class="chapter-num">Chapter II</p>
+    <h2 class="chapter-title">Faces<br><em>unmasked</em></h2>
+  </div>
+</div>
+
+<div class="g-full reveal" style="height:85vh;">
+  <div class="ph ph-port" style="height:100%"></div>
+</div>
+
+<div class="g-two reveal" style="grid-template-columns: 2fr 3fr;">
+  <div class="ph ph-warm" style="height:55vh; filter:sepia(0.2)"></div>
+  <div class="ph ph-port" style="height:55vh; filter:brightness(0.85)"></div>
+</div>
+
+<!-- CHAPTER 3: STREET -->
+<div class="chapter reveal">
+  <div>
+    <p class="chapter-num">Chapter III</p>
+    <h2 class="chapter-title">Cities<br><em>at rest</em></h2>
+  </div>
+</div>
+
+<div class="g-full reveal">
+  <div class="ph ph-street" style="height:100%"></div>
+</div>
+
+<div class="g-three reveal">
+  <div class="ph ph-street" style="height:45vh; filter:brightness(1.2)"></div>
+  <div class="ph ph-street" style="height:45vh; filter:contrast(1.2) brightness(0.8)"></div>
+  <div class="ph ph-street" style="height:45vh; filter:brightness(0.9)"></div>
+</div>
+
+<!-- ABOUT -->
+<div class="about-strip reveal">
+  <div class="about-img"></div>
+  <div class="about-text">
+    <p class="about-label">The photographer</p>
+    <h2 class="about-heading">Born from<br><em>curiosity</em></h2>
+    <p class="about-body">
+      Rutvij Dhotey is a photographer based between Mumbai and the mountains, drawn to the in-between spaces where light and life intersect. His work spans three continents and one obsession: finding what the eye almost missed.
+    </p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-sig">Rutvij<br><span>Dhotey</span></div>
+  <div class="footer-meta">
+    Photography<br>
+    Mumbai · India<br>
+    © 2024
+  </div>
+</footer>
+
+<!-- CONCEPT NAV -->
+<div class="concept-badge">Concept 2 — Renaissance</div>
+<div class="concept-nav">
+  <a href="concept-1-noir.html">01 Noir</a>
+  <a href="concept-2-renaissance.html" class="active">02 Renaissance</a>
+  <a href="concept-3-atlas.html">03 Atlas</a>
+</div>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

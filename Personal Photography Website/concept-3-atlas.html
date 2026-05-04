@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concept 3 — Atlas</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f6f3;
+    --dark: #111110;
+    --mid: #888680;
+    --accent: #e84c2b;
+    --line: rgba(17,17,16,0.1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--dark);
+    font-family: 'Helvetica Neue', 'Arial', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 20px 40px;
+    background: rgba(248,246,243,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-left {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--mid);
+  }
+
+  .nav-center a {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dark);
+    text-decoration: none;
+  }
+
+  .nav-right {
+    display: flex;
+    gap: 32px;
+    justify-content: flex-end;
+    list-style: none;
+  }
+
+  .nav-right a {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mid);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-right a:hover { color: var(--dark); }
+
+  /* ── HERO: Full takeover ── */
+  .hero {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    padding: 60px 40px;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #1a1410 0%, #2d2010 30%, #1a1818 60%, #0d0d10 100%);
+  }
+
+  /* Overlay gradient for text readability */
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 40%, transparent 70%);
+    z-index: 1;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+  }
+
+  .hero-counter {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.5s forwards;
+  }
+
+  .hero-headline {
+    font-size: clamp(64px, 12vw, 180px);
+    font-weight: 700;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    color: #f0ede8;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.7s forwards;
+  }
+
+  .hero-headline .accent { color: var(--accent); }
+
+  .hero-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+
+  .hero-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(240,237,232,0.6);
+    max-width: 320px;
+    letter-spacing: 0.01em;
+  }
+
+  .hero-scroll-cta {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(240,237,232,0.4);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .hero-scroll-cta::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  /* ── TICKER ── */
+  .ticker {
+    background: var(--dark);
+    padding: 14px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .ticker-inner {
+    display: inline-flex;
+    animation: ticker 20s linear infinite;
+  }
+
+  .ticker-item {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(248,246,243,0.4);
+    padding: 0 48px;
+  }
+
+  .ticker-item.hi { color: var(--accent); }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: end;
+    padding: 80px 40px 40px;
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s, transform 0.7s;
+  }
+
+  .section-head.visible { opacity: 1; transform: translateY(0); }
+
+  .sh-num {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .sh-title {
+    font-size: clamp(40px, 6vw, 80px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    line-height: 0.9;
+    color: var(--dark);
+  }
+
+  .sh-right {
+    text-align: right;
+  }
+
+  .sh-count {
+    font-size: 72px;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    color: rgba(17,17,16,0.06);
+    line-height: 1;
+  }
+
+  .sh-desc {
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--mid);
+    margin-top: 16px;
+    max-width: 280px;
+    margin-left: auto;
+  }
+
+  /* ── GRID LAYOUTS ── */
+  .g-hero {
+    width: 100%;
+    height: 80vh;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 1s, clip-path 1s;
+    clip-path: inset(0 100% 0 0);
+  }
+
+  .g-hero.visible {
+    opacity: 1;
+    clip-path: inset(0 0% 0 0);
+  }
+
+  .g-hero .ph { width: 100%; height: 100%; display: block; }
+
+  .g-atlas {
+    display: grid;
+    gap: 4px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.9s, transform 0.9s;
+  }
+
+  .g-atlas.visible { opacity: 1; transform: translateY(0); }
+
+  .g-atlas .ph { display: block; width: 100%; }
+
+  /* Grid variations */
+  .layout-a { grid-template-columns: 5fr 3fr; }
+  .layout-b { grid-template-columns: 2fr 2fr 3fr; }
+  .layout-c { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .layout-d { grid-template-columns: 3fr 5fr; }
+
+  /* ── STAT BAR ── */
+  .stat-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin: 40px 0;
+    opacity: 0;
+    transition: opacity 0.9s 0.2s;
+  }
+
+  .stat-bar.visible { opacity: 1; }
+
+  .stat-item {
+    padding: 40px;
+    border-right: 1px solid var(--line);
+  }
+
+  .stat-item:last-child { border-right: none; }
+
+  .stat-num {
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: var(--dark);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-top: 12px;
+  }
+
+  /* Placeholder gradients */
+  .ph-land { background: linear-gradient(135deg, #3a3020 0%, #6a5830 25%, #9a8040 50%, #c0a060 70%, #4a3a20 100%); }
+  .ph-port { background: linear-gradient(160deg, #2a1818 0%, #5a3030 30%, #a06050 55%, #d09080 75%, #4a2020 100%); }
+  .ph-street { background: linear-gradient(145deg, #101018 0%, #202030 30%, #404050 55%, #808090 75%, #282838 100%); }
+  .ph-travel { background: linear-gradient(120deg, #102030 0%, #1a4060 30%, #2870a0 55%, #50a0c0 75%, #183040 100%); }
+  .ph-warm { background: linear-gradient(130deg, #201510 0%, #402818 30%, #704030 55%, #a06040 75%, #d09060 90%, #3a2010 100%); }
+  .ph-dark { background: linear-gradient(135deg, #080810 0%, #101020 40%, #202040 70%, #181820 100%); }
+
+  /* ── FEATURED SINGLE ── */
+  .featured {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.97);
+    transition: opacity 1s, transform 1s;
+  }
+
+  .featured.visible { opacity: 1; transform: scale(1); }
+
+  .featured .ph { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+  .featured-label {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: #f0ede8;
+  }
+
+  .featured-label .big {
+    font-size: clamp(60px, 10vw, 140px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    opacity: 0.15;
+    line-height: 0.9;
+  }
+
+  /* ── CONTACT ── */
+  .contact-bar {
+    background: var(--dark);
+    padding: 80px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.9s;
+  }
+
+  .contact-bar.visible { opacity: 1; }
+
+  .contact-heading {
+    font-size: clamp(36px, 5vw, 72px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    color: #f0ede8;
+    line-height: 0.9;
+  }
+
+  .contact-heading .accent { color: var(--accent); }
+
+  .contact-action {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: right;
+  }
+
+  .contact-action a {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(248,246,243,0.4);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .contact-action a:hover { color: #f0ede8; }
+
+  .contact-action .cta-btn {
+    background: var(--accent);
+    color: #f0ede8;
+    padding: 16px 36px;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.3s;
+  }
+
+  .contact-action .cta-btn:hover { background: #c43a20; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 32px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--line);
+  }
+
+  .footer-logo {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dark);
+  }
+
+  .footer-copy {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--mid);
+  }
+
+  /* ── CONCEPT NAV ── */
+  .concept-badge {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: rgba(232,76,43,0.1);
+    border: 1px solid rgba(232,76,43,0.3);
+    color: var(--accent);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    z-index: 200;
+  }
+
+  .concept-nav {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    display: flex;
+    gap: 8px;
+    z-index: 200;
+  }
+
+  .concept-nav a {
+    background: rgba(17,17,16,0.85);
+    border: 1px solid rgba(17,17,16,0.15);
+    color: rgba(248,246,243,0.5);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .concept-nav a:hover, .concept-nav a.active {
+    color: var(--accent);
+    border-color: rgba(232,76,43,0.4);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">Portfolio · 2024</div>
+  <div class="nav-center"><a href="#">RD</a></div>
+  <ul class="nav-right">
+    <li><a href="#">Work</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="ph ph-land" style="width:100%;height:100%;opacity:0.7"></div>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-counter">001 / Photography</p>
+    <h1 class="hero-headline">Rutvij<br><span class="accent">Dhotey</span></h1>
+    <div class="hero-bottom">
+      <p class="hero-desc">Landscape · Portrait · Street<br>Documenting the world between moments.</p>
+      <div class="hero-scroll-cta">Scroll to explore</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item hi">Landscape</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">Portrait</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item hi">Street</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">Travel</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item hi">Documentary</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">India</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item hi">Iceland</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">Mumbai</span>
+    <span class="ticker-item">·</span>
+    <!-- repeat -->
+    <span class="ticker-item hi">Landscape</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">Portrait</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item hi">Street</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">Travel</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item hi">Documentary</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">India</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item hi">Iceland</span>
+    <span class="ticker-item">·</span>
+    <span class="ticker-item">Mumbai</span>
+    <span class="ticker-item">·</span>
+  </div>
+</div>
+
+<!-- SECTION: LANDSCAPE -->
+<div class="section-head reveal">
+  <div>
+    <p class="sh-num">001</p>
+    <h2 class="sh-title">Land<br>scape</h2>
+  </div>
+  <div class="sh-right">
+    <div class="sh-count">48</div>
+    <p class="sh-desc">From sea-level to summits — light on the earth's oldest surfaces.</p>
+  </div>
+</div>
+
+<div class="g-hero reveal">
+  <div class="ph ph-land" style="height:80vh"></div>
+</div>
+
+<div class="g-atlas layout-a reveal" style="margin-top:4px">
+  <div class="ph ph-land" style="height:55vh; filter:brightness(0.8)"></div>
+  <div class="ph ph-travel" style="height:55vh"></div>
+</div>
+
+<div class="g-atlas layout-b reveal" style="margin-top:4px">
+  <div class="ph ph-warm" style="height:45vh"></div>
+  <div class="ph ph-land" style="height:45vh; filter:brightness(1.1)"></div>
+  <div class="ph ph-travel" style="height:45vh; filter:brightness(0.9)"></div>
+</div>
+
+<!-- STATS -->
+<div class="stat-bar reveal">
+  <div class="stat-item">
+    <div class="stat-num">48</div>
+    <div class="stat-label">Landscapes</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">12</div>
+    <div class="stat-label">Countries</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">4</div>
+    <div class="stat-label">Years</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">∞</div>
+    <div class="stat-label">Moments</div>
+  </div>
+</div>
+
+<!-- SECTION: PORTRAIT -->
+<div class="section-head reveal">
+  <div>
+    <p class="sh-num">002</p>
+    <h2 class="sh-title">Port<br>rait</h2>
+  </div>
+  <div class="sh-right">
+    <div class="sh-count">36</div>
+    <p class="sh-desc">Faces as geography — every line a story, every gaze a destination.</p>
+  </div>
+</div>
+
+<div class="featured reveal">
+  <div class="ph ph-port" style="width:100%;height:100%;position:absolute;inset:0"></div>
+  <div class="featured-label">
+    <div class="big">Portrait</div>
+  </div>
+</div>
+
+<div class="g-atlas layout-d reveal" style="margin-top:4px">
+  <div class="ph ph-port" style="height:60vh; filter:brightness(0.85)"></div>
+  <div class="ph ph-warm" style="height:60vh; filter:sepia(0.15)"></div>
+</div>
+
+<!-- SECTION: STREET -->
+<div class="section-head reveal">
+  <div>
+    <p class="sh-num">003</p>
+    <h2 class="sh-title">Street</h2>
+  </div>
+  <div class="sh-right">
+    <div class="sh-count">62</div>
+    <p class="sh-desc">Cities are alive. These are the frames between heartbeats.</p>
+  </div>
+</div>
+
+<div class="g-atlas layout-c reveal">
+  <div class="ph ph-street" style="height:70vh"></div>
+  <div class="ph ph-dark" style="height:70vh"></div>
+  <div class="ph ph-street" style="height:70vh; filter:brightness(1.3)"></div>
+  <div class="ph ph-street" style="height:70vh; filter:contrast(1.3) brightness(0.7)"></div>
+</div>
+
+<!-- CONTACT -->
+<div class="contact-bar reveal">
+  <div class="contact-heading">Let's<br><span class="accent">work</span><br>together</div>
+  <div class="contact-action">
+    <a href="#">Instagram</a>
+    <a href="#">rutvij@example.com</a>
+    <a href="#" class="cta-btn">Get in touch →</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Rutvij Dhotey</div>
+  <div class="footer-copy">© 2024 — All rights reserved</div>
+</footer>
+
+<!-- CONCEPT NAV -->
+<div class="concept-badge">Concept 3 — Atlas</div>
+<div class="concept-nav">
+  <a href="concept-1-noir.html">01 Noir</a>
+  <a href="concept-2-renaissance.html">02 Renaissance</a>
+  <a href="concept-3-atlas.html" class="active">03 Atlas</a>
+</div>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

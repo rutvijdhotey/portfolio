@@ -19,9 +19,10 @@ const layoutClass: Record<GalleryRow['layout'], string> = {
 interface Props {
   rows: GalleryRow[]
   onItemClick: (globalIndex: number) => void
+  indexOffset?: number
 }
 
-export default function GalleryGrid({ rows, onItemClick }: Props) {
+export default function GalleryGrid({ rows, onItemClick, indexOffset = 0 }: Props) {
   const galleryRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -52,7 +53,7 @@ export default function GalleryGrid({ rows, onItemClick }: Props) {
       {rows.map((row, ri) => (
         <div key={ri} className={`gallery-row ${layoutClass[row.layout]}`}>
           {row.items.map((item, ii) => (
-            <div key={ii} className="gallery-cell" onClick={() => onItemClick(rowOffsets[ri] + ii)}>
+            <div key={ii} className="gallery-cell" onClick={() => onItemClick(indexOffset + rowOffsets[ri] + ii)}>
               {item.type === 'video' ? (
                 <>
                   {/* eslint-disable-next-line jsx-a11y/media-has-caption */}

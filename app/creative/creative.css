@@ -80,28 +80,44 @@
   50%       { transform: translateY(5px); opacity: 0.65; }
 }
 
-/* ── PHOTOGRAPHY DIVIDER ── */
-.photo-divider {
+/* ── CHAPTERS ── */
+.chapter {
+  border-top: 1px solid var(--faint);
+}
+
+.chapter-intro {
   display: flex;
-  align-items: center;
-  gap: 24px;
-  padding: 52px 48px 40px;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 56px 48px 40px;
 }
 
-.photo-divider::before,
-.photo-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--faint);
-}
-
-.photo-divider span {
+.chapter-num {
   font-family: var(--sans);
-  font-size: 9px;
-  letter-spacing: 0.4em;
+  font-size: 10px;
+  letter-spacing: 0.35em;
   text-transform: uppercase;
   color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.chapter-title {
+  font-size: clamp(72px, 12vw, 140px);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 0.88;
+  color: var(--text);
+}
+
+.chapter-meta {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: right;
+  line-height: 2;
+  padding-bottom: 6px;
 }
 
 /* ── FOOTER ── */
@@ -143,7 +159,9 @@
   .video-hero__content { left: 24px; bottom: 72px; }
   .hero-scroll { right: 24px; }
 
-  .photo-divider { padding: 40px 24px 32px; }
+  .chapter-intro { padding: 40px 24px 28px; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .chapter-meta  { text-align: left; }
+  .chapter-title { font-size: clamp(56px, 18vw, 80px); }
 
   .creative-footer { padding: 32px 24px; flex-direction: column; gap: 20px; text-align: center; }
 }

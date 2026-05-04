@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concept 1 — NOIR</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #080808;
+    --white: #f0ede8;
+    --grey: #6b6b6b;
+    --accent: #c8b89a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 48px;
+    mix-blend-mode: normal;
+  }
+
+  .nav-logo {
+    font-size: 13px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--white);
+    font-family: 'Helvetica Neue', sans-serif;
+    font-weight: 300;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grey);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  /* ── HERO ── */
+  .hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #1a1410 0%, #080808 50%, #0d0f14 100%);
+    z-index: 0;
+  }
+
+  /* Simulated image layer */
+  .hero-img {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 60%, rgba(40,30,20,0.8) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 30%, rgba(20,25,35,0.9) 0%, transparent 50%),
+      linear-gradient(180deg, #0a0806 0%, #1c1510 40%, #0d0c0b 100%);
+    opacity: 0.7;
+    z-index: 1;
+  }
+
+  /* Placeholder "photo" in hero */
+  .hero-photo {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(135deg, #1a1208 0%, #2d2016 30%, #1a1a2e 60%, #080808 100%);
+    opacity: 0.6;
+    z-index: 0;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 1s 0.3s forwards;
+  }
+
+  .hero-name {
+    font-size: clamp(52px, 9vw, 120px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 0.9;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp 1s 0.6s forwards;
+  }
+
+  .hero-name em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-tagline {
+    margin-top: 40px;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--grey);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 1s 0.9s forwards;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 1s 1.5s forwards;
+  }
+
+  .hero-scroll span {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--grey);
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollPulse 2s infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+
+  /* ── SECTION INTROS ── */
+  .section-intro {
+    padding: 140px 48px 60px;
+    max-width: 900px;
+  }
+
+  .section-label {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+
+  .section-title {
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--white);
+  }
+
+  .section-title em { font-style: italic; color: var(--accent); }
+
+  /* ── FULL BLEED IMAGE ── */
+  .full-bleed {
+    width: 100%;
+    height: 85vh;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+
+  .full-bleed.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .full-bleed-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Placeholder images using gradients */
+  .placeholder-img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .img-landscape {
+    background: linear-gradient(135deg, #1a2a1a 0%, #2d4020 25%, #4a5a30 45%, #8a7a50 65%, #c4a868 80%, #3a3020 100%);
+  }
+
+  .img-portrait {
+    background: linear-gradient(160deg, #1a1015 0%, #2d1820 35%, #4a2830 55%, #c48878 75%, #8a5848 90%, #1a1015 100%);
+  }
+
+  .img-street {
+    background: linear-gradient(145deg, #0a0a12 0%, #1a1a2a 30%, #3a3a4a 55%, #6a6a7a 75%, #2a2a3a 90%, #080810 100%);
+  }
+
+  .img-travel {
+    background: linear-gradient(120deg, #0a1520 0%, #102535 20%, #1a3545 40%, #5a8a9a 60%, #8ab5c8 75%, #2a5565 90%, #0a1520 100%);
+  }
+
+  /* ── CAPTION STRIP ── */
+  .caption-strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 48px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .caption-strip.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .caption-left {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grey);
+  }
+
+  .caption-right {
+    font-style: italic;
+    font-size: 13px;
+    color: rgba(200, 184, 154, 0.5);
+  }
+
+  /* ── TWO COLUMN ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin: 2px 0;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+
+  .two-col.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .two-col .placeholder-img { height: 60vh; }
+
+  /* ── OFFSET PAIR ── */
+  .offset-pair {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 2px;
+    margin: 2px 0;
+    align-items: end;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+
+  .offset-pair.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .offset-pair .placeholder-img:first-child { height: 70vh; }
+  .offset-pair .placeholder-img:last-child { height: 45vh; }
+
+  /* ── TEXT STATEMENT ── */
+  .statement {
+    padding: 120px 48px;
+    max-width: 800px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .statement.visible { opacity: 1; transform: translateY(0); }
+
+  .statement p {
+    font-size: clamp(22px, 3vw, 38px);
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: var(--white);
+  }
+
+  .statement p em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  /* ── DIVIDER ── */
+  hr {
+    border: none;
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 0 48px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 80px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .footer-name {
+    font-size: clamp(24px, 4vw, 56px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--white);
+  }
+
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: right;
+  }
+
+  .footer-links a {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grey);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .footer-links a:hover { color: var(--white); }
+
+  /* ── BADGE ── */
+  .concept-badge {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: rgba(200,184,154,0.15);
+    border: 1px solid rgba(200,184,154,0.3);
+    color: var(--accent);
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    backdrop-filter: blur(10px);
+    z-index: 200;
+  }
+
+  .concept-nav {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    display: flex;
+    gap: 8px;
+    z-index: 200;
+  }
+
+  .concept-nav a {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--grey);
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    text-decoration: none;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s;
+  }
+
+  .concept-nav a:hover, .concept-nav a.active {
+    background: rgba(255,255,255,0.1);
+    color: var(--white);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">R. Dhotey</a>
+  <ul class="nav-links">
+    <li><a href="#">Work</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-photo placeholder-img img-landscape"></div>
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Photography · 2024</p>
+    <h1 class="hero-name">Rutvij<br><em>Dhotey</em></h1>
+    <p class="hero-tagline">Landscape · Portrait · Street</p>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- SECTION 1: LANDSCAPE -->
+<div class="section-intro">
+  <p class="section-label">01 — Landscape &amp; Travel</p>
+  <h2 class="section-title">The world as<br><em>I found it</em></h2>
+</div>
+
+<div class="full-bleed reveal">
+  <div class="placeholder-img img-landscape" style="height:100%"></div>
+</div>
+
+<div class="caption-strip reveal">
+  <span class="caption-left">Iceland Highlands · 2023</span>
+  <span class="caption-right">The silence between mountains</span>
+</div>
+
+<div class="two-col reveal" style="margin: 2px 0;">
+  <div class="placeholder-img img-travel" style="height:60vh"></div>
+  <div class="placeholder-img img-landscape" style="height:60vh; filter:brightness(0.7)"></div>
+</div>
+
+<!-- STATEMENT -->
+<div class="statement reveal">
+  <p>"I photograph <em>what light does</em> to the world — the moment before it disappears."</p>
+</div>
+
+<hr>
+
+<!-- SECTION 2: PORTRAIT -->
+<div class="section-intro">
+  <p class="section-label">02 — Portrait</p>
+  <h2 class="section-title">People<br><em>unguarded</em></h2>
+</div>
+
+<div class="offset-pair reveal">
+  <div class="placeholder-img img-portrait"></div>
+  <div class="placeholder-img img-portrait" style="filter:brightness(0.5) sepia(0.3)"></div>
+</div>
+
+<div class="full-bleed reveal" style="height:70vh;">
+  <div class="placeholder-img img-portrait" style="height:100%; filter:contrast(1.1)"></div>
+</div>
+
+<hr>
+
+<!-- SECTION 3: STREET -->
+<div class="section-intro">
+  <p class="section-label">03 — Street</p>
+  <h2 class="section-title">Cities<br><em>breathing</em></h2>
+</div>
+
+<div class="full-bleed reveal">
+  <div class="placeholder-img img-street" style="height:100%"></div>
+</div>
+
+<div class="caption-strip reveal">
+  <span class="caption-left">Mumbai · 2024</span>
+  <span class="caption-right">3:42 AM</span>
+</div>
+
+<div class="two-col reveal">
+  <div class="placeholder-img img-street" style="height:60vh; filter:brightness(0.8)"></div>
+  <div class="placeholder-img img-street" style="height:60vh; filter:brightness(1.2) contrast(0.9)"></div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-name">Rutvij<br>Dhotey</div>
+  <div class="footer-links">
+    <a href="#">Instagram</a>
+    <a href="#">Email</a>
+    <a href="#">Prints</a>
+  </div>
+</footer>
+
+<!-- CONCEPT NAVIGATION -->
+<div class="concept-badge">Concept 1 — Noir</div>
+<div class="concept-nav">
+  <a href="concept-1-noir.html" class="active">01 Noir</a>
+  <a href="concept-2-renaissance.html">02 Renaissance</a>
+  <a href="concept-3-atlas.html">03 Atlas</a>
+</div>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
