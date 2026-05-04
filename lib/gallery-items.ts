@@ -14,75 +14,81 @@ export interface GalleryRow {
   items: GalleryItem[]
 }
 
+const BASE = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Images'
+
+const jp = (file: string) => `${BASE}/Japan/${file}`
+const ch = (file: string) => `${BASE}/Switzerland/${file}`
+const rn = (file: string) => `${BASE}/Random/${file}`
+
 export const galleryRows: GalleryRow[] = [
   {
     layout: 'full',
     items: [
-      { src: '/creative/dji_fly_20230512_173012_662_1684010304506_photo_optimized.jpg', alt: 'Aerial', type: 'photo' },
+      { src: rn('dji_fly_20230512_173012_662_1684010304506_photo_optimized.jpg'), alt: 'Aerial', type: 'photo' },
     ],
   },
   {
     layout: 'halves',
     items: [
-      { src: '/creative/Japan/RJ405649.jpg', alt: 'Japan', type: 'photo' },
-      { src: '/creative/Japan/RJ405760.jpg', alt: 'Japan', type: 'photo' },
+      { src: jp('RJ405649.jpg'), alt: 'Japan', type: 'photo' },
+      { src: jp('RJ405760.jpg'), alt: 'Japan', type: 'photo' },
     ],
   },
   {
     layout: 'large-small',
     items: [
-      { src: '/creative/Switzerland/RJ400991.jpg', alt: 'Switzerland', type: 'photo' },
-      { src: '/creative/Japan/RJ405651.jpg', alt: 'Japan', type: 'photo' },
+      { src: ch('RJ400991.jpg'), alt: 'Switzerland', type: 'photo' },
+      { src: jp('RJ405651.jpg'), alt: 'Japan', type: 'photo' },
     ],
   },
   {
     layout: 'thirds',
     items: [
-      { src: '/creative/Japan/RJ405690.jpg', alt: 'Japan', type: 'photo' },
-      { src: '/creative/Japan/RJ405702.jpg', alt: 'Japan', type: 'photo' },
-      { src: '/creative/DSC04641.jpg', alt: 'Photo', type: 'photo' },
+      { src: jp('RJ405690.jpg'), alt: 'Japan', type: 'photo' },
+      { src: jp('RJ405702.jpg'), alt: 'Japan', type: 'photo' },
+      { src: rn('DSC04641.jpg'), alt: 'Photo', type: 'photo' },
     ],
   },
   {
     layout: 'small-large',
     items: [
-      { src: '/creative/IMG_8880.jpg', alt: 'Photo', type: 'photo' },
-      { src: '/creative/Japan/RJ405720.jpg', alt: 'Japan', type: 'photo' },
+      { src: rn('IMG_8880.jpg'), alt: 'Photo', type: 'photo' },
+      { src: jp('RJ405720.jpg'), alt: 'Japan', type: 'photo' },
     ],
   },
   {
     layout: 'full',
     items: [
-      { src: '/creative/Japan/RJ405757.jpg', alt: 'Japan', type: 'photo' },
+      { src: jp('RJ405757.jpg'), alt: 'Japan', type: 'photo' },
     ],
   },
   {
     layout: 'halves',
     items: [
-      { src: '/creative/Switzerland/RJ401212.jpg', alt: 'Switzerland', type: 'photo' },
-      { src: '/creative/Japan/RJ405808.jpg', alt: 'Japan', type: 'photo' },
+      { src: ch('RJ401212.jpg'), alt: 'Switzerland', type: 'photo' },
+      { src: jp('RJ405808.jpg'), alt: 'Japan', type: 'photo' },
     ],
   },
   {
     layout: 'thirds',
     items: [
-      { src: '/creative/Japan/RJ405817.jpg', alt: 'Japan', type: 'photo' },
-      { src: '/creative/Japan/RJ405829.jpg', alt: 'Japan', type: 'photo' },
-      { src: '/creative/Switzerland/RJ401219.jpg', alt: 'Switzerland', type: 'photo' },
+      { src: jp('RJ405776.jpg'), alt: 'Japan', type: 'photo' },
+      { src: jp('RJ405829.jpg'), alt: 'Japan', type: 'photo' },
+      { src: ch('RJ401219.jpg'), alt: 'Switzerland', type: 'photo' },
     ],
   },
   {
     layout: 'large-small',
     items: [
-      { src: '/creative/Japan/RJ405850.jpg', alt: 'Japan', type: 'photo' },
-      { src: '/creative/DSC07277.jpg', alt: 'Photo', type: 'photo' },
+      { src: jp('RJ405850.jpg'), alt: 'Japan', type: 'photo' },
+      { src: rn('DSC07277.jpg'), alt: 'Photo', type: 'photo' },
     ],
   },
   {
     layout: 'halves',
     items: [
-      { src: '/creative/Japan/RJ405873.jpg', alt: 'Japan', type: 'photo' },
-      { src: '/creative/Japan/RJ405894.jpg', alt: 'Japan', type: 'photo' },
+      { src: jp('RJ405873.jpg'), alt: 'Japan', type: 'photo' },
+      { src: jp('RJ405894.jpg'), alt: 'Japan', type: 'photo' },
     ],
   },
 ]
