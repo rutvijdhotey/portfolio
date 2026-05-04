@@ -1,6 +1,27 @@
 /* app/creative/creative.css */
 
 /* ── NAV ── */
+.nav-back {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  transition: color 0.3s, transform 0.3s;
+}
+.nav-back:hover { color: #ffffff; transform: translateX(-3px); }
+
+.nav-section {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+}
+
 .nav-name {
   font-family: var(--sans);
   font-size: 11px;
@@ -9,6 +30,7 @@
   text-transform: uppercase;
   color: #ffffff;
   text-decoration: none;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.6);
   transition: opacity 0.2s;
 }
 .nav-name:hover { opacity: 0.6; }
