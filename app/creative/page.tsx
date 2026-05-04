@@ -11,7 +11,7 @@ import './creative.css'
 
 const VBASE = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Videos'
 const HERO_VIDEO_DESKTOP = `${VBASE}/IMG_7855.mov`
-const HERO_VIDEO_MOBILE  = `${VBASE}/IMG_7946%20(1).mov`
+const HERO_VIDEO_MOBILE  = `${VBASE}/test%20video.mov`
 
 export default function Creative() {
   const [overlayOpen, setOverlayOpen] = useState(false)
