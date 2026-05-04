@@ -98,7 +98,11 @@ export default function EngineeringPage() {
       <nav className="engineering-nav">
         <Link href="/" className="nav-back">← Home</Link>
         <Link href="/" className="nav-name">Rutvij Dhotey</Link>
-        <span className="nav-section">Engineering</span>
+        <div className="nav-right">
+          <a href="https://linkedin.com/in/rutvij-dhotey" className="nav-social" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://github.com/rutvijdhotey" className="nav-social" target="_blank" rel="noopener">GitHub</a>
+          <span className="nav-section">Engineering</span>
+        </div>
       </nav>
 
       {/* HERO: LACURIOSITY */}

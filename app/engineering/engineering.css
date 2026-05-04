@@ -46,6 +46,24 @@
   color: rgba(255,255,255,0.6);
 }
 
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.nav-social {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.nav-social:hover { color: #ffffff; }
+
 /* ── HERO PROJECT CARD ── */
 .hero {
   position: relative;
@@ -466,6 +484,7 @@
 @media (max-width: 768px) {
   .engineering-nav { padding: 20px 24px; }
   .nav-section { display: none; }
+  .nav-social { display: none; }
   .hero { padding: 100px 24px 60px; height: auto; min-height: 100vh; }
   .hero-scroll-hint { display: none; }
   .about { grid-template-columns: 1fr; padding: 48px 24px; gap: 20px; }
