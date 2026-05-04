@@ -9,6 +9,8 @@ import OverlayViewer from '@/components/OverlayViewer'
 import { galleryRows, allItems } from '@/lib/gallery-items'
 import './creative.css'
 
+const HERO_VIDEO = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Videos/IMG_7855.mov'
+
 export default function Creative() {
   const [overlayOpen, setOverlayOpen] = useState(false)
   const [overlayIndex, setOverlayIndex] = useState(0)
@@ -16,8 +18,9 @@ export default function Creative() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from('nav > *', { opacity: 0, y: -10, duration: 1, ease: 'power3.out', delay: 0.2, stagger: 0.08 })
-      gsap.from('.creative-title', { opacity: 0, y: 30, duration: 1.2, ease: 'power3.out', delay: 0.3 })
-      gsap.from('.creative-sub', { opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.5 })
+      gsap.from('.hero-title', { opacity: 0, y: 30, duration: 1.2, ease: 'power3.out', delay: 0.4 })
+      gsap.from('.hero-sub', { opacity: 0, y: 16, duration: 1, ease: 'power3.out', delay: 0.65 })
+      gsap.from('.hero-scroll', { opacity: 0, duration: 1.2, delay: 1.2 })
     })
     return () => ctx.revert()
   }, [])
@@ -30,13 +33,18 @@ export default function Creative() {
         <span className="nav-section">Creative</span>
       </nav>
 
-      <header className="creative-header">
-        <h1 className="creative-title">Creative</h1>
-        <div className="creative-sub">
-          Travel Photography &amp; Film<br />
-          Japan · Switzerland · California
+      <section className="video-hero">
+        {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+        <video className="video-hero__video" src={HERO_VIDEO} autoPlay muted loop playsInline />
+        <div className="video-hero__overlay" />
+        <div className="video-hero__content">
+          <h1 className="hero-title">Creative</h1>
+          <p className="hero-sub">Travel Photography &amp; Film &nbsp;·&nbsp; Japan · Switzerland · California</p>
         </div>
-      </header>
+        <div className="hero-scroll">scroll ↓</div>
+      </section>
+
+      <div className="photo-divider"><span>Photography</span></div>
 
       <GalleryGrid
         rows={galleryRows}

@@ -60,13 +60,6 @@ export const galleryRows: GalleryRow[] = [
     ],
   },
   {
-    layout: 'halves',
-    items: [
-      { src: vid('IMG_7946%20(1).mov'), alt: 'Video', type: 'video' },
-      { src: vid('IMG_7855.mov'), alt: 'Video', type: 'video' },
-    ],
-  },
-  {
     layout: 'full',
     items: [
       { src: jp('RJ405757.jpg'), alt: 'Japan', type: 'photo' },
