@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import LaCuriosityPipeline from '@/components/LaCuriosityPipeline'
 import './engineering.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -174,37 +175,7 @@ export default function EngineeringPage() {
           <span className="arch-section-label">Pipeline Architecture</span>
           <span className="arch-section-meta">Make.com · 55 nodes · 1 daily trigger</span>
         </div>
-        <div className="arch-pipeline">
-          {[
-            { num: '01', name: 'Trigger',     tools: ['Make.com', 'Daily Scheduler'] },
-            { num: '02', name: 'Research',    tools: ['Tavily Search', 'Reddit Signals'] },
-            { num: '03', name: 'Write',       tools: ['Claude Writer', '× 5 Personas'] },
-            { num: '04', name: 'Fact-Check',  tools: ['Claude Checker'] },
-            { num: '05', name: 'Media',       tools: ['Gemini Images', 'ElevenLabs Audio', 'Creatomate Video'] },
-            { num: '06', name: 'Store',       tools: ['Supabase CDN'] },
-            { num: '07', name: 'Publish',     tools: ['Ghost CMS'] },
-            { num: '08', name: 'Distribute',  tools: ['Email Newsletter', 'Buffer Social'] },
-          ].map((node, i, arr) => (
-            <div key={node.num} className="arch-pipeline-item">
-              <div className="arch-node">
-                <div className="arch-node-header">
-                  <span className="arch-node-num">{node.num}</span>
-                  <span className="arch-node-name">{node.name}</span>
-                </div>
-                <div className="arch-node-tools">
-                  {node.tools.map(t => <span key={t} className="arch-node-tool">{t}</span>)}
-                </div>
-              </div>
-              {i < arr.length - 1 && <div className="arch-arrow">→</div>}
-            </div>
-          ))}
-        </div>
-        <div className="arch-streams-row">
-          <span className="arch-streams-label">5 Parallel Streams</span>
-          {['Science', 'Psychology', 'Technology', 'Mathematics', 'Ecology'].map(s => (
-            <span key={s} className="arch-stream-pill">{s}</span>
-          ))}
-        </div>
+        <LaCuriosityPipeline />
       </section>
 
       {/* ABOUT STRIP */}
