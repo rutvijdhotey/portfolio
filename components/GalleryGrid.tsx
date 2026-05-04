@@ -53,8 +53,23 @@ export default function GalleryGrid({ rows, onItemClick }: Props) {
         <div key={ri} className={`gallery-row ${layoutClass[row.layout]}`}>
           {row.items.map((item, ii) => (
             <div key={ii} className="gallery-cell" onClick={() => onItemClick(rowOffsets[ri] + ii)}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={item.src} alt={item.alt} />
+              {item.type === 'video' ? (
+                <>
+                  {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                  <video
+                    src={item.src}
+                    poster={item.poster}
+                    muted
+                    loop
+                    playsInline
+                    autoPlay
+                  />
+                  <div className="gallery-cell__play">▶</div>
+                </>
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={item.src} alt={item.alt} />
+              )}
             </div>
           ))}
         </div>

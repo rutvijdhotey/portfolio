@@ -7,6 +7,7 @@ export interface GalleryItem {
   src: string
   alt: string
   type: MediaType
+  poster?: string  // optional thumbnail shown in grid before video loads
 }
 
 export interface GalleryRow {
@@ -15,10 +16,12 @@ export interface GalleryRow {
 }
 
 const BASE = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Images'
+const VBASE = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Videos'
 
 const jp = (file: string) => `${BASE}/Japan/${file}`
 const ch = (file: string) => `${BASE}/Switzerland/${file}`
 const rn = (file: string) => `${BASE}/Random/${file}`
+const vid = (file: string) => `${VBASE}/${file}`
 
 export const galleryRows: GalleryRow[] = [
   {
@@ -54,6 +57,13 @@ export const galleryRows: GalleryRow[] = [
     items: [
       { src: rn('IMG_8880.jpg'), alt: 'Photo', type: 'photo' },
       { src: jp('RJ405720.jpg'), alt: 'Japan', type: 'photo' },
+    ],
+  },
+  {
+    layout: 'halves',
+    items: [
+      { src: vid('IMG_7946%20(1).mov'), alt: 'Video', type: 'video' },
+      { src: vid('IMG_7855.mov'), alt: 'Video', type: 'video' },
     ],
   },
   {

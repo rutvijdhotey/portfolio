@@ -23,6 +23,13 @@
   display: block;
 }
 
+.overlay-video {
+  max-width: 90vw;
+  max-height: 88vh;
+  display: block;
+  background: #000;
+}
+
 .overlay-close {
   position: fixed;
   top: 32px; right: 48px;
