@@ -97,7 +97,7 @@ export default function EngineeringPage() {
       {/* NAV */}
       <nav>
         <Link href="/" className="nav-back">← Home</Link>
-        <span className="nav-name">Rutvij Dhotey</span>
+        <Link href="/" className="nav-name">Rutvij Dhotey</Link>
         <span className="nav-section">Engineering</span>
       </nav>
 
