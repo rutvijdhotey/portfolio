@@ -325,6 +325,14 @@ export default function EngineeringPage() {
         </div>
       </section>
 
+      {/* CONTACT */}
+      <section className="contact">
+        <div className="contact-label">Get in touch</div>
+        <a href="mailto:rutvij.dhotey@gmail.com" className="contact-email">
+          rutvij.dhotey@gmail.com
+        </a>
+      </section>
+
       {/* FOOTER */}
       <footer>
         <span className="footer-name">© 2026 Rutvij Dhotey</span>

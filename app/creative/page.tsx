@@ -15,9 +15,7 @@ import './creative.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const VBASE = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Videos'
-const HERO_VIDEO_DESKTOP = `${VBASE}/IMG_7855.mov`
-const HERO_VIDEO_MOBILE  = `${VBASE}/test%20video.mov`
+const HERO_VIDEO_DESKTOP = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Videos/IMG_7855.mov'
 
 const chapters = [
   { key: 'city',   num: '01', title: 'City',   meta: 'Japan · Street & Architecture', rows: cityRows,   offset: 0 },
@@ -62,10 +60,7 @@ export default function Creative() {
       {/* ── Video Hero ── */}
       <section className="video-hero">
         {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-        <video className="video-hero__video" autoPlay muted loop playsInline>
-          <source src={HERO_VIDEO_MOBILE}  media="(max-width: 768px)" />
-          <source src={HERO_VIDEO_DESKTOP} />
-        </video>
+        <video className="video-hero__video" src={HERO_VIDEO_DESKTOP} autoPlay muted loop playsInline />
         <div className="video-hero__overlay" />
         <div className="video-hero__content">
           <h1 className="hero-title">Creative</h1>
@@ -99,6 +94,14 @@ export default function Creative() {
         onClose={() => setOverlayOpen(false)}
         onNavigate={i => setOverlayIndex(i)}
       />
+
+      {/* ── Contact ── */}
+      <section className="contact">
+        <div className="contact-label">Get in touch</div>
+        <a href="mailto:rutvij.dhotey@gmail.com" className="contact-email">
+          rutvij.dhotey@gmail.com
+        </a>
+      </section>
 
       <footer className="creative-footer">
         <span className="creative-footer-name">© 2026 Rutvij Dhotey</span>
