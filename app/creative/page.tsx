@@ -106,6 +106,8 @@ export default function Creative() {
       <footer className="creative-footer">
         <span className="creative-footer-name">© 2026 Rutvij Dhotey</span>
         <nav className="creative-footer-links">
+          <a href="https://instagram.com/intoyourstories" className="creative-footer-link" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://instagram.com/mytadkatruffle" className="creative-footer-link" target="_blank" rel="noopener">Instagram (us)</a>
           <a href="https://linkedin.com/in/rutvij-dhotey" className="creative-footer-link" target="_blank" rel="noopener">LinkedIn</a>
           <a href="https://github.com/rutvijdhotey" className="creative-footer-link" target="_blank" rel="noopener">GitHub</a>
           <Link href="/" className="creative-footer-link">← Home</Link>

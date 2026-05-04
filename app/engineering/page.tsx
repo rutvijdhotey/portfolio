@@ -43,19 +43,27 @@ export default function EngineeringPage() {
         ease: 'power3.out',
         delay: 0.75,
       })
+      gsap.from('.hero-stats > *', {
+        opacity: 0,
+        y: 12,
+        duration: 0.9,
+        ease: 'power3.out',
+        delay: 0.88,
+        stagger: 0.08,
+      })
       gsap.from('.hero-tags', {
         opacity: 0,
         y: 16,
         duration: 0.9,
         ease: 'power3.out',
-        delay: 0.9,
+        delay: 1.05,
       })
       gsap.from('.hero-cta', {
         opacity: 0,
         y: 12,
         duration: 0.9,
         ease: 'power3.out',
-        delay: 1.05,
+        delay: 1.2,
       })
 
       // Scroll: about strip
@@ -113,18 +121,43 @@ export default function EngineeringPage() {
 
         <div className="hero-content">
           <p className="hero-eyebrow">Featured Project · 01</p>
-          <h1 className="hero-title">La<br />Curiosity</h1>
+          <h1 className="hero-title">LaCuriosity</h1>
           <p className="hero-desc">
-            An AI-powered editorial platform with a fully automated content pipeline.
-            Orchestrates Claude and Gemini to research, write, and publish —
-            with Supabase as the backbone.
+            A fully automated editorial platform publishing daily long-form articles across five
+            thematic streams — Science, Psychology, Technology, Mathematics, and Ecology — each
+            driven by a specialized Claude instance with its own persona, research mandate,
+            and visual identity.
           </p>
+          <p className="hero-desc hero-desc--last">
+            The pipeline handles everything without human intervention: demand-signal research via
+            Tavily and Reddit, multi-agent drafting and fact-checking, Risograph-style image
+            generation with Gemini, voiceover via ElevenLabs, video assembly via Creatomate, and
+            distribution through Ghost CMS, email, and social. One daily trigger. Fifty-five nodes.
+            $0.30 per article.
+          </p>
+
+          <div className="hero-stats">
+            <div className="hero-stat">
+              <div className="hero-stat-value">5</div>
+              <div className="hero-stat-label">Editorial Streams</div>
+            </div>
+            <div className="hero-stat">
+              <div className="hero-stat-value">~$0.30</div>
+              <div className="hero-stat-label">Per Article</div>
+            </div>
+            <div className="hero-stat">
+              <div className="hero-stat-value">0</div>
+              <div className="hero-stat-label">Human Touchpoints</div>
+            </div>
+          </div>
+
           <div className="hero-tags">
             <span className="tag">Claude API</span>
             <span className="tag">Gemini API</span>
+            <span className="tag">Make.com</span>
+            <span className="tag">Ghost CMS</span>
             <span className="tag">Supabase</span>
-            <span className="tag">React</span>
-            <span className="tag">Python</span>
+            <span className="tag">ElevenLabs</span>
             <span className="tag">Prompt Engineering</span>
           </div>
           <a href="https://lacuriosity.com" className="hero-cta" target="_blank" rel="noopener">
