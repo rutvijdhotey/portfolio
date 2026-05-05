@@ -192,7 +192,7 @@ export default function EngineeringPage() {
       <section className="agent-section">
         <div className="agent-label">Featured Idea · 02</div>
         <div className="agent-body">
-          <h2 className="agent-title">Agent Tech<br />Engineer</h2>
+          <h2 className="agent-title">Agentic<br />Engineer</h2>
           <div className="agent-right">
             <p className="agent-desc">
               Beyond writing code — I design and ship systems where multiple AI tools
