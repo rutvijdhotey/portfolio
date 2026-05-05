@@ -227,7 +227,7 @@ export default function EngineeringPage() {
         <div className="about-role">
           Software Engineer<br />
           YouTube · Google<br />
-          Sunnyvale, CA
+          Mountain View, CA
         </div>
         <p className="about-bio">
           Building systems that scale to billions at YouTube —
@@ -260,7 +260,7 @@ export default function EngineeringPage() {
               <div className="entry-info">
                 <div className="exp-company">YouTube</div>
                 <div className="exp-role">Software Engineer</div>
-                <div className="exp-date">Current · Sunnyvale, CA</div>
+                <div className="exp-date">Current · Mountain View, CA</div>
               </div>
             </div>
 
