@@ -4,7 +4,6 @@ import { useEffect } from 'react'
 import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import LaCuriosityPipeline from '@/components/LaCuriosityPipeline'
 import './engineering.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -65,6 +64,16 @@ export default function EngineeringPage() {
         duration: 0.9,
         ease: 'power3.out',
         delay: 1.2,
+      })
+
+      // Scroll: agent tech section
+      gsap.from('.agent-section > *', {
+        scrollTrigger: { trigger: '.agent-section', start: 'top 80%' },
+        opacity: 0,
+        y: 24,
+        duration: 0.9,
+        ease: 'power3.out',
+        stagger: 0.12,
       })
 
       // Scroll: about strip
@@ -175,7 +184,41 @@ export default function EngineeringPage() {
           <span className="arch-section-label">Pipeline Architecture</span>
           <span className="arch-section-meta">Make.com · 55 nodes · 1 daily trigger</span>
         </div>
-        <LaCuriosityPipeline />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Engineering/ChatGPT%20Image%20May%204,%202026,%2009_39_45%20PM.png"
+          alt="LaCuriosity Pipeline Architecture"
+          className="arch-diagram-img"
+        />
+      </section>
+
+      {/* AGENT TECH ENGINEER */}
+      <section className="agent-section">
+        <div className="agent-label">Featured Idea · 02</div>
+        <div className="agent-body">
+          <h2 className="agent-title">AI Agentic<br />Engineer</h2>
+          <div className="agent-right">
+            <p className="agent-desc">
+              Beyond writing code — I design and ship systems where multiple AI tools
+              talk to each other. A trigger fires, models research, draft, fact-check,
+              generate, and publish. The outcome arrives. No hand-holding required.
+            </p>
+            <p className="agent-desc">
+              The craft is knowing which tool to reach for, how to chain them across
+              APIs, and how to wire them so the whole thing holds together under real
+              conditions. LLMs, voice synthesis, image generation, automation platforms
+              — composed into a single outcome-driven system.
+            </p>
+            <div className="agent-capabilities">
+              <span className="agent-cap">Multi-Agent Orchestration</span>
+              <span className="agent-cap">LLM Pipelines</span>
+              <span className="agent-cap">Tool Chaining</span>
+              <span className="agent-cap">Workflow Automation</span>
+              <span className="agent-cap">API Integration</span>
+              <span className="agent-cap">Outcome-Driven Systems</span>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ABOUT STRIP */}
