@@ -353,6 +353,69 @@
   padding: 5px 12px;
 }
 
+/* ── AGENT TECH ENGINEER ── */
+.agent-section {
+  padding: 80px 48px;
+  border-bottom: 1px solid var(--faint);
+}
+
+.agent-label {
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(240,237,232,0.25);
+  margin-bottom: 48px;
+}
+
+.agent-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.agent-title {
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.agent-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.agent-desc {
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(240,237,232,0.55);
+}
+
+.agent-capabilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.agent-cap {
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--faint);
+  padding: 6px 14px;
+  transition: color 0.3s, border-color 0.3s;
+}
+
+.agent-cap:hover { color: var(--text); border-color: rgba(240,237,232,0.3); }
+
 /* ── DIVIDER LINE ── */
 .rule {
   width: 100%;
@@ -651,6 +714,8 @@
   .hero-stats { gap: 24px; }
   .arch-section { padding: 48px 24px; }
   .arch-header { flex-direction: column; gap: 8px; }
+  .agent-section { padding: 48px 24px; }
+  .agent-body { grid-template-columns: 1fr; gap: 32px; }
   .about { grid-template-columns: 1fr; padding: 48px 24px; gap: 20px; }
   .about-location { text-align: left; }
   .credentials { grid-template-columns: 1fr; }
