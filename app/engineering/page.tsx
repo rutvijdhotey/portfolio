@@ -194,7 +194,7 @@ export default function EngineeringPage() {
 
       {/* AGENT TECH ENGINEER */}
       <section className="agent-section">
-        <div className="agent-label">Featured Idea · 02</div>
+        <div className="agent-label">Expertise</div>
         <div className="agent-body">
           <h2 className="agent-title">AI Agentic<br />Engineer</h2>
           <div className="agent-right">
