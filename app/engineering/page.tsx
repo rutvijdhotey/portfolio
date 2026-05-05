@@ -4,7 +4,6 @@ import { useEffect } from 'react'
 import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import LaCuriosityPipeline from '@/components/LaCuriosityPipeline'
 import './engineering.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -185,14 +184,19 @@ export default function EngineeringPage() {
           <span className="arch-section-label">Pipeline Architecture</span>
           <span className="arch-section-meta">Make.com · 55 nodes · 1 daily trigger</span>
         </div>
-        <LaCuriosityPipeline />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Engineering/ChatGPT%20Image%20May%204,%202026,%2009_39_45%20PM.png"
+          alt="LaCuriosity Pipeline Architecture"
+          className="arch-diagram-img"
+        />
       </section>
 
       {/* AGENT TECH ENGINEER */}
       <section className="agent-section">
         <div className="agent-label">Featured Idea · 02</div>
         <div className="agent-body">
-          <h2 className="agent-title">Agentic<br />Engineer</h2>
+          <h2 className="agent-title">Agentic<br />Systems Engineer</h2>
           <div className="agent-right">
             <p className="agent-desc">
               Beyond writing code — I design and ship systems where multiple AI tools

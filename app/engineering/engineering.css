@@ -251,6 +251,13 @@
   color: rgba(240,237,232,0.12);
 }
 
+.arch-diagram-img {
+  width: 100%;
+  max-width: 1200px;
+  display: block;
+  border-radius: 4px;
+}
+
 .arch-pipeline {
   display: flex;
   align-items: flex-start;
