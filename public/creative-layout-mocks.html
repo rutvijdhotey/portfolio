@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Creative Layout Options</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0a0a0a;
+  --text: rgba(240,237,232,0.92);
+  --muted: rgba(240,237,232,0.45);
+  --faint: rgba(240,237,232,0.1);
+  --accent: rgba(240,237,232,0.05);
+  --sans: 'DM Sans', sans-serif;
+  --serif: 'Fraunces', serif;
+}
+body { background: #111; color: var(--text); font-family: var(--sans); font-size: 13px; padding: 24px; }
+
+h1 { font-family: var(--serif); font-weight: 300; font-size: 18px; color: var(--text); margin-bottom: 4px; }
+.page-title { text-align: center; margin-bottom: 24px; }
+.page-title p { color: var(--muted); font-size: 12px; margin-top: 4px; }
+
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+.col { display: flex; flex-direction: column; gap: 12px; }
+.col-label { text-align: center; padding-bottom: 8px; border-bottom: 1px solid var(--faint); }
+.col-label .badge {
+  display: inline-block; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted); border: 1px solid var(--faint); padding: 2px 8px; border-radius: 10px; margin-bottom: 6px;
+}
+.col-label.rec .badge { color: #5bd47a; border-color: rgba(91,212,122,0.3); }
+.col-label h2 { font-family: var(--serif); font-size: 15px; font-weight: 300; margin-bottom: 4px; }
+.col-label p { font-size: 10px; color: var(--muted); line-height: 1.6; }
+
+.mock { background: var(--bg); border: 1px solid var(--faint); border-radius: 8px; overflow: hidden; flex: 1; }
+
+.m-nav { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--faint); font-size: 8px; color: var(--muted); }
+.m-nav-r { display: flex; gap: 8px; }
+
+.m-hero { height: 90px; background: linear-gradient(160deg, #1a1510 0%, #0d0d0d 50%, #111820 100%); display: flex; align-items: flex-end; padding: 10px 12px; position: relative; }
+.m-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 30%, rgba(0,0,0,0.55) 100%); }
+.m-hero-content { position: relative; z-index: 1; }
+.m-hero-content .eyebrow { font-size: 7px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+.m-hero-content h2 { font-family: var(--serif); font-size: 22px; font-weight: 300; line-height: 1; margin-bottom: 2px; }
+.m-hero-content .sub { font-size: 8px; color: var(--muted); }
+.m-hero-badge { position: absolute; top: 8px; right: 10px; font-size: 7px; color: var(--muted); border: 1px solid var(--faint); padding: 2px 6px; border-radius: 2px; z-index: 1; }
+
+.m-ch { display: flex; align-items: baseline; gap: 6px; padding: 8px 12px 4px; }
+.m-ch .num { font-family: var(--serif); font-size: 8px; color: var(--muted); }
+.m-ch .ttl { font-family: var(--serif); font-size: 13px; font-weight: 300; }
+.m-ch .meta { font-size: 7px; color: var(--muted); margin-left: auto; }
+
+.m-photos { padding: 0 12px 8px; display: flex; flex-direction: column; gap: 2px; }
+.m-row { display: flex; gap: 2px; height: 36px; }
+.m-row .ph { flex: 1; background: #1c1c1c; border-radius: 1px; }
+.m-row .ph.w2 { flex: 2; }
+.m-row .ph:nth-child(2) { background: #191919; }
+.m-row .ph:nth-child(3) { background: #161616; }
+
+.m-post { display: flex; gap: 8px; margin: 4px 12px 8px; padding: 8px; border: 1px solid var(--faint); border-radius: 4px; }
+.m-post-thumb { width: 44px; height: 34px; background: #1c1c1c; border-radius: 2px; flex-shrink: 0; }
+.m-post-tag { font-size: 7px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+.m-post-title { font-family: var(--serif); font-size: 10px; font-weight: 300; line-height: 1.3; }
+
+.m-tabs { display: flex; border-bottom: 1px solid var(--faint); padding: 0 12px; }
+.m-tab { font-size: 8px; letter-spacing: 0.07em; text-transform: uppercase; padding: 7px 10px; color: var(--muted); border-bottom: 1.5px solid transparent; }
+.m-tab.active { color: var(--text); border-bottom-color: var(--text); }
+
+.m-ed { padding: 10px 12px; border-bottom: 1px solid var(--faint); }
+.m-ed:last-child { border-bottom: none; }
+.m-ed-lbl { font-size: 7px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.m-ed-photos { display: flex; gap: 2px; margin-bottom: 6px; }
+.m-ed-photos .ph { flex: 1; height: 42px; background: #1c1c1c; border-radius: 1px; }
+.m-ed-photos .ph.w2 { flex: 2; }
+.m-ed-photos .ph:nth-child(2) { background: #181818; }
+.m-ed-story { display: flex; gap: 8px; padding: 6px 8px; border: 1px solid var(--faint); border-radius: 4px; background: var(--accent); align-items: center; }
+.m-ed-story-thumb { width: 32px; height: 26px; background: #222; border-radius: 2px; flex-shrink: 0; }
+.m-ed-story-kicker { font-size: 7px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+.m-ed-story-title { font-family: var(--serif); font-size: 9px; font-weight: 300; line-height: 1.3; }
+.m-ed-story-cta { font-size: 7px; color: var(--muted); margin-top: 2px; }
+
+.pills { display: flex; flex-wrap: wrap; gap: 4px; }
+.pill { font-size: 9px; padding: 3px 8px; border-radius: 10px; }
+.pro { background: rgba(91,212,122,0.1); color: #5bd47a; border: 1px solid rgba(91,212,122,0.2); }
+.con { background: rgba(212,91,91,0.08); color: #d47060; border: 1px solid rgba(212,91,91,0.15); }
+.divider { height: 1px; background: var(--faint); margin: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-title">
+  <h1>Creative Page — Layout Options</h1>
+  <p>Wireframe comparison · same design system · pick your direction</p>
+</div>
+
+<div class="grid">
+
+  <!-- OPTION A -->
+  <div class="col">
+    <div class="col-label">
+      <div class="badge">Option A</div>
+      <h2>Sequential</h2>
+      <p>Same structure as today.<br>Blog is chapter 04, after photos.</p>
+    </div>
+    <div class="mock">
+      <div class="m-nav"><span>← Home · Rutvij Dhotey</span><div class="m-nav-r"><span>@intoyourstories</span><span>Creative</span></div></div>
+      <div class="m-hero">
+        <div class="m-hero-badge">▶ VIDEO</div>
+        <div class="m-hero-content">
+          <div class="eyebrow">Creative Portfolio</div>
+          <h2>Creative</h2>
+          <div class="sub">Photography &amp; Film · Japan · Oregon</div>
+        </div>
+      </div>
+      <div class="m-ch"><span class="num">01</span><span class="ttl">City</span><span class="meta">Japan</span></div>
+      <div class="m-photos">
+        <div class="m-row"><div class="ph w2"></div><div class="ph"></div></div>
+        <div class="m-row"><div class="ph"></div><div class="ph"></div><div class="ph"></div></div>
+      </div>
+      <div class="m-ch"><span class="num">02</span><span class="ttl">Nature</span><span class="meta">Oregon</span></div>
+      <div class="m-photos"><div class="m-row"><div class="ph"></div><div class="ph w2"></div></div></div>
+      <div class="m-ch"><span class="num">03</span><span class="ttl">Random</span><span class="meta">Various</span></div>
+      <div class="m-photos"><div class="m-row"><div class="ph"></div><div class="ph"></div></div></div>
+      <div class="divider"></div>
+      <div class="m-ch"><span class="num">04</span><span class="ttl">Stories</span><span class="meta">Travel</span></div>
+      <div class="m-post">
+        <div class="m-post-thumb"></div>
+        <div><div class="m-post-tag">Japan · 12 min</div><div class="m-post-title">Two weeks in Tokyo — what the photos don't show</div></div>
+      </div>
+      <div class="m-post">
+        <div class="m-post-thumb"></div>
+        <div><div class="m-post-tag">Oregon · 8 min</div><div class="m-post-title">Bend in October — chasing golden hour</div></div>
+      </div>
+    </div>
+    <div class="pills">
+      <span class="pill pro">Ships fastest</span>
+      <span class="pill pro">Zero structural change</span>
+      <span class="pill con">Blog feels appended</span>
+      <span class="pill con">No visual link between photos &amp; stories</span>
+    </div>
+  </div>
+
+  <!-- OPTION B -->
+  <div class="col">
+    <div class="col-label">
+      <div class="badge">Option B</div>
+      <h2>Photography · Stories</h2>
+      <p>Mode bar below hero.<br>Visitor chooses their path.</p>
+    </div>
+    <div class="mock">
+      <div class="m-nav"><span>← Home · Rutvij Dhotey</span><div class="m-nav-r"><span>@intoyourstories</span><span>Creative</span></div></div>
+      <div class="m-hero">
+        <div class="m-hero-badge">▶ VIDEO</div>
+        <div class="m-hero-content">
+          <div class="eyebrow">Creative Portfolio</div>
+          <h2>Creative</h2>
+          <div class="sub">Photography &amp; Film · Japan · Oregon</div>
+        </div>
+      </div>
+      <div class="m-tabs">
+        <div class="m-tab active">Photography</div>
+        <div class="m-tab">Stories</div>
+      </div>
+      <div class="m-ch"><span class="num">01</span><span class="ttl">City</span><span class="meta">Japan</span></div>
+      <div class="m-photos">
+        <div class="m-row"><div class="ph w2"></div><div class="ph"></div></div>
+        <div class="m-row"><div class="ph"></div><div class="ph"></div><div class="ph"></div></div>
+      </div>
+      <div class="m-ch"><span class="num">02</span><span class="ttl">Nature</span><span class="meta">Oregon</span></div>
+      <div class="m-photos"><div class="m-row"><div class="ph"></div><div class="ph w2"></div></div></div>
+      <div class="m-ch"><span class="num">03</span><span class="ttl">Random</span><span class="meta">Various</span></div>
+      <div class="m-photos"><div class="m-row"><div class="ph"></div><div class="ph"></div></div></div>
+      <div style="padding: 10px 12px; font-size: 8px; color: var(--muted); text-align: center; border-top: 1px solid var(--faint); opacity: 0.4;">
+        ↑ Stories tab shows blog posts
+      </div>
+    </div>
+    <div class="pills">
+      <span class="pill pro">Each world feels intentional</span>
+      <span class="pill pro">Easy to add Notion Templates tab later</span>
+      <span class="pill con">Visitors may miss Stories entirely</span>
+      <span class="pill con">Photos &amp; posts feel disconnected</span>
+    </div>
+  </div>
+
+  <!-- OPTION C -->
+  <div class="col">
+    <div class="col-label rec">
+      <div class="badge">Option C — Recommended</div>
+      <h2>Editorial Feed</h2>
+      <p>Each destination: photos + story together.<br>Like a magazine spread.</p>
+    </div>
+    <div class="mock">
+      <div class="m-nav"><span>← Home · Rutvij Dhotey</span><div class="m-nav-r"><span>@intoyourstories</span><span>Creative</span></div></div>
+      <div class="m-hero">
+        <div class="m-hero-badge">▶ VIDEO</div>
+        <div class="m-hero-content">
+          <div class="eyebrow">Creative Portfolio</div>
+          <h2>Creative</h2>
+          <div class="sub">Photography &amp; Stories · Japan · Oregon</div>
+        </div>
+      </div>
+      <div class="m-ed">
+        <div class="m-ed-lbl">01 · Japan · Street &amp; Architecture</div>
+        <div class="m-ed-photos"><div class="ph w2"></div><div class="ph"></div><div class="ph"></div></div>
+        <div class="m-ed-story">
+          <div class="m-ed-story-thumb"></div>
+          <div>
+            <div class="m-ed-story-kicker">Story · 12 min read</div>
+            <div class="m-ed-story-title">Two weeks in Tokyo — what the photos don't show</div>
+            <div class="m-ed-story-cta">Read →</div>
+          </div>
+        </div>
+      </div>
+      <div class="m-ed">
+        <div class="m-ed-lbl">02 · Oregon · Bend Landscape</div>
+        <div class="m-ed-photos"><div class="ph"></div><div class="ph w2"></div></div>
+        <div class="m-ed-story">
+          <div class="m-ed-story-thumb"></div>
+          <div>
+            <div class="m-ed-story-kicker">Story · 8 min read</div>
+            <div class="m-ed-story-title">Bend in October — chasing golden hour</div>
+            <div class="m-ed-story-cta">Read →</div>
+          </div>
+        </div>
+      </div>
+      <div class="m-ed">
+        <div class="m-ed-lbl">03 · Various · Aerial &amp; Candid</div>
+        <div class="m-ed-photos"><div class="ph"></div><div class="ph"></div><div class="ph"></div></div>
+      </div>
+    </div>
+    <div class="pills">
+      <span class="pill pro">Photos &amp; stories feel like one thing</span>
+      <span class="pill pro">Natural flow — see place, read story</span>
+      <span class="pill pro">Works without a post (just shows photos)</span>
+      <span class="pill con">Posts must map to destinations</span>
+      <span class="pill con">More structural change to existing page</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
