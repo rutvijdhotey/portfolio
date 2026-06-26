@@ -76,6 +76,16 @@ export default function EngineeringPage() {
         stagger: 0.12,
       })
 
+      // Scroll: featured project 02
+      gsap.from('.hero--02 .hero-content > *', {
+        scrollTrigger: { trigger: '.hero--02', start: 'top 75%' },
+        opacity: 0,
+        y: 24,
+        duration: 0.9,
+        ease: 'power3.out',
+        stagger: 0.08,
+      })
+
       // Scroll: about strip
       gsap.from('.about > *', {
         scrollTrigger: { trigger: '.about', start: 'top 80%' },
@@ -190,6 +200,52 @@ export default function EngineeringPage() {
           alt="LaCuriosity Pipeline Architecture"
           className="arch-diagram-img"
         />
+      </section>
+
+      {/* FEATURED PROJECT 02: INTO YOUR STORIES */}
+      <section className="hero hero--02">
+        <div className="hero-content">
+          <p className="hero-eyebrow">Featured Project · 02</p>
+          <h2 className="hero-title">Into Your Stories</h2>
+          <p className="hero-desc">
+            An iOS app that turns a trip&apos;s photos, notes, and voice into a written
+            story and a mapped, day-by-day itinerary. The opposite mode of agentic AI to
+            LaCuriosity: human-in-the-loop, multimodal intelligence embedded inside a
+            polished consumer product.
+          </p>
+          <p className="hero-desc hero-desc--last">
+            Capture is voice-first and offline-first. A multi-model Claude pipeline runs
+            server-side — Haiku classifies intent and tags notes, Opus looks at the photos,
+            writes the narrative, and emits a structured itinerary with coordinates.
+          </p>
+
+          <div className="hero-stats">
+            <div className="hero-stat">
+              <div className="hero-stat-value">3</div>
+              <div className="hero-stat-label">Claude Models</div>
+            </div>
+            <div className="hero-stat">
+              <div className="hero-stat-value">289</div>
+              <div className="hero-stat-label">Tests Passing</div>
+            </div>
+            <div className="hero-stat">
+              <div className="hero-stat-value">100%</div>
+              <div className="hero-stat-label">Offline-First Capture</div>
+            </div>
+          </div>
+
+          <div className="hero-tags">
+            <span className="tag">React Native</span>
+            <span className="tag">Expo</span>
+            <span className="tag">Supabase</span>
+            <span className="tag">Edge Functions</span>
+            <span className="tag">Claude Opus + Haiku</span>
+            <span className="tag">TypeScript</span>
+          </div>
+          <Link href="/engineering/into-your-stories" className="hero-cta">
+            Read case study <span>→</span>
+          </Link>
+        </div>
       </section>
 
       {/* AGENT TECH ENGINEER */}

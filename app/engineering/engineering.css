@@ -729,3 +729,11 @@
   .cred-col { padding: 48px 24px; border-right: none !important; }
   .engineering-footer { padding: 32px 24px; flex-direction: column; gap: 20px; text-align: center; }
 }
+
+/* ── FEATURED PROJECT 02 (no full-bleed bg, sits in normal flow) ── */
+.hero--02 {
+  min-height: auto;
+  padding: 120px 48px;
+  background: var(--bg-eng);
+}
+.hero--02 .hero-content { max-width: 760px; }
