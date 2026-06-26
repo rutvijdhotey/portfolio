@@ -21,29 +21,30 @@ export default function EngineeringPage() {
         stagger: 0.08,
       })
 
-      // Entrance: hero content
-      gsap.from('.hero-eyebrow', {
+      // Entrance: hero content (scoped to the first hero only — the 02 section
+      // reuses these classes and is revealed by its own scroll trigger below)
+      gsap.from('.hero:not(.hero--02) .hero-eyebrow', {
         opacity: 0,
         y: 20,
         duration: 1,
         ease: 'power3.out',
         delay: 0.3,
       })
-      gsap.from('.hero-title', {
+      gsap.from('.hero:not(.hero--02) .hero-title', {
         opacity: 0,
         y: 40,
         duration: 1.3,
         ease: 'power3.out',
         delay: 0.5,
       })
-      gsap.from('.hero-desc', {
+      gsap.from('.hero:not(.hero--02) .hero-desc', {
         opacity: 0,
         y: 20,
         duration: 1,
         ease: 'power3.out',
         delay: 0.75,
       })
-      gsap.from('.hero-stats > *', {
+      gsap.from('.hero:not(.hero--02) .hero-stats > *', {
         opacity: 0,
         y: 12,
         duration: 0.9,
@@ -51,14 +52,14 @@ export default function EngineeringPage() {
         delay: 0.88,
         stagger: 0.08,
       })
-      gsap.from('.hero-tags', {
+      gsap.from('.hero:not(.hero--02) .hero-tags', {
         opacity: 0,
         y: 16,
         duration: 0.9,
         ease: 'power3.out',
         delay: 1.05,
       })
-      gsap.from('.hero-cta', {
+      gsap.from('.hero:not(.hero--02) .hero-cta', {
         opacity: 0,
         y: 12,
         duration: 0.9,
