@@ -255,21 +255,23 @@ export default function EngineeringPage() {
           <h2 className="agent-title">AI Agentic<br />Engineer</h2>
           <div className="agent-right">
             <p className="agent-desc">
-              Beyond writing code — I design and ship systems where multiple AI tools
-              talk to each other. A trigger fires, models research, draft, fact-check,
-              generate, and publish. The outcome arrives. No hand-holding required.
+              I build in two modes of agentic AI. One is autonomous orchestration —
+              a trigger fires and a chain of models research, draft, fact-check, generate,
+              and publish with no hand-holding (LaCuriosity).
             </p>
             <p className="agent-desc">
-              The craft is knowing which tool to reach for, how to chain them across
-              APIs, and how to wire them so the whole thing holds together under real
-              conditions. LLMs, voice synthesis, image generation, automation platforms
-              — composed into a single outcome-driven system.
+              The other is intelligence embedded inside a shipped product — voice capture
+              routed through intent classification into multimodal generation, working
+              offline-first on a phone in someone&apos;s pocket (Into Your Stories). The craft
+              is the same: choosing the right model for each job, chaining them across APIs,
+              and wiring it so the whole thing holds together under real conditions.
             </p>
             <div className="agent-capabilities">
               <span className="agent-cap">Multi-Agent Orchestration</span>
-              <span className="agent-cap">LLM Pipelines</span>
+              <span className="agent-cap">Multimodal LLM Pipelines</span>
+              <span className="agent-cap">Mobile / Product Engineering</span>
+              <span className="agent-cap">Offline-First Systems</span>
               <span className="agent-cap">Tool Chaining</span>
-              <span className="agent-cap">Workflow Automation</span>
               <span className="agent-cap">API Integration</span>
               <span className="agent-cap">Outcome-Driven Systems</span>
             </div>
