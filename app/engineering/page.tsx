@@ -21,29 +21,30 @@ export default function EngineeringPage() {
         stagger: 0.08,
       })
 
-      // Entrance: hero content
-      gsap.from('.hero-eyebrow', {
+      // Entrance: hero content (scoped to the first hero only — the 02 section
+      // reuses these classes and is revealed by its own scroll trigger below)
+      gsap.from('.hero:not(.hero--02) .hero-eyebrow', {
         opacity: 0,
         y: 20,
         duration: 1,
         ease: 'power3.out',
         delay: 0.3,
       })
-      gsap.from('.hero-title', {
+      gsap.from('.hero:not(.hero--02) .hero-title', {
         opacity: 0,
         y: 40,
         duration: 1.3,
         ease: 'power3.out',
         delay: 0.5,
       })
-      gsap.from('.hero-desc', {
+      gsap.from('.hero:not(.hero--02) .hero-desc', {
         opacity: 0,
         y: 20,
         duration: 1,
         ease: 'power3.out',
         delay: 0.75,
       })
-      gsap.from('.hero-stats > *', {
+      gsap.from('.hero:not(.hero--02) .hero-stats > *', {
         opacity: 0,
         y: 12,
         duration: 0.9,
@@ -51,14 +52,14 @@ export default function EngineeringPage() {
         delay: 0.88,
         stagger: 0.08,
       })
-      gsap.from('.hero-tags', {
+      gsap.from('.hero:not(.hero--02) .hero-tags', {
         opacity: 0,
         y: 16,
         duration: 0.9,
         ease: 'power3.out',
         delay: 1.05,
       })
-      gsap.from('.hero-cta', {
+      gsap.from('.hero:not(.hero--02) .hero-cta', {
         opacity: 0,
         y: 12,
         duration: 0.9,
@@ -74,6 +75,16 @@ export default function EngineeringPage() {
         duration: 0.9,
         ease: 'power3.out',
         stagger: 0.12,
+      })
+
+      // Scroll: featured project 02
+      gsap.from('.hero--02 .hero-content > *', {
+        scrollTrigger: { trigger: '.hero--02', start: 'top 75%' },
+        opacity: 0,
+        y: 24,
+        duration: 0.9,
+        ease: 'power3.out',
+        stagger: 0.08,
       })
 
       // Scroll: about strip
@@ -192,6 +203,52 @@ export default function EngineeringPage() {
         />
       </section>
 
+      {/* FEATURED PROJECT 02: INTO YOUR STORIES */}
+      <section className="hero hero--02">
+        <div className="hero-content">
+          <p className="hero-eyebrow">Featured Project · 02</p>
+          <h2 className="hero-title">Into Your Stories</h2>
+          <p className="hero-desc">
+            An iOS app that turns a trip&apos;s photos, notes, and voice into a written
+            story and a mapped, day-by-day itinerary. The opposite mode of agentic AI to
+            LaCuriosity: human-in-the-loop, multimodal intelligence embedded inside a
+            polished consumer product.
+          </p>
+          <p className="hero-desc hero-desc--last">
+            Capture is voice-first and offline-first. A multi-model Claude pipeline runs
+            server-side — Haiku classifies intent and tags notes, Opus looks at the photos,
+            writes the narrative, and emits a structured itinerary with coordinates.
+          </p>
+
+          <div className="hero-stats">
+            <div className="hero-stat">
+              <div className="hero-stat-value">3</div>
+              <div className="hero-stat-label">Claude Models</div>
+            </div>
+            <div className="hero-stat">
+              <div className="hero-stat-value">289</div>
+              <div className="hero-stat-label">Tests Passing</div>
+            </div>
+            <div className="hero-stat">
+              <div className="hero-stat-value">100%</div>
+              <div className="hero-stat-label">Offline-First Capture</div>
+            </div>
+          </div>
+
+          <div className="hero-tags">
+            <span className="tag">React Native</span>
+            <span className="tag">Expo</span>
+            <span className="tag">Supabase</span>
+            <span className="tag">Edge Functions</span>
+            <span className="tag">Claude Opus + Haiku</span>
+            <span className="tag">TypeScript</span>
+          </div>
+          <Link href="/engineering/into-your-stories" className="hero-cta">
+            Read case study <span>→</span>
+          </Link>
+        </div>
+      </section>
+
       {/* AGENT TECH ENGINEER */}
       <section className="agent-section">
         <div className="agent-label">Expertise</div>
@@ -199,21 +256,23 @@ export default function EngineeringPage() {
           <h2 className="agent-title">AI Agentic<br />Engineer</h2>
           <div className="agent-right">
             <p className="agent-desc">
-              Beyond writing code — I design and ship systems where multiple AI tools
-              talk to each other. A trigger fires, models research, draft, fact-check,
-              generate, and publish. The outcome arrives. No hand-holding required.
+              I build in two modes of agentic AI. One is autonomous orchestration —
+              a trigger fires and a chain of models research, draft, fact-check, generate,
+              and publish with no hand-holding (LaCuriosity).
             </p>
             <p className="agent-desc">
-              The craft is knowing which tool to reach for, how to chain them across
-              APIs, and how to wire them so the whole thing holds together under real
-              conditions. LLMs, voice synthesis, image generation, automation platforms
-              — composed into a single outcome-driven system.
+              The other is intelligence embedded inside a shipped product — voice capture
+              routed through intent classification into multimodal generation, working
+              offline-first on a phone in someone&apos;s pocket (Into Your Stories). The craft
+              is the same: choosing the right model for each job, chaining them across APIs,
+              and wiring it so the whole thing holds together under real conditions.
             </p>
             <div className="agent-capabilities">
               <span className="agent-cap">Multi-Agent Orchestration</span>
-              <span className="agent-cap">LLM Pipelines</span>
+              <span className="agent-cap">Multimodal LLM Pipelines</span>
+              <span className="agent-cap">Mobile / Product Engineering</span>
+              <span className="agent-cap">Offline-First Systems</span>
               <span className="agent-cap">Tool Chaining</span>
-              <span className="agent-cap">Workflow Automation</span>
               <span className="agent-cap">API Integration</span>
               <span className="agent-cap">Outcome-Driven Systems</span>
             </div>
