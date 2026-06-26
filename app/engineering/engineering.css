@@ -733,6 +733,9 @@
 /* ── FEATURED PROJECT 02 (no full-bleed bg, sits in normal flow) ── */
 .hero--02 {
   min-height: auto;
+  height: auto;
+  align-items: flex-start;
+  overflow: visible;
   padding: 120px 48px;
   background: var(--bg-eng);
 }
