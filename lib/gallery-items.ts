@@ -2,7 +2,7 @@
 
 export type GalleryLayout = 'full' | 'halves' | 'large-small' | 'small-large' | 'thirds'
 export type MediaType = 'photo' | 'video'
-export type GalleryCategory = 'city' | 'nature' | 'random'
+export type GalleryCategory = 'city' | 'nature' | 'random' | 'paris'
 
 export interface GalleryItem {
   src: string
@@ -22,10 +22,12 @@ const BASE = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/
 const city   = (f: string) => `${BASE}/City/Japan/${f}`
 const nature = (f: string) => `${BASE}/Nature/Bend%20Oregon%20LR%20Edits/${f}`
 const rnd    = (f: string) => `${BASE}/Random/${f}`
+const paris  = (f: string) => `${BASE}/Paris/${f}`
 
 const c = (f: string): GalleryItem => ({ src: city(f),   alt: 'Japan',       type: 'photo', category: 'city' })
 const n = (f: string): GalleryItem => ({ src: nature(f), alt: 'Bend Oregon', type: 'photo', category: 'nature' })
 const r = (f: string): GalleryItem => ({ src: rnd(f),    alt: 'Photo',       type: 'photo', category: 'random' })
+const p = (f: string): GalleryItem => ({ src: paris(f),  alt: 'Paris',       type: 'photo', category: 'paris' })
 
 // ── City ─────────────────────────────────────────────────────────────────────
 
@@ -52,9 +54,19 @@ export const randomRows: GalleryRow[] = [
   { layout: 'halves',      items: [r('IMG_8880.jpg'), r('DSC07504.jpg')] },
 ]
 
-// ── Flat list for overlay navigation (city → nature → random) ────────────────
+// ── Paris ────────────────────────────────────────────────────────────────────
+
+export const parisRows: GalleryRow[] = [
+  { layout: 'full',        items: [p('RJ402306.jpg')] },
+  { layout: 'halves',      items: [p('RJ402344.jpg'), p('RJ402371.jpg')] },
+  { layout: 'thirds',      items: [p('RJ402536.jpg'), p('RJ402597.jpg'), p('RJ402605.jpg')] },
+  { layout: 'halves',      items: [p('RJ402656.jpg'), p('RJ402666.jpg')] },
+]
+
+// ── Flat list for overlay navigation (city → nature → random → paris) ────────
 
 export const cityItems   = cityRows.flatMap(r => r.items)
 export const natureItems = natureRows.flatMap(r => r.items)
 export const randomItems = randomRows.flatMap(r => r.items)
-export const allItems    = [...cityItems, ...natureItems, ...randomItems]
+export const parisItems  = parisRows.flatMap(r => r.items)
+export const allItems    = [...cityItems, ...natureItems, ...randomItems, ...parisItems]

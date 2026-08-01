@@ -8,8 +8,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import GalleryGrid from '@/components/GalleryGrid'
 import OverlayViewer from '@/components/OverlayViewer'
 import {
-  cityRows, natureRows, randomRows,
-  cityItems, natureItems, allItems,
+  cityRows, natureRows, randomRows, parisRows,
+  cityItems, natureItems, randomItems, allItems,
 } from '@/lib/gallery-items'
 import './creative.css'
 
@@ -19,9 +19,10 @@ const HERO_VIDEO_DESKTOP = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/
 const HERO_VIDEO_MOBILE  = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Videos/IMG_7946%20(1).mov'
 
 const chapters = [
-  { key: 'city',   num: '01', title: 'City',   meta: 'Japan · Street & Architecture', rows: cityRows,   offset: 0 },
-  { key: 'nature', num: '02', title: 'Nature',  meta: 'Bend, Oregon · Landscape',     rows: natureRows, offset: cityItems.length },
-  { key: 'random', num: '03', title: 'Random',  meta: 'Various · Aerial & Candid',    rows: randomRows, offset: cityItems.length + natureItems.length },
+  { key: 'city',   num: '01', title: 'City',   meta: 'Japan · Street & Architecture',       rows: cityRows,   offset: 0 },
+  { key: 'nature', num: '02', title: 'Nature',  meta: 'Bend, Oregon · Landscape',           rows: natureRows, offset: cityItems.length },
+  { key: 'random', num: '03', title: 'Random',  meta: 'Various · Aerial & Candid',          rows: randomRows, offset: cityItems.length + natureItems.length },
+  { key: 'paris',  num: '04', title: 'Paris',   meta: 'Paris, France · Streets & Architecture', rows: parisRows,  offset: cityItems.length + natureItems.length + randomItems.length },
 ]
 
 export default function Creative() {
@@ -77,7 +78,7 @@ export default function Creative() {
         <div className="video-hero__overlay" />
         <div className="video-hero__content">
           <h1 className="hero-title">Creative</h1>
-          <p className="hero-sub">Travel Photography &amp; Film &nbsp;·&nbsp; Japan · Oregon · California</p>
+          <p className="hero-sub">Travel Photography &amp; Film &nbsp;·&nbsp; Japan · Paris · Oregon · California</p>
         </div>
         <div className="hero-scroll">scroll ↓</div>
       </section>
