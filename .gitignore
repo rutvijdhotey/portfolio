@@ -42,3 +42,7 @@ next-env.d.ts
 
 # Large photo assets — served from public but not committed to git
 /public/creative/
+
+# Photo pipeline working directories — large binaries, never committed
+/masters/
+/derivatives/
