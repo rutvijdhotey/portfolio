@@ -1,0 +1,176 @@
+{
+  "RJ405649": {
+    "category": "city",
+    "width": 3338,
+    "height": 1878,
+    "tint": "#2f241b"
+  },
+  "RJ405760": {
+    "category": "city",
+    "width": 3902,
+    "height": 2195,
+    "tint": "#58412d"
+  },
+  "RJ405690": {
+    "category": "city",
+    "width": 4672,
+    "height": 2628,
+    "tint": "#4b3d36"
+  },
+  "RJ405702": {
+    "category": "city",
+    "width": 6788,
+    "height": 4525,
+    "tint": "#604127"
+  },
+  "RJ405650": {
+    "category": "city",
+    "width": 4672,
+    "height": 2628,
+    "tint": "#696f6c"
+  },
+  "RJ405757": {
+    "category": "city",
+    "width": 4672,
+    "height": 2628,
+    "tint": "#513e2b"
+  },
+  "RJ405776": {
+    "category": "city",
+    "width": 4621,
+    "height": 2599,
+    "tint": "#44352a"
+  },
+  "RJ405808": {
+    "category": "city",
+    "width": 3678,
+    "height": 2069,
+    "tint": "#414339"
+  },
+  "RJ405710-copy": {
+    "category": "city",
+    "width": 4046,
+    "height": 2276,
+    "tint": "#636566"
+  },
+  "RJ400615": {
+    "category": "nature",
+    "width": 2048,
+    "height": 1152,
+    "tint": "#818181"
+  },
+  "RJ400631": {
+    "category": "nature",
+    "width": 2048,
+    "height": 1152,
+    "tint": "#43627a"
+  },
+  "RJ400656": {
+    "category": "nature",
+    "width": 2048,
+    "height": 1536,
+    "tint": "#4f7388"
+  },
+  "RJ400680": {
+    "category": "nature",
+    "width": 2048,
+    "height": 1152,
+    "tint": "#717c83"
+  },
+  "RJ400695": {
+    "category": "nature",
+    "width": 2048,
+    "height": 1536,
+    "tint": "#57779a"
+  },
+  "RJ400721": {
+    "category": "nature",
+    "width": 2048,
+    "height": 1152,
+    "tint": "#727f8d"
+  },
+  "RJ400730": {
+    "category": "nature",
+    "width": 2048,
+    "height": 1152,
+    "tint": "#73889f"
+  },
+  "RJ400731": {
+    "category": "nature",
+    "width": 2048,
+    "height": 1152,
+    "tint": "#777981"
+  },
+  "dji_fly_20230512_173012_662_1684010304506_photo_optimized": {
+    "category": "random",
+    "width": 4000,
+    "height": 2250,
+    "tint": "#6d7140"
+  },
+  "DSC07277": {
+    "category": "random",
+    "width": 5930,
+    "height": 3337,
+    "tint": "#495c59"
+  },
+  "IMG_8880": {
+    "category": "random",
+    "width": 4000,
+    "height": 2250,
+    "tint": "#696e67"
+  },
+  "DSC07504": {
+    "category": "random",
+    "width": 6000,
+    "height": 3376,
+    "tint": "#676a5f"
+  },
+  "RJ402306": {
+    "category": "paris",
+    "width": 7008,
+    "height": 3944,
+    "tint": "#858d83"
+  },
+  "RJ402344": {
+    "category": "paris",
+    "width": 4171,
+    "height": 2346,
+    "tint": "#8d6a45"
+  },
+  "RJ402371": {
+    "category": "paris",
+    "width": 3060,
+    "height": 1721,
+    "tint": "#9f6a56"
+  },
+  "RJ402536": {
+    "category": "paris",
+    "width": 6008,
+    "height": 3201,
+    "tint": "#6f7877"
+  },
+  "RJ402597": {
+    "category": "paris",
+    "width": 3823,
+    "height": 2150,
+    "tint": "#625e49"
+  },
+  "RJ402605": {
+    "category": "paris",
+    "width": 4459,
+    "height": 2508,
+    "tint": "#7f6e49"
+  },
+  "RJ402656": {
+    "category": "paris",
+    "width": 7008,
+    "height": 3944,
+    "tint": "#4e2f16"
+  },
+  "RJ402666": {
+    "category": "paris",
+    "width": 4930,
+    "height": 3944,
+    "tint": "#47472d"
+  }
+}
