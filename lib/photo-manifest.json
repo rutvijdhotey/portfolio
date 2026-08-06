@@ -172,5 +172,65 @@
     "width": 4930,
     "height": 3944,
     "tint": "#47472d"
+  },
+  "RJ400008": {
+    "category": "copenhagen",
+    "width": 4709,
+    "height": 5849,
+    "tint": "#58482d"
+  },
+  "RJ400034": {
+    "category": "copenhagen",
+    "width": 6374,
+    "height": 3651,
+    "tint": "#5d4929"
+  },
+  "RJ400074": {
+    "category": "copenhagen",
+    "width": 4503,
+    "height": 5591,
+    "tint": "#a68247"
+  },
+  "RJ400161": {
+    "category": "copenhagen",
+    "width": 4196,
+    "height": 3172,
+    "tint": "#5e392a"
+  },
+  "RJ400173": {
+    "category": "copenhagen",
+    "width": 4736,
+    "height": 2730,
+    "tint": "#6a6a6a"
+  },
+  "RJ400190": {
+    "category": "copenhagen",
+    "width": 4246,
+    "height": 2454,
+    "tint": "#7d7d7d"
+  },
+  "RJ400204": {
+    "category": "copenhagen",
+    "width": 2304,
+    "height": 2843,
+    "tint": "#4e4e4e"
+  },
+  "RJ400207": {
+    "category": "copenhagen",
+    "width": 6374,
+    "height": 3651,
+    "tint": "#5f5f5f"
+  },
+  "RJ409387": {
+    "category": "copenhagen",
+    "width": 6374,
+    "height": 3651,
+    "tint": "#7f7f7f"
+  },
+  "RJ409814": {
+    "category": "copenhagen",
+    "width": 6374,
+    "height": 3651,
+    "tint": "#707070"
   }
 }

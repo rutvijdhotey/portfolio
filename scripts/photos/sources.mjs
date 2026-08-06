@@ -21,4 +21,9 @@ export const SOURCE_PHOTOS = [
     'RJ402306.jpg', 'RJ402344.jpg', 'RJ402371.jpg', 'RJ402536.jpg',
     'RJ402597.jpg', 'RJ402605.jpg', 'RJ402656.jpg', 'RJ402666.jpg',
   ]),
+  ...list('copenhagen', [
+    'RJ400008.jpg', 'RJ400034.jpg', 'RJ400074.jpg', 'RJ400161.jpg',
+    'RJ400173.jpg', 'RJ400190.jpg', 'RJ400204.jpg', 'RJ400207.jpg',
+    'RJ409387.jpg', 'RJ409814.jpg',
+  ]),
 ]

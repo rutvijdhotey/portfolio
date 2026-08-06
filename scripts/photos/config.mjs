@@ -37,4 +37,5 @@ export const CATEGORY_FOLDERS = {
   nature: 'Nature/Bend Oregon LR Edits',
   random: 'Random',
   paris: 'Paris',
+  copenhagen: 'Copenhagen',
 }

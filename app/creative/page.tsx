@@ -8,8 +8,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import GalleryGrid from '@/components/GalleryGrid'
 import OverlayViewer from '@/components/OverlayViewer'
 import {
-  cityRows, natureRows, randomRows, parisRows,
-  cityItems, natureItems, randomItems, allItems,
+  cityRows, natureRows, randomRows, parisRows, copenhagenRows,
+  cityItems, natureItems, randomItems, parisItems, allItems,
 } from '@/lib/gallery-items'
 import './creative.css'
 
@@ -23,6 +23,7 @@ const chapters = [
   { key: 'nature', num: '02', title: 'Nature',  meta: 'Bend, Oregon · Landscape',           rows: natureRows, offset: cityItems.length },
   { key: 'random', num: '03', title: 'Random',  meta: 'Various · Aerial & Candid',          rows: randomRows, offset: cityItems.length + natureItems.length },
   { key: 'paris',  num: '04', title: 'Paris',   meta: 'Paris, France · Streets & Architecture', rows: parisRows,  offset: cityItems.length + natureItems.length + randomItems.length },
+  { key: 'copenhagen', num: '05', title: 'Copenhagen', meta: 'Copenhagen, Denmark · Streets & Harbour', rows: copenhagenRows, offset: cityItems.length + natureItems.length + randomItems.length + parisItems.length },
 ]
 
 export default function Creative() {

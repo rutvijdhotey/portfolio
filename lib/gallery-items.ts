@@ -2,7 +2,7 @@
 
 export type GalleryLayout = 'full' | 'halves' | 'large-small' | 'small-large' | 'thirds'
 export type MediaType = 'photo' | 'video'
-export type GalleryCategory = 'city' | 'nature' | 'random' | 'paris'
+export type GalleryCategory = 'city' | 'nature' | 'random' | 'paris' | 'copenhagen'
 
 export interface GalleryItem {
   src: string
@@ -23,11 +23,13 @@ const city   = (f: string) => `${BASE}/City/Japan/${f}`
 const nature = (f: string) => `${BASE}/Nature/Bend%20Oregon%20LR%20Edits/${f}`
 const rnd    = (f: string) => `${BASE}/Random/${f}`
 const paris  = (f: string) => `${BASE}/Paris/${f}`
+const cph    = (f: string) => `${BASE}/Copenhagen/${f}`
 
 const c = (f: string): GalleryItem => ({ src: city(f),   alt: 'Japan',       type: 'photo', category: 'city' })
 const n = (f: string): GalleryItem => ({ src: nature(f), alt: 'Bend Oregon', type: 'photo', category: 'nature' })
 const r = (f: string): GalleryItem => ({ src: rnd(f),    alt: 'Photo',       type: 'photo', category: 'random' })
 const p = (f: string): GalleryItem => ({ src: paris(f),  alt: 'Paris',       type: 'photo', category: 'paris' })
+const k = (f: string): GalleryItem => ({ src: cph(f),    alt: 'Copenhagen',  type: 'photo', category: 'copenhagen' })
 
 // ── City ─────────────────────────────────────────────────────────────────────
 
@@ -63,10 +65,21 @@ export const parisRows: GalleryRow[] = [
   { layout: 'halves',      items: [p('RJ402656.jpg'), p('RJ402666.jpg')] },
 ]
 
-// ── Flat list for overlay navigation (city → nature → random → paris) ────────
+// ── Copenhagen ───────────────────────────────────────────────────────────────
 
-export const cityItems   = cityRows.flatMap(r => r.items)
-export const natureItems = natureRows.flatMap(r => r.items)
-export const randomItems = randomRows.flatMap(r => r.items)
-export const parisItems  = parisRows.flatMap(r => r.items)
-export const allItems    = [...cityItems, ...natureItems, ...randomItems, ...parisItems]
+export const copenhagenRows: GalleryRow[] = [
+  { layout: 'full',        items: [k('RJ400008.jpg')] },
+  { layout: 'halves',      items: [k('RJ400034.jpg'), k('RJ400074.jpg')] },
+  { layout: 'thirds',      items: [k('RJ400161.jpg'), k('RJ400173.jpg'), k('RJ400190.jpg')] },
+  { layout: 'large-small', items: [k('RJ400204.jpg'), k('RJ400207.jpg')] },
+  { layout: 'halves',      items: [k('RJ409387.jpg'), k('RJ409814.jpg')] },
+]
+
+// ── Flat list for overlay navigation (city → nature → random → paris → cph) ──
+
+export const cityItems       = cityRows.flatMap(r => r.items)
+export const natureItems     = natureRows.flatMap(r => r.items)
+export const randomItems     = randomRows.flatMap(r => r.items)
+export const parisItems      = parisRows.flatMap(r => r.items)
+export const copenhagenItems = copenhagenRows.flatMap(r => r.items)
+export const allItems        = [...cityItems, ...natureItems, ...randomItems, ...parisItems, ...copenhagenItems]
