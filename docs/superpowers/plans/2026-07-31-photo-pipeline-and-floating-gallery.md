@@ -43,20 +43,20 @@ Tasks 1–4 and 6–8 are fully unblocked and can proceed now.
 | Task | Status |
 |---|---|
 | 1. Pipeline config and URL helpers | ✅ Done — commit `e32c401`, 4/4 tests pass. `masterUrl` verified against live Supabase (HTTP 200, 735564 bytes). |
-| 2. Fetch masters | Not started — unblocked |
-| 3. Derivatives and manifest | Not started — unblocked (depends on 2) |
-| 4. Measurement harness | Not started — unblocked. **Capture the baseline before Task 5 uploads anything.** |
-| 5. Upload | **Blocked** — needs `.env.local` credentials |
+| 2. Fetch masters | ✅ Done — `351db83`. 29 masters, 191.4 MB, local backup now exists. Idempotent re-run skips all 29. |
+| 3. Derivatives and manifest | ✅ Done — `fdb684e`. 274 files, 37.3 MB on disk; 1800 AVIF rung 5.64 MB for all 29. Manifest has 29 well-formed entries. |
+| 4. Measurement harness | ✅ Done — `d453f5c`. Baseline captured against the live site before any upload. |
+| 5. Upload | Not started — **unblocked**, `.env.local` present and verified |
 | 6. `Photo` component | Not started — depends on 3 |
 | 7. Floating layout | Not started — depends on 6 |
 | 8. Overlay fixes | Not started — depends on 6 |
 | 9. Hero video and covers | Partially blocked — poster/cover work is unblocked, re-encode needs ffmpeg |
 | 10. Verify and finish | Not started |
 
-**Two open decisions for the user, neither yet answered:**
+**One open decision for the user:**
 
 1. **ffmpeg.** Not installed. Needed to re-encode the 32 MB hero `.mov` and the 10.8 MB case-study MP4. Either install it, or supply the encoded MP4/WebM + poster stills directly. Blocks only Task 9 Step 5.
-2. **Supabase service key.** No `.env.local` exists. The user must create it themselves — the key must never be pasted into chat, committed, or logged. Blocks only Task 5.
+2. ~~**Supabase service key.**~~ Resolved 2026-08-05 — `.env.local` created by the user and verified (role `service_role`, `portfolio` bucket reachable, covered by `.gitignore:34`). Task 5 is unblocked.
 
 **Baseline to beat** (measured 2026-07-31 against the live site): 29 gallery images, **191.4 MB** total, 6.60 MB average, 16.95 MB largest, **29 of 29 uncached**. Hero video 32.4 MB. Home cover PNG 2.46 MB. Engineering cover PNG 1.90 MB. Case-study MP4 10.76 MB.
 
