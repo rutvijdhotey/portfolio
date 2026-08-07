@@ -1,7 +1,7 @@
 // app/creative/page.tsx
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -14,9 +14,11 @@ import './creative.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const HERO_VIDEO_DESKTOP = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Videos/IMG_7855.mov'
-const HERO_VIDEO_MOBILE  = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Videos/IMG_7946%20(1).mov'
-const HERO_POSTER = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/optimized/covers/creative-hero-poster.avif'
+// The hero was a 32 MB autoplaying .mov (plus a 33 MB "mobile" sibling), which
+// dwarfed the 6.9 MB of photographs on the rest of the page. Pulled out until
+// the files are re-encoded; the originals are untouched on Supabase under
+// Videos/, and PROGRESS.md records how to restore them.
+const HERO_IMAGE = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/optimized/covers/creative-hero-poster.avif'
 
 const chapters = [
   { key: 'city',   num: '01', title: 'City',   meta: 'Japan · Street & Architecture',       items: cityItems,   offset: 0 },
@@ -29,19 +31,11 @@ const chapters = [
 export default function Creative() {
   const [overlayOpen, setOverlayOpen]   = useState(false)
   const [overlayIndex, setOverlayIndex] = useState(0)
-  const videoRef = useRef<HTMLVideoElement>(null)
 
   function openOverlay(index: number) {
     setOverlayIndex(index)
     setOverlayOpen(true)
   }
-
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.src = window.innerWidth <= 768 ? HERO_VIDEO_MOBILE : HERO_VIDEO_DESKTOP
-      videoRef.current.load()
-    }
-  }, [])
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -74,16 +68,12 @@ export default function Creative() {
 
       {/* ── Video Hero ── */}
       <section className="video-hero">
-        {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-        {/* The poster paints immediately and is the LCP element — the video's
-            src is only assigned after hydration, so without this the hero is a
-            black box until the fetch starts. */}
-        <video
-          ref={videoRef}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           className="video-hero__video"
-          poster={HERO_POSTER}
-          preload="none"
-          autoPlay muted loop playsInline
+          src={HERO_IMAGE}
+          alt="Commuters crossing a glass walkway at Shinjuku station, Tokyo"
+          fetchPriority="high"
         />
         <div className="video-hero__overlay" />
         <div className="video-hero__content">

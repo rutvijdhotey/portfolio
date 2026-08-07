@@ -87,9 +87,21 @@ Two defects found while measuring, both being fixed as part of this work:
 
 ## Blocked on the user
 
-**1. ffmpeg — not installed.** Needed to re-encode the 32 MB hero and the 10.8 MB case-study video. Either install it, or supply encoded MP4/WebM files and poster stills directly. Blocks only Task 9 Step 5.
+**1. ffmpeg — not installed.** Needed to re-encode the hero and case-study videos. Either install it, or supply encoded MP4/WebM files directly.
 
-Also unresolved: **whether the `.mov` hero ever played in Chrome.** QuickTime container support is unreliable outside Safari. If it's HEVC, a chunk of visitors have been seeing a black hero, and this is a correctness fix rather than a performance one. Verify in the browser before treating it as perf-only.
+~~Also unresolved: whether the `.mov` hero ever played in Chrome.~~ **Resolved 2026-08-07: it plays.** Both heroes were loaded directly in Chrome 148 — each decodes cleanly, `readyState` 4, no error, 3840×2160. They are H.264 in a QuickTime container, and Chrome sniffs the codec rather than trusting the container MIME (`canPlayType('video/quicktime')` returns `""` even though playback works). So this was always a performance problem, never a correctness one.
+
+**The hero video has been removed from the site** (2026-08-07), pending re-encoding. Measured sizes, by ranged GET:
+
+| File | Size | Status |
+|---|---|---|
+| `Videos/IMG_7855.mov` — desktop hero | 32.4 MB | no longer referenced |
+| `Videos/IMG_7946 (1).mov` — "mobile" hero | 33.1 MB | no longer referenced |
+| `Videos/movie.mp4` — case study | 11.3 MB | **still referenced** |
+
+Note the mobile hero was *larger* than the desktop one, and both were 4K. They are different clips, though, so the `innerWidth <= 768` branch was an art-direction choice rather than a bandwidth one — restore both if the videos come back.
+
+**To restore the hero:** `app/creative/page.tsx` renders an `<img className="video-hero__video">` using the poster. Swap it back to a `<video>` with the same class (the CSS is unchanged and still named for it), and reinstate the two URL constants above plus the `innerWidth` branch. Nothing on Supabase was deleted — the originals are untouched under `Videos/`.
 
 **2. ~~Supabase service key~~ — RESOLVED 2026-08-05.** `.env.local` exists with `SUPABASE_URL` and `SUPABASE_SERVICE_KEY`. Verified: the key decodes to role `service_role`, and `GET /storage/v1/bucket` returns 200 with the `portfolio` bucket. `git check-ignore` confirms `.gitignore:34` (`.env*`) covers it. Scripts read `process.env` and run via `node --env-file=.env.local`. Never paste the key into a chat, a commit, or a log line.
 
