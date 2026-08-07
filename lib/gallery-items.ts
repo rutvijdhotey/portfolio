@@ -1,85 +1,72 @@
 // lib/gallery-items.ts
+// Gallery data derived from the generated photo manifest. Placement and art
+// direction live in lib/gallery-layout.ts, not here.
 
-export type GalleryLayout = 'full' | 'halves' | 'large-small' | 'small-large' | 'thirds'
-export type MediaType = 'photo' | 'video'
+import manifest from './photo-manifest.json'
+
 export type GalleryCategory = 'city' | 'nature' | 'random' | 'paris' | 'copenhagen'
 
 export interface GalleryItem {
-  src: string
-  alt: string
-  type: MediaType
+  id: string
   category: GalleryCategory
-  poster?: string
+  width: number
+  height: number
+  tint: string
+  alt: string
 }
 
-export interface GalleryRow {
-  layout: GalleryLayout
-  items: GalleryItem[]
+const ALT: Record<GalleryCategory, string> = {
+  city: 'Japan',
+  nature: 'Bend, Oregon',
+  random: 'Photo',
+  paris: 'Paris',
+  copenhagen: 'Copenhagen',
 }
 
-const BASE = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Images'
+type ManifestEntry = Omit<GalleryItem, 'id' | 'alt' | 'category'> & { category: string }
 
-const city   = (f: string) => `${BASE}/City/Japan/${f}`
-const nature = (f: string) => `${BASE}/Nature/Bend%20Oregon%20LR%20Edits/${f}`
-const rnd    = (f: string) => `${BASE}/Random/${f}`
-const paris  = (f: string) => `${BASE}/Paris/${f}`
-const cph    = (f: string) => `${BASE}/Copenhagen/${f}`
+const entries = Object.entries(manifest) as [string, ManifestEntry][]
 
-const c = (f: string): GalleryItem => ({ src: city(f),   alt: 'Japan',       type: 'photo', category: 'city' })
-const n = (f: string): GalleryItem => ({ src: nature(f), alt: 'Bend Oregon', type: 'photo', category: 'nature' })
-const r = (f: string): GalleryItem => ({ src: rnd(f),    alt: 'Photo',       type: 'photo', category: 'random' })
-const p = (f: string): GalleryItem => ({ src: paris(f),  alt: 'Paris',       type: 'photo', category: 'paris' })
-const k = (f: string): GalleryItem => ({ src: cph(f),    alt: 'Copenhagen',  type: 'photo', category: 'copenhagen' })
+const byCategory = (category: GalleryCategory): GalleryItem[] =>
+  entries
+    .filter(([, m]) => m.category === category)
+    .map(([id, m]) => ({ ...m, id, category, alt: ALT[category] }))
 
-// ── City ─────────────────────────────────────────────────────────────────────
+export const cityItems = byCategory('city')
+export const natureItems = byCategory('nature')
+export const randomItems = byCategory('random')
+export const parisItems = byCategory('paris')
+export const copenhagenItems = byCategory('copenhagen')
 
-export const cityRows: GalleryRow[] = [
-  { layout: 'halves',      items: [c('RJ405649.jpg'), c('RJ405760.jpg')] },
-  { layout: 'thirds',      items: [c('RJ405690.jpg'), c('RJ405702.jpg'), c('RJ405650.jpg')] },
-  { layout: 'large-small', items: [c('RJ405757.jpg'), c('RJ405776.jpg')] },
-  { layout: 'halves',      items: [c('RJ405808.jpg'), c('RJ405710%20copy.jpg')] },
+export const allItems = [
+  ...cityItems, ...natureItems, ...randomItems, ...parisItems, ...copenhagenItems,
 ]
 
-// ── Nature ───────────────────────────────────────────────────────────────────
+const DERIVATIVE_PREFIX =
+  'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/optimized'
 
-export const natureRows: GalleryRow[] = [
-  { layout: 'full',        items: [n('RJ400615.jpg')] },
-  { layout: 'halves',      items: [n('RJ400631.jpg'), n('RJ400656.jpg')] },
-  { layout: 'thirds',      items: [n('RJ400680.jpg'), n('RJ400695.jpg'), n('RJ400721.jpg')] },
-  { layout: 'halves',      items: [n('RJ400730.jpg'), n('RJ400731.jpg')] },
-]
+export const GRID_WIDTHS = [480, 768, 1200, 1800] as const
+export const OVERLAY_WIDTH = 2560
 
-// ── Random ───────────────────────────────────────────────────────────────────
+export function photoUrl(item: GalleryItem, width: number, ext: 'avif' | 'webp'): string {
+  return `${DERIVATIVE_PREFIX}/${item.category}/${item.id}-${width}.${ext}`
+}
 
-export const randomRows: GalleryRow[] = [
-  { layout: 'large-small', items: [r('dji_fly_20230512_173012_662_1684010304506_photo_optimized.jpg'), r('DSC07277.jpg')] },
-  { layout: 'halves',      items: [r('IMG_8880.jpg'), r('DSC07504.jpg')] },
-]
+/** Only widths that were actually generated — the pipeline never upscales. */
+export function availableWidths(item: GalleryItem): number[] {
+  return GRID_WIDTHS.filter(w => w <= item.width)
+}
 
-// ── Paris ────────────────────────────────────────────────────────────────────
+export function srcSet(item: GalleryItem, ext: 'avif' | 'webp'): string {
+  return availableWidths(item).map(w => `${photoUrl(item, w, ext)} ${w}w`).join(', ')
+}
 
-export const parisRows: GalleryRow[] = [
-  { layout: 'full',        items: [p('RJ402306.jpg')] },
-  { layout: 'halves',      items: [p('RJ402344.jpg'), p('RJ402371.jpg')] },
-  { layout: 'thirds',      items: [p('RJ402536.jpg'), p('RJ402597.jpg'), p('RJ402605.jpg')] },
-  { layout: 'halves',      items: [p('RJ402656.jpg'), p('RJ402666.jpg')] },
-]
-
-// ── Copenhagen ───────────────────────────────────────────────────────────────
-
-export const copenhagenRows: GalleryRow[] = [
-  { layout: 'full',        items: [k('RJ400008.jpg')] },
-  { layout: 'halves',      items: [k('RJ400034.jpg'), k('RJ400074.jpg')] },
-  { layout: 'thirds',      items: [k('RJ400161.jpg'), k('RJ400173.jpg'), k('RJ400190.jpg')] },
-  { layout: 'large-small', items: [k('RJ400204.jpg'), k('RJ400207.jpg')] },
-  { layout: 'halves',      items: [k('RJ409387.jpg'), k('RJ409814.jpg')] },
-]
-
-// ── Flat list for overlay navigation (city → nature → random → paris → cph) ──
-
-export const cityItems       = cityRows.flatMap(r => r.items)
-export const natureItems     = natureRows.flatMap(r => r.items)
-export const randomItems     = randomRows.flatMap(r => r.items)
-export const parisItems      = parisRows.flatMap(r => r.items)
-export const copenhagenItems = copenhagenRows.flatMap(r => r.items)
-export const allItems        = [...cityItems, ...natureItems, ...randomItems, ...parisItems, ...copenhagenItems]
+/**
+ * Widest rung available for the fullscreen overlay. The 8 Bend Oregon masters
+ * are only 2048px wide, so the dedicated 2560 rung does not exist for them —
+ * callers must not assume it does.
+ */
+export function overlayWidth(item: GalleryItem): number {
+  if (item.width >= OVERLAY_WIDTH) return OVERLAY_WIDTH
+  return availableWidths(item).at(-1) ?? item.width
+}

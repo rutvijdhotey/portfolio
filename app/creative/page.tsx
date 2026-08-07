@@ -5,11 +5,10 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import GalleryGrid from '@/components/GalleryGrid'
+import GalleryFlow from '@/components/GalleryFlow'
 import OverlayViewer from '@/components/OverlayViewer'
 import {
-  cityRows, natureRows, randomRows, parisRows, copenhagenRows,
-  cityItems, natureItems, randomItems, parisItems, allItems,
+  cityItems, natureItems, randomItems, parisItems, copenhagenItems, allItems,
 } from '@/lib/gallery-items'
 import './creative.css'
 
@@ -19,11 +18,11 @@ const HERO_VIDEO_DESKTOP = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/
 const HERO_VIDEO_MOBILE  = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Videos/IMG_7946%20(1).mov'
 
 const chapters = [
-  { key: 'city',   num: '01', title: 'City',   meta: 'Japan · Street & Architecture',       rows: cityRows,   offset: 0 },
-  { key: 'nature', num: '02', title: 'Nature',  meta: 'Bend, Oregon · Landscape',           rows: natureRows, offset: cityItems.length },
-  { key: 'random', num: '03', title: 'Random',  meta: 'Various · Aerial & Candid',          rows: randomRows, offset: cityItems.length + natureItems.length },
-  { key: 'paris',  num: '04', title: 'Paris',   meta: 'Paris, France · Streets & Architecture', rows: parisRows,  offset: cityItems.length + natureItems.length + randomItems.length },
-  { key: 'copenhagen', num: '05', title: 'Copenhagen', meta: 'Copenhagen, Denmark · Streets & Harbour', rows: copenhagenRows, offset: cityItems.length + natureItems.length + randomItems.length + parisItems.length },
+  { key: 'city',   num: '01', title: 'City',   meta: 'Japan · Street & Architecture',       items: cityItems,   offset: 0 },
+  { key: 'nature', num: '02', title: 'Nature',  meta: 'Bend, Oregon · Landscape',           items: natureItems, offset: cityItems.length },
+  { key: 'random', num: '03', title: 'Random',  meta: 'Various · Aerial & Candid',          items: randomItems, offset: cityItems.length + natureItems.length },
+  { key: 'paris',  num: '04', title: 'Paris',   meta: 'Paris, France · Streets & Architecture', items: parisItems,  offset: cityItems.length + natureItems.length + randomItems.length },
+  { key: 'copenhagen', num: '05', title: 'Copenhagen', meta: 'Copenhagen, Denmark · Streets & Harbour', items: copenhagenItems, offset: cityItems.length + natureItems.length + randomItems.length + parisItems.length },
 ]
 
 export default function Creative() {
@@ -94,8 +93,8 @@ export default function Creative() {
             </div>
             <div className="chapter-meta">{ch.meta}</div>
           </div>
-          <GalleryGrid
-            rows={ch.rows}
+          <GalleryFlow
+            items={ch.items}
             indexOffset={ch.offset}
             onItemClick={openOverlay}
           />
