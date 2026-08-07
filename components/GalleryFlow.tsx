@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { GalleryItem } from '@/lib/gallery-items'
-import { placementFor, SIZE_WIDTH } from '@/lib/gallery-layout'
+import { buildBands, dropOffset, photoSizes } from '@/lib/gallery-bands'
+import { BAND_OVERRIDES, TUNING } from '@/lib/gallery-layout'
 import Photo from './Photo'
 import './gallery.css'
 
@@ -12,14 +13,6 @@ gsap.registerPlugin(ScrollTrigger)
 
 /** Shows each photo's id and current placement while art-directing. Dev only. */
 const REVIEW_MODE = process.env.NODE_ENV === 'development'
-
-/** Maps a placement size to a `sizes` attribute so the browser picks a sane rung. */
-const SIZES: Record<string, string> = {
-  sm: '(max-width: 768px) 88vw, 34vw',
-  md: '(max-width: 768px) 88vw, 50vw',
-  lg: '(max-width: 768px) 92vw, 66vw',
-  xl: '(max-width: 768px) 96vw, 92vw',
-}
 
 interface Props {
   items: GalleryItem[]
@@ -29,12 +22,14 @@ interface Props {
 
 export default function GalleryFlow({ items, onItemClick, indexOffset = 0 }: Props) {
   const flowRef = useRef<HTMLDivElement>(null)
+  const bands = useMemo(() => buildBands(items, BAND_OVERRIDES, TUNING), [items])
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>('.photo-slot').forEach(slot => {
-        gsap.from(slot, {
-          scrollTrigger: { trigger: slot, start: 'top 90%' },
+      /* Reveal a whole band at once, so a pair rises together. */
+      gsap.utils.toArray<HTMLElement>('.photo-band').forEach(band => {
+        gsap.from(band, {
+          scrollTrigger: { trigger: band, start: 'top 90%' },
           opacity: 0,
           y: 40,
           duration: 1,
@@ -43,33 +38,46 @@ export default function GalleryFlow({ items, onItemClick, indexOffset = 0 }: Pro
       })
     }, flowRef)
     return () => ctx.revert()
-  }, [])
+  }, [bands])
 
   return (
-    <div className="gallery-flow" ref={flowRef}>
-      {items.map((item, i) => {
-        const { size, align } = placementFor(item.id)
-        return (
-          <div
-            key={item.id}
-            className={`photo-slot photo-slot--${align}`}
-            style={{ ['--photo-width' as string]: SIZE_WIDTH[size] }}
-          >
-            <Photo
-              item={item}
-              sizes={SIZES[size]}
-              /* Only the very first photo on the page is eager — `i === 0`
-                 alone would make one per chapter, five eager loads. */
-              priority={indexOffset === 0 && i === 0}
-              onClick={() => onItemClick(indexOffset + i)}
-            />
-            {/* Review aid for the placement pass. Dev only — never shipped. */}
-            {REVIEW_MODE && (
-              <span className="photo-review-tag">{`${item.id} · ${size}/${align}`}</span>
-            )}
-          </div>
-        )
-      })}
+    <div
+      className="gallery-flow"
+      ref={flowRef}
+      style={{ ['--band-gap' as string]: `${TUNING.gap}%` }}
+    >
+      {bands.map((band, b) => (
+        <div
+          key={band.photos[0].item.id}
+          className={`photo-band photo-band--${band.align}`}
+        >
+          {band.photos.map(photo => (
+            <div
+              key={photo.item.id}
+              className="photo-band__slot"
+              style={{
+                ['--share' as string]: `${photo.share}%`,
+                ['--drop' as string]: dropOffset(photo),
+              }}
+            >
+              <Photo
+                item={photo.item}
+                sizes={photoSizes(photo.share)}
+                /* Only the very first photo on the page is eager — one per
+                   chapter would mean five eager loads. */
+                priority={indexOffset === 0 && b === 0 && photo.index === 0}
+                onClick={() => onItemClick(indexOffset + photo.index)}
+              />
+              {/* Review aid for the placement pass. Dev only — never shipped. */}
+              {REVIEW_MODE && (
+                <span className="photo-review-tag">
+                  {`${photo.item.id} · ${photo.share}% ↓${photo.drop}`}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      ))}
     </div>
   )
 }
