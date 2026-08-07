@@ -2,7 +2,7 @@
 
 .gallery-flow {
   --flow-max: 1440px;
-  --flow-rhythm: clamp(64px, 9vw, 140px);
+  --flow-rhythm: clamp(48px, 6vw, 96px);
 
   max-width: var(--flow-max);
   margin: 0 auto;
@@ -12,10 +12,22 @@
   gap: var(--flow-rhythm);
 }
 
-.photo-slot {
-  width: var(--photo-width, 55%);
+.photo-band {
   display: flex;
+  align-items: flex-start;
+  gap: var(--band-gap, 4%);
+  width: 100%;
+}
+
+.photo-band--left  { justify-content: flex-start; }
+.photo-band--right { justify-content: flex-end; }
+
+.photo-band__slot {
   position: relative;
+  flex: 0 0 var(--share, 50%);
+  /* A percentage margin resolves against the containing block's WIDTH, so the
+     drop is pre-converted to a share of the column in dropOffset(). */
+  margin-top: var(--drop, 0%);
 }
 
 /* Review aid — rendered only in dev, see REVIEW_MODE in GalleryFlow.tsx. */
@@ -33,10 +45,6 @@
   pointer-events: none;
   user-select: none;
 }
-
-.photo-slot--left   { align-self: flex-start; }
-.photo-slot--center { align-self: center; }
-.photo-slot--right  { align-self: flex-end; }
 
 .photo {
   width: 100%;
@@ -66,6 +74,11 @@
     --flow-rhythm: clamp(40px, 12vw, 72px);
     padding: 0 16px;
   }
-  /* On narrow screens every photo goes near-full width and centres. */
-  .photo-slot { width: 100% !important; align-self: center; }
+  /* On narrow screens a band becomes one photo per row, full width, no drop. */
+  .photo-band { flex-direction: column; gap: var(--flow-rhythm); }
+  .photo-band__slot {
+    flex-basis: auto !important;
+    width: 100%;
+    margin-top: 0 !important;
+  }
 }
