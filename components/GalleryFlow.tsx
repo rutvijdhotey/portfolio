@@ -10,6 +10,9 @@ import './gallery.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
+/** Shows each photo's id and current placement while art-directing. Dev only. */
+const REVIEW_MODE = process.env.NODE_ENV === 'development'
+
 /** Maps a placement size to a `sizes` attribute so the browser picks a sane rung. */
 const SIZES: Record<string, string> = {
   sm: '(max-width: 768px) 88vw, 34vw',
@@ -60,6 +63,10 @@ export default function GalleryFlow({ items, onItemClick, indexOffset = 0 }: Pro
               priority={indexOffset === 0 && i === 0}
               onClick={() => onItemClick(indexOffset + i)}
             />
+            {/* Review aid for the placement pass. Dev only — never shipped. */}
+            {REVIEW_MODE && (
+              <span className="photo-review-tag">{`${item.id} · ${size}/${align}`}</span>
+            )}
           </div>
         )
       })}
