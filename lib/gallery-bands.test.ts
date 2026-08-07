@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { classify, buildBands, TEST_TUNING } from './gallery-bands.ts'
+import { classify, buildBands, dropOffset, TEST_TUNING } from './gallery-bands.ts'
 import type { Band } from './gallery-bands.ts'
 import type { GalleryItem } from './gallery-items.ts'
 
@@ -127,4 +127,66 @@ test('a band leaves margin in the column rather than filling it', () => {
     const total = band.photos.reduce((sum, p) => sum + p.share, 0) + gaps
     assert.ok(total <= 96, `band occupies ${total}% of the column`)
   }
+})
+
+test('drops are deterministic for the same photo id', () => {
+  const items = [wide('a'), tall('b')]
+  const first  = buildBands(items, {}, TEST_TUNING)
+  const second = buildBands(items, {}, TEST_TUNING)
+  assert.deepEqual(
+    first.flatMap(band => band.photos.map(p => p.drop)),
+    second.flatMap(band => band.photos.map(p => p.drop)),
+  )
+})
+
+test('exactly one photo in a pair is dropped', () => {
+  const bands = buildBands([wide('a'), tall('b')], {}, TEST_TUNING)
+  const dropped = bands[0].photos.filter(p => p.drop > 0)
+  assert.equal(dropped.length, 1)
+})
+
+test('the shorter photo is the one that drops', () => {
+  // wide at 50% share renders 0.333 column-widths tall; tall at 30% renders 0.45.
+  const bands = buildBands([wide('a'), tall('b')], {}, TEST_TUNING)
+  const dropped = bands[0].photos.find(p => p.drop > 0)
+  assert.equal(dropped?.item.id, 'a')
+})
+
+test('a solo photo never drops', () => {
+  const bands = buildBands([pano('a')], {}, TEST_TUNING)
+  assert.equal(bands[0].photos[0].drop, 0)
+})
+
+test('a drop never pushes a photo past the bottom of the tallest in its band', () => {
+  const bands = buildBands([wide('a'), tall('b')], {}, TEST_TUNING)
+  const bottoms = bands[0].photos.map(p => {
+    const height = p.share / (p.item.width / p.item.height)
+    return height + (p.drop / 100) * height
+  })
+  const tallest = Math.max(
+    ...bands[0].photos.map(p => p.share / (p.item.width / p.item.height)))
+  for (const bottom of bottoms) {
+    assert.ok(bottom <= tallest + 0.001, `band overflows: ${bottom} > ${tallest}`)
+  }
+})
+
+test('an override can set drops explicitly', () => {
+  const bands = buildBands(
+    [wide('a'), tall('b')],
+    { a: { with: 'b', shares: [50, 30], drops: [0, 12] } },
+    TEST_TUNING,
+  )
+  assert.deepEqual(bands[0].photos.map(p => p.drop), [0, 12])
+})
+
+test('dropOffset converts a drop into a percentage of the column', () => {
+  // 30% share, aspect 2/3 → rendered height 45% of the column.
+  // A 20% drop of that height is 9% of the column.
+  const photo = { item: tall('x'), index: 0, share: 30, drop: 20 }
+  assert.equal(dropOffset(photo), '9.00%')
+})
+
+test('dropOffset is zero for an undropped photo', () => {
+  const photo = { item: wide('x'), index: 0, share: 50, drop: 0 }
+  assert.equal(dropOffset(photo), '0%')
 })

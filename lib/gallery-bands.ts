@@ -75,6 +75,54 @@ export const TEST_TUNING: Tuning = {
   gap: 4,
 }
 
+/**
+ * FNV-1a over the photo id. Any stable hash would do — what matters is that the
+ * build and the browser agree, since a mismatch breaks hydration.
+ */
+function hash(id: string): number {
+  let h = 0x811c9dc5
+  for (let i = 0; i < id.length; i++) {
+    h ^= id.charCodeAt(i)
+    h = Math.imul(h, 0x01000193) >>> 0
+  }
+  return h
+}
+
+/** Rendered height, in units of the content column's width. */
+function renderedHeight(photo: BandPhoto): number {
+  return photo.share / (photo.item.width / photo.item.height)
+}
+
+/**
+ * Drops the shorter photo in each multi-photo band, so top edges never align.
+ * Clamped so the dropped photo's bottom never passes the tallest photo's bottom —
+ * the band's height stays set by its tallest frame.
+ */
+export function applyDrops(band: Band, tuning: Tuning): Band {
+  if (band.photos.length < 2) return band
+
+  const heights = band.photos.map(renderedHeight)
+  const tallest = Math.max(...heights)
+  const shortest = Math.min(...heights)
+  const target = heights.indexOf(shortest)
+
+  const [min, max] = tuning.dropRange
+  const chosen = min + (hash(band.photos[target].item.id) % (max - min + 1))
+
+  // Room available, expressed as a percentage of the dropped photo's own height.
+  const room = shortest === 0 ? 0 : ((tallest - shortest) / shortest) * 100
+  const drop = Math.min(chosen, room)
+
+  const photos = band.photos.map((p, i) => (i === target ? { ...p, drop } : p))
+  return { ...band, photos }
+}
+
+/** The drop as a CSS percentage of the column, which is what `margin-top: %` resolves against. */
+export function dropOffset(photo: BandPhoto): string {
+  if (photo.drop === 0) return '0%'
+  return `${((photo.drop / 100) * renderedHeight(photo)).toFixed(2)}%`
+}
+
 /** A pair is legal unless it puts two portraits side by side, or involves a panorama. */
 function canPair(a: GalleryItem, b: GalleryItem): boolean {
   const sa = classify(a)
@@ -102,9 +150,17 @@ export function buildBands(
   const bands: Band[] = []
   let sinceSolo = 0
 
-  /** Pushes a band and assigns its alternating side. */
-  const push = (photos: BandPhoto[]) => {
-    bands.push({ photos, align: bands.length % 2 === 0 ? 'left' : 'right' })
+  /** Pushes a band, assigns its alternating side, and derives its drops. */
+  const push = (photos: BandPhoto[], explicitDrops?: number[]) => {
+    const band: Band = { photos, align: bands.length % 2 === 0 ? 'left' : 'right' }
+    if (explicitDrops) {
+      bands.push({
+        ...band,
+        photos: photos.map((p, i) => ({ ...p, drop: explicitDrops[i] ?? 0 })),
+      })
+      return
+    }
+    bands.push(applyDrops(band, tuning))
   }
 
   const asPhoto = (i: number, share: number): BandPhoto => ({
@@ -131,7 +187,7 @@ export function buildBands(
           consumed.add(j)
           photos.push(asPhoto(j, shares[n + 1] ?? tuning.pairShares[1]))
         })
-        push(photos)
+        push(photos, override.drops)
         sinceSolo = 0
         continue
       }
