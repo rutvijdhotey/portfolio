@@ -62,3 +62,116 @@ export interface Tuning {
   /** Gap between photos in a band, as a percentage of the column. */
   gap: number
 }
+
+/** Tuning used by the test suite. Kept here so tests never depend on art direction. */
+export const TEST_TUNING: Tuning = {
+  panoSolo: 92,
+  soloBreath: 70,
+  tallSolo: 42,
+  soloEvery: 4,
+  pairShares: [50, 30],
+  pairSharesWideWide: [52, 28],
+  dropRange: [8, 20],
+  gap: 4,
+}
+
+/** A pair is legal unless it puts two portraits side by side, or involves a panorama. */
+function canPair(a: GalleryItem, b: GalleryItem): boolean {
+  const sa = classify(a)
+  const sb = classify(b)
+  if (sa === 'pano' || sb === 'pano') return false
+  if (sa === 'tall' && sb === 'tall') return false
+  return true
+}
+
+/** Share for a photo that ends up alone in its band. */
+function soloShare(item: GalleryItem, tuning: Tuning): number {
+  const shape = classify(item)
+  if (shape === 'pano') return tuning.panoSolo
+  if (shape === 'tall') return tuning.tallSolo
+  return tuning.soloBreath
+}
+
+export function buildBands(
+  items: GalleryItem[],
+  overrides: BandOverrides,
+  tuning: Tuning,
+): Band[] {
+  const indexOf = new Map(items.map((it, i) => [it.id, i]))
+  const consumed = new Set<number>()
+  const bands: Band[] = []
+  let sinceSolo = 0
+
+  /** Pushes a band and assigns its alternating side. */
+  const push = (photos: BandPhoto[]) => {
+    bands.push({ photos, align: bands.length % 2 === 0 ? 'left' : 'right' })
+  }
+
+  const asPhoto = (i: number, share: number): BandPhoto => ({
+    item: items[i], index: i, share, drop: 0,
+  })
+
+  for (let i = 0; i < items.length; i++) {
+    if (consumed.has(i)) continue
+    const lead = items[i]
+    consumed.add(i)
+
+    // 1. An authored grouping wins outright, and may pull a non-adjacent photo.
+    const override = overrides[lead.id]
+    if (override) {
+      const partnerIds = Array.isArray(override.with) ? override.with : [override.with]
+      const partners = partnerIds
+        .map(id => indexOf.get(id))
+        .filter((j): j is number => j !== undefined && !consumed.has(j))
+      if (partners.length > 0) {
+        const shares = override.shares
+          ?? [tuning.pairShares[0], ...partners.map(() => tuning.pairShares[1])]
+        const photos = [asPhoto(i, shares[0] ?? tuning.pairShares[0])]
+        partners.forEach((j, n) => {
+          consumed.add(j)
+          photos.push(asPhoto(j, shares[n + 1] ?? tuning.pairShares[1]))
+        })
+        push(photos)
+        sinceSolo = 0
+        continue
+      }
+      // Every named partner was missing or already placed — fall through to derived.
+    }
+
+    // 2. Panoramas stand alone.
+    if (classify(lead) === 'pano') {
+      push([asPhoto(i, soloShare(lead, tuning))])
+      sinceSolo = 0
+      continue
+    }
+
+    // 3. A periodic solo, so the page is not relentless pairs.
+    if (sinceSolo >= tuning.soloEvery) {
+      push([asPhoto(i, soloShare(lead, tuning))])
+      sinceSolo = 0
+      continue
+    }
+
+    // 4. Otherwise pair with the next unconsumed photo, if that pairing is legal.
+    let partner = -1
+    for (let j = i + 1; j < items.length; j++) {
+      if (consumed.has(j)) continue
+      if (canPair(lead, items[j])) partner = j
+      break   // only the immediate next photo, so order is never rearranged
+    }
+
+    if (partner === -1) {
+      push([asPhoto(i, soloShare(lead, tuning))])
+      sinceSolo = 0
+      continue
+    }
+
+    consumed.add(partner)
+    const wideWide = classify(lead) === 'wide' && classify(items[partner]) === 'wide'
+    const [a, b] = wideWide ? tuning.pairSharesWideWide : tuning.pairShares
+    push([asPhoto(i, a), asPhoto(partner, b)])
+    sinceSolo++
+  }
+
+  return bands
+}
