@@ -28,16 +28,25 @@ Nothing pushed to GitHub. `masters/` (191.4 MB) and `derivatives/` (37.3 MB) exi
 
 Measured against the live site on 2026-07-31:
 
+> **Correction (2026-08-06):** the `cache-control` row below was wrong. Supabase's CDN returns `no-cache` on *any* HEAD request regardless of stored metadata, and the original measurement used HEAD. On a real GET the masters serve `max-age=3600`. Caching was weak (1 hour), not absent. The size figures are unaffected. `measure.mjs` now uses a ranged GET.
+
 | Asset | Weight |
 |---|---|
-| 29 gallery images | **191.4 MB** (6.60 MB avg, 16.95 MB largest) |
+| 29 gallery images | **191.4 MB** (6.60 MB avg, 16.95 MB largest) — now 39 images / 211.7 MB with Copenhagen |
 | Hero video (`.mov`, autoplay) | **32.4 MB** |
 | Home cover PNG (`app/home.css:28`) | 2.46 MB |
 | Engineering cover PNG (`app/engineering/engineering.css:81`) | 1.90 MB |
 | Case-study MP4 (`app/engineering/into-your-stories/page.tsx:12`) | 10.76 MB |
-| `cache-control` on every asset | **`no-cache`** — nothing caches, returning visitors re-download everything |
+| `cache-control` on every asset | `max-age=3600` (see correction above) |
 
-**Target: under 8 MB.** Re-run `npm run photos:measure` to reproduce the baseline; `npm run photos:measure after` compares once derivatives are live.
+**Target: under 8 MB — met at the asset level.** Measured 2026-08-06, both via ranged GET:
+
+| | Photos | Total | Average | Largest | cache-control |
+|---|---|---|---|---|---|
+| before | 39 | 211.7 MB | 5.43 MB | 16.95 MB | `max-age=3600` |
+| after | 39 | **6.9 MB** | 0.18 MB | 0.52 MB | `public, max-age=31536000, immutable` |
+
+**This is not yet a page-weight win.** It measures the 1800 AVIF rung on Supabase; nothing on the site requests those files until Tasks 6–8 land. `/creative` still loads the 211.7 MB of originals.
 
 Two defects found while measuring, both being fixed as part of this work:
 
@@ -67,7 +76,7 @@ Two defects found while measuring, both being fixed as part of this work:
 | 2. Fetch masters | ✅ Done — `351db83`. All 29 masters local, 191.4 MB. Re-run skips all 29. |
 | 3. Derivatives and manifest | ✅ Done — `fdb684e`. 274 derivatives, 37.3 MB on disk; 1800 AVIF rung is 5.64 MB for all 29. |
 | 4. Measurement harness | ✅ Done — `d453f5c`. Baseline captured before any upload. |
-| 5. Upload | Not started — **unblocked**, `.env.local` verified (role `service_role`, bucket `portfolio` reachable) |
+| 5. Upload | ✅ Done — `09bbace`. 372 files under `optimized/`, remote count matches local, masters byte-identical. |
 | 6. `Photo` component | Not started — needs 3 |
 | 7. Floating layout | Not started — needs 6 |
 | 8. Overlay fixes | Not started — needs 6 |
@@ -111,6 +120,12 @@ Also unresolved: **whether the `.mov` hero ever played in Chrome.** QuickTime co
 
 ## To resume
 
-> Continue the photo pipeline work on rutvijdhotey.com — read `PROGRESS.md`, then the plan's Progress section, and start Task 5.
+> Continue the photo pipeline work on rutvijdhotey.com — read `PROGRESS.md`, then the plan's Progress section, and start Task 6.
 
-Task 5 (upload) is unblocked and is the first step that **writes** to Supabase. Everything before it was read-only. Upload only under the `optimized/` prefix; `upload.mjs` must throw if a key falls outside it. Verify a master is byte-identical afterwards using the `curl` check above.
+Derivatives are live on Supabase but **nothing on the site requests them yet**. Task 6 (`Photo` component) is what converts the upload into an actual page-weight win, and Tasks 7–8 follow from it. Task 9 remains blocked on ffmpeg.
+
+Verification habit worth keeping: check Supabase headers with a **ranged GET**, never HEAD.
+
+```bash
+curl -s -o /dev/null -D- -r 0-1 "<url>" | grep -iE "cache-control|content-range"
+```

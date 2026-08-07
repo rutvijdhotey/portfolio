@@ -46,7 +46,7 @@ Tasks 1–4 and 6–8 are fully unblocked and can proceed now.
 | 2. Fetch masters | ✅ Done — `351db83`. 29 masters, 191.4 MB, local backup now exists. Idempotent re-run skips all 29. |
 | 3. Derivatives and manifest | ✅ Done — `fdb684e`. 274 files, 37.3 MB on disk; 1800 AVIF rung 5.64 MB for all 29. Manifest has 29 well-formed entries. |
 | 4. Measurement harness | ✅ Done — `d453f5c`. Baseline captured against the live site before any upload. |
-| 5. Upload | Not started — **unblocked**, `.env.local` present and verified |
+| 5. Upload | ✅ Done — `09bbace`. 372 files, 47.4 MB, remote count matches local. **Step 4's verification was wrong**: a HEAD against Supabase always reports `no-cache`, so it would have triggered a false stop. Verify with a ranged GET instead. |
 | 6. `Photo` component | Not started — depends on 3 |
 | 7. Floating layout | Not started — depends on 6 |
 | 8. Overlay fixes | Not started — depends on 6 |
