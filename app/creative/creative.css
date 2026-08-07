@@ -63,7 +63,9 @@
 }
 .nav-social:hover { color: #ffffff; }
 
-/* ── VIDEO HERO ── */
+/* ── HERO ──
+   Still an <img> for now, not a video — see the note in creative/page.tsx.
+   The class names are kept so restoring the video is a one-element change. */
 .video-hero {
   position: relative;
   width: 100%;

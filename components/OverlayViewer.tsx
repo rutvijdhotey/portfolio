@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
-import { GalleryItem } from '@/lib/gallery-items'
+import { GalleryItem, photoUrl, overlayWidth } from '@/lib/gallery-items'
 import './overlay.css'
 
 interface Props {
@@ -18,6 +18,15 @@ export default function OverlayViewer({ items, open, currentIndex, onClose, onNa
   const overlayRef = useRef<HTMLDivElement>(null)
   const mediaRef = useRef<HTMLElement | null>(null)
   const [displayIndex, setDisplayIndex] = useState(currentIndex)
+
+  // Nothing is mounted with a live src until the overlay is opened for the
+  // first time — otherwise image #1 downloads at full resolution on every
+  // page load, whether or not anyone opens the viewer. A ref rather than
+  // state, so the first open mounts the image in the same render instead of
+  // painting an empty overlay and then re-rendering.
+  const hasOpenedRef = useRef(false)
+  if (open) hasOpenedRef.current = true
+  const hasOpened = hasOpenedRef.current
 
   // Sync displayIndex when overlay opens or parent changes currentIndex
   useEffect(() => {
@@ -52,6 +61,17 @@ export default function OverlayViewer({ items, open, currentIndex, onClose, onNa
     return () => window.removeEventListener('keydown', onKey)
   })
 
+  // Prefetch both neighbours so arrow navigation paints instantly.
+  useEffect(() => {
+    if (!open) return
+    for (const offset of [1, -1]) {
+      const neighbour = items[(displayIndex + offset + items.length) % items.length]
+      if (!neighbour) continue
+      const img = new Image()
+      img.src = photoUrl(neighbour, overlayWidth(neighbour), 'avif')
+    }
+  }, [open, displayIndex, items])
+
   function navigate(dir: number) {
     // Pause current video before navigating away
     if (mediaRef.current instanceof HTMLVideoElement) mediaRef.current.pause()
@@ -70,31 +90,24 @@ export default function OverlayViewer({ items, open, currentIndex, onClose, onNa
 
   const item = items[displayIndex]
 
+  if (!hasOpened || !item) {
+    return <div ref={overlayRef} className="overlay" aria-hidden="true" />
+  }
+
   return (
     <div ref={overlayRef} className={`overlay${open ? ' overlay--open' : ''}`}>
       <button className="overlay-close" onClick={onClose}>✕ Close</button>
       <button className="overlay-arrow overlay-arrow--prev" onClick={() => navigate(-1)}>←</button>
 
-      {item?.type === 'video' ? (
-        // eslint-disable-next-line jsx-a11y/media-has-caption
-        <video
-          ref={mediaRef as React.RefObject<HTMLVideoElement>}
-          key={item.src}
-          className="overlay-video"
-          src={item.src}
-          controls
-          autoPlay
-          playsInline
-        />
-      ) : (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          ref={mediaRef as React.RefObject<HTMLImageElement>}
-          className="overlay-img"
-          src={item?.src ?? ''}
-          alt={item?.alt ?? ''}
-        />
-      )}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        ref={mediaRef as React.RefObject<HTMLImageElement>}
+        className="overlay-img"
+        src={photoUrl(item, overlayWidth(item), 'avif')}
+        alt={item.alt}
+        width={item.width}
+        height={item.height}
+      />
 
       <button className="overlay-arrow overlay-arrow--next" onClick={() => navigate(1)}>→</button>
       <span className="overlay-counter">{displayIndex + 1} / {items.length}</span>
