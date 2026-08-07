@@ -11,9 +11,6 @@ import './gallery.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
-/** Shows each photo's id and current placement while art-directing. Dev only. */
-const REVIEW_MODE = process.env.NODE_ENV === 'development'
-
 interface Props {
   items: GalleryItem[]
   onItemClick: (globalIndex: number) => void
@@ -68,12 +65,6 @@ export default function GalleryFlow({ items, onItemClick, indexOffset = 0 }: Pro
                 priority={indexOffset === 0 && b === 0 && photo.index === 0}
                 onClick={() => onItemClick(indexOffset + photo.index)}
               />
-              {/* Review aid for the placement pass. Dev only — never shipped. */}
-              {REVIEW_MODE && (
-                <span className="photo-review-tag">
-                  {`${photo.item.id} · ${photo.share}% ↓${photo.drop}`}
-                </span>
-              )}
             </div>
           ))}
         </div>
