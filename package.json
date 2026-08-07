@@ -11,7 +11,9 @@
     "photos:build": "node scripts/photos/build-derivatives.mjs",
     "photos:upload": "node --env-file=.env.local scripts/photos/upload.mjs",
     "photos:measure": "node scripts/photos/measure.mjs",
-    "test": "node --test \"scripts/**/*.test.mjs\" \"lib/**/*.test.ts\""
+    "test": "node --test \"scripts/**/*.test.mjs\" \"lib/**/*.test.ts\"",
+    "covers:build": "node scripts/photos/build-covers.mjs",
+    "covers:upload": "node --env-file=.env.local scripts/photos/upload.mjs covers"
   },
   "dependencies": {
     "gsap": "^3.15.0",

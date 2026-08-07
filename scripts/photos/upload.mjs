@@ -60,10 +60,17 @@ async function upload(path) {
   }
 }
 
-let count = 0, bytes = 0
+// An optional argument narrows the run to paths containing that substring, so a
+// small change (say the covers) doesn't re-upload all 372 gallery derivatives.
+// The optimized/ guard in upload() still applies either way.
+const filter = process.argv[2]
+
+let count = 0, bytes = 0, skipped = 0
 for await (const path of walk(DERIVATIVES_DIR)) {
+  if (filter && !path.includes(filter)) { skipped++; continue }
   bytes += await upload(path)
   count++
   if (count % 25 === 0) console.log(`  ${count} uploaded...`)
 }
-console.log(`\n${count} files, ${(bytes / 1048576).toFixed(1)} MB uploaded to ${DERIVATIVE_PATH}/`)
+const scope = filter ? ` matching "${filter}" (${skipped} skipped)` : ''
+console.log(`\n${count} files${scope}, ${(bytes / 1048576).toFixed(1)} MB uploaded to ${DERIVATIVE_PATH}/`)

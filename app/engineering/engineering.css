@@ -78,7 +78,10 @@
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('https://mskwqqbigtauakojpyhn.supabase.co/storage/v1/object/public/covers/2026-04-17T07:02:16.297Z.png');
+  background-image: image-set(
+    url('https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/optimized/covers/engineering-hero.avif') type('image/avif'),
+    url('https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/optimized/covers/engineering-hero.webp') type('image/webp')
+  );
   background-size: cover;
   background-position: center;
   filter: brightness(0.62) saturate(0.85);

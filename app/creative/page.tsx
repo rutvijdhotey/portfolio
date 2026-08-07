@@ -16,6 +16,7 @@ gsap.registerPlugin(ScrollTrigger)
 
 const HERO_VIDEO_DESKTOP = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Videos/IMG_7855.mov'
 const HERO_VIDEO_MOBILE  = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Videos/IMG_7946%20(1).mov'
+const HERO_POSTER = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/optimized/covers/creative-hero-poster.avif'
 
 const chapters = [
   { key: 'city',   num: '01', title: 'City',   meta: 'Japan · Street & Architecture',       items: cityItems,   offset: 0 },
@@ -74,7 +75,16 @@ export default function Creative() {
       {/* ── Video Hero ── */}
       <section className="video-hero">
         {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-        <video ref={videoRef} className="video-hero__video" autoPlay muted loop playsInline />
+        {/* The poster paints immediately and is the LCP element — the video's
+            src is only assigned after hydration, so without this the hero is a
+            black box until the fetch starts. */}
+        <video
+          ref={videoRef}
+          className="video-hero__video"
+          poster={HERO_POSTER}
+          preload="none"
+          autoPlay muted loop playsInline
+        />
         <div className="video-hero__overlay" />
         <div className="video-hero__content">
           <h1 className="hero-title">Creative</h1>

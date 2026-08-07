@@ -25,7 +25,10 @@
 .panel--eng .bg-img {
   position: absolute;
   inset: 0;
-  background-image: url('https://mskwqqbigtauakojpyhn.supabase.co/storage/v1/object/public/covers/Gemini_Generated_Image_hwg7nmhwg7nmhwg7.png');
+  background-image: image-set(
+    url('https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/optimized/covers/home-engineering.avif') type('image/avif'),
+    url('https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/optimized/covers/home-engineering.webp') type('image/webp')
+  );
   background-size: cover;
   background-position: center;
   opacity: 0.18;
@@ -43,7 +46,10 @@
 .panel--creative .bg-img {
   position: absolute;
   inset: 0;
-  background-image: url('https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/Images/Random/HaleakalaSunrisePortrait_1.jpg');
+  background-image: image-set(
+    url('https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/optimized/covers/home-creative.avif') type('image/avif'),
+    url('https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/optimized/covers/home-creative.webp') type('image/webp')
+  );
   background-size: cover;
   background-position: center;
   transition: transform 0.9s cubic-bezier(0.76,0,0.24,1);
