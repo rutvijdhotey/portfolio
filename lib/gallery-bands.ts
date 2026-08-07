@@ -123,6 +123,23 @@ export function dropOffset(photo: BandPhoto): string {
   return `${((photo.drop / 100) * renderedHeight(photo)).toFixed(2)}%`
 }
 
+/** Content column at its widest: the 1440px max-width less 72px of padding each side. */
+const COLUMN_MAX = 1296
+/** Viewport at which the column stops growing: 1440 plus both paddings. */
+const COLUMN_LOCK = 1584
+/** Below the lock the column is roughly 90% of the viewport, padding included. */
+const COLUMN_VW_RATIO = 0.9
+
+/**
+ * A `sizes` value for a photo occupying `share` percent of the content column.
+ * Below 768px every band collapses to one photo per row at 92vw.
+ */
+export function photoSizes(share: number): string {
+  const pinned = Math.round((share / 100) * COLUMN_MAX)
+  const scaled = Math.round(share * COLUMN_VW_RATIO)
+  return `(max-width: 768px) 92vw, (min-width: ${COLUMN_LOCK}px) ${pinned}px, ${scaled}vw`
+}
+
 /** A pair is legal unless it puts two portraits side by side, or involves a panorama. */
 function canPair(a: GalleryItem, b: GalleryItem): boolean {
   const sa = classify(a)

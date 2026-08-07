@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { classify, buildBands, dropOffset, TEST_TUNING } from './gallery-bands.ts'
+import { classify, buildBands, dropOffset, photoSizes, TEST_TUNING } from './gallery-bands.ts'
 import type { Band } from './gallery-bands.ts'
 import type { GalleryItem } from './gallery-items.ts'
 
@@ -189,4 +189,20 @@ test('dropOffset converts a drop into a percentage of the column', () => {
 test('dropOffset is zero for an undropped photo', () => {
   const photo = { item: wide('x'), index: 0, share: 50, drop: 0 }
   assert.equal(dropOffset(photo), '0%')
+})
+
+test('photoSizes pins a pixel width above the column max and scales below it', () => {
+  // Column is 1296px at and above a 1584px viewport (1440 max-width less 2x72 padding).
+  // 30% of 1296 is 389px.
+  assert.equal(
+    photoSizes(30),
+    '(max-width: 768px) 92vw, (min-width: 1584px) 389px, 27vw',
+  )
+})
+
+test('photoSizes handles a full-width panorama', () => {
+  assert.equal(
+    photoSizes(92),
+    '(max-width: 768px) 92vw, (min-width: 1584px) 1192px, 83vw',
+  )
 })
