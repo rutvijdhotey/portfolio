@@ -47,9 +47,9 @@ Tasks 1–4 and 6–8 are fully unblocked and can proceed now.
 | 3. Derivatives and manifest | ✅ Done — `fdb684e`. 274 files, 37.3 MB on disk; 1800 AVIF rung 5.64 MB for all 29. Manifest has 29 well-formed entries. |
 | 4. Measurement harness | ✅ Done — `d453f5c`. Baseline captured against the live site before any upload. |
 | 5. Upload | ✅ Done — `09bbace`. 372 files, 47.4 MB, remote count matches local. **Step 4's verification was wrong**: a HEAD against Supabase always reports `no-cache`, so it would have triggered a false stop. Verify with a ranged GET instead. |
-| 6. `Photo` component | Not started — depends on 3 |
-| 7. Floating layout | Not started — depends on 6 |
-| 8. Overlay fixes | Not started — depends on 6 |
+| 6. `Photo` component | ✅ Done — `392887f` |
+| 7. Floating layout | ✅ Done — `392887f`. **Step 2's `priority={i === 0}` was wrong** — it marks one photo eager per chapter. Scoped to the first on the page. |
+| 8. Overlay fixes | ✅ Done — `392887f`. **Step 2's `Math.min(OVERLAY_WIDTH, item.width)` was wrong** — yields 2048 for the Bend Oregon masters, a rung that was never generated, so all 8 would 404. Use `overlayWidth()`. |
 | 9. Hero video and covers | Partially blocked — poster/cover work is unblocked, re-encode needs ffmpeg |
 | 10. Verify and finish | Not started |
 

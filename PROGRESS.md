@@ -46,7 +46,7 @@ Measured against the live site on 2026-07-31:
 | before | 39 | 211.7 MB | 5.43 MB | 16.95 MB | `max-age=3600` |
 | after | 39 | **6.9 MB** | 0.18 MB | 0.52 MB | `public, max-age=31536000, immutable` |
 
-**This is not yet a page-weight win.** It measures the 1800 AVIF rung on Supabase; nothing on the site requests those files until Tasks 6–8 land. `/creative` still loads the 211.7 MB of originals.
+As of `392887f` the site actually requests these files. Verified at a 1440px viewport: 39 photos, all `optimized/` AVIF, 1800 rung selected, 1 eager / 38 lazy, no `-2560` fetched on load, and the overlay mounts zero images until it is first opened.
 
 Two defects found while measuring, both being fixed as part of this work:
 
@@ -77,9 +77,9 @@ Two defects found while measuring, both being fixed as part of this work:
 | 3. Derivatives and manifest | ✅ Done — `fdb684e`. 274 derivatives, 37.3 MB on disk; 1800 AVIF rung is 5.64 MB for all 29. |
 | 4. Measurement harness | ✅ Done — `d453f5c`. Baseline captured before any upload. |
 | 5. Upload | ✅ Done — `09bbace`. 372 files under `optimized/`, remote count matches local, masters byte-identical. |
-| 6. `Photo` component | Not started — needs 3 |
-| 7. Floating layout | Not started — needs 6 |
-| 8. Overlay fixes | Not started — needs 6 |
+| 6. `Photo` component | ✅ Done — `392887f` |
+| 7. Floating layout | ✅ Done — `392887f`. Placements for all 39 in `lib/gallery-layout.ts`; **not yet reviewed by a human**. |
+| 8. Overlay fixes | ✅ Done — `392887f` |
 | 9. Hero video and covers | Partially blocked — poster/cover work unblocked, re-encode needs ffmpeg |
 | 10. Verify and finish | Not started |
 
@@ -120,9 +120,11 @@ Also unresolved: **whether the `.mov` hero ever played in Chrome.** QuickTime co
 
 ## To resume
 
-> Continue the photo pipeline work on rutvijdhotey.com — read `PROGRESS.md`, then the plan's Progress section, and start Task 6.
+> Continue the photo pipeline work on rutvijdhotey.com — read `PROGRESS.md`, then the plan's Progress section. Tasks 1–8 are done; Task 9 is blocked on ffmpeg, so the next thing needing a human is the photo review pass.
 
-Derivatives are live on Supabase but **nothing on the site requests them yet**. Task 6 (`Photo` component) is what converts the upload into an actual page-weight win, and Tasks 7–8 follow from it. Task 9 remains blocked on ffmpeg.
+**The photo review is now the critical path.** `object-fit: cover` is gone, so all 39 photos display uncropped for the first time and every placement in `lib/gallery-layout.ts` is a first guess, not a considered choice. Adjust `size`/`align` per photo there.
+
+Task 9 remains blocked on ffmpeg. Nothing is pushed; `main` is untouched.
 
 Verification habit worth keeping: check Supabase headers with a **ranged GET**, never HEAD.
 
