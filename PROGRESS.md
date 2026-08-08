@@ -9,18 +9,18 @@ This file is a cold-start handoff. Read it first, then the plan.
 
 ## Where things stand
 
-| Branch | Commit | State |
+**Shipped and live as of 2026-08-07.** `main` is at `ad47246`; the GitHub Pages deploy succeeded and rutvijdhotey.com serves the new build.
+
+| Merged | PR | Contents |
 |---|---|---|
-| `feature/paris-chapter` | `ec007e1` | Paris chapter (8 photos, section 04). Was sitting uncommitted on `main`; rescued onto its own branch. **Not pushed, no PR.** |
-| `feature/photo-pipeline-floating-gallery` | `e32c401` | Task 1 — pipeline config + URL helpers. 4/4 tests pass. `masterUrl` verified against live Supabase (HTTP 200, 735564 bytes). |
-| ″ | `abaf2c6` | The implementation plan. |
-| ″ | `351db83` | Task 2 — fetch masters. |
-| ″ | `d453f5c` | Task 4 — measurement harness + recorded baseline. |
-| ″ | `fdb684e` | Task 3 — derivative ladder + `lib/photo-manifest.json`. |
+| `feature/paris-chapter` | [#8](https://github.com/rutvijdhotey/portfolio/pull/8) | Paris chapter (8 photos, section 04) |
+| `feature/photo-pipeline-floating-gallery` | [#9](https://github.com/rutvijdhotey/portfolio/pull/9) | Photo pipeline, floating collage gallery, covers, hero video removal |
 
-Nothing pushed to GitHub. `masters/` (191.4 MB) and `derivatives/` (37.3 MB) exist locally and are gitignored.
+Verified against the live site, not just the build: `/creative` serves `photo-band` markup and `optimized/` derivatives, with zero references to the old masters or the hero `.mov`. Home and engineering serve the AVIF covers.
 
-**Branch stacking:** `feature/photo-pipeline-floating-gallery` is branched off `feature/paris-chapter`, **not** off `main` — the pipeline's source list and the generated manifest both need the Paris photos. Merge the Paris PR first, then rebase this branch onto `main`.
+> **Every commit hash quoted below is from before the pre-push rewrite and no longer resolves.** Both branches were rewritten to fix six misattributed commits (see Known gaps), which invalidated every hash. They are left in place as a record of what was done in what order, not as references you can `git show`.
+
+`masters/` (191.4 MB) and `derivatives/` (37.3 MB) exist locally and are gitignored. Supabase still holds the only remote copy of the masters.
 
 ---
 
@@ -46,7 +46,16 @@ Measured against the live site on 2026-07-31:
 | before | 39 | 211.7 MB | 5.43 MB | 16.95 MB | `max-age=3600` |
 | after | 39 | **6.9 MB** | 0.18 MB | 0.52 MB | `public, max-age=31536000, immutable` |
 
-As of `392887f` the site actually requests these files. Verified at a 1440px viewport: 39 photos, all `optimized/` AVIF, 1800 rung selected, 1 eager / 38 lazy, no `-2560` fetched on load, and the overlay mounts zero images until it is first opened.
+The site actually requests these files. Verified at a 1440px viewport: 39 photos, all `optimized/` AVIF, 1 eager / 38 lazy, no `-2560` fetched on load, and the overlay mounts zero images until it is first opened. The band layout later widened rung selection from all-1800 to a 768/1200/1800 mix, since a photo at a 30% share only needs ~390px.
+
+**Whole-page result**, once the covers and the hero video were dealt with too:
+
+| Asset class | Before | After |
+|---|---|---|
+| 39 gallery photos | 211.7 MB | **6.9 MB** |
+| 3 full-bleed covers | 4.93 MB | **442 KB** |
+| Hero video (autoplay) | 32.4 MB (+33.1 MB on mobile) | **removed** — 156 KB poster still |
+| Case-study MP4 | 11.3 MB | unchanged, but `preload="metadata"` so it is not fetched until played |
 
 Two defects found while measuring, both being fixed as part of this work:
 
@@ -80,12 +89,12 @@ Two defects found while measuring, both being fixed as part of this work:
 | 6. `Photo` component | ✅ Done — `392887f` |
 | 7. Floating layout | ✅ Redone as bands — see [the collage spec](docs/superpowers/specs/2026-08-07-floating-collage-gallery-design.md). 39 photos in 21 bands. **Reviewed and accepted by Rutvij, 2026-08-07** — every derived band stands, no overrides added beyond the Dotonbori pair. Review badge removed. |
 | 8. Overlay fixes | ✅ Done — `392887f` |
-| 9. Hero video and covers | Partially blocked — poster/cover work unblocked, re-encode needs ffmpeg |
-| 10. Verify and finish | Not started |
+| 9. Hero video and covers | ✅ Done for everything that does not need ffmpeg. Three covers converted to AVIF (4.93 MB → 442 KB), hero poster added, then the hero video removed entirely. **Re-encoding is still open.** |
+| 10. Verify and finish | ✅ Done — merged via #8 and #9, deployed, and verified live. |
 
 ---
 
-## Blocked on the user
+## Blocked on the user — video only
 
 **1. ffmpeg — not installed.** Needed to re-encode the hero and case-study videos. Either install it, or supply encoded MP4/WebM files directly.
 
@@ -121,7 +130,7 @@ Note the mobile hero was *larger* than the desktop one, and both were 4K. They a
 
 ## Known gaps
 
-- **The case-study MP4 has no task.** 10.76 MB at `app/engineering/into-your-stories/page.tsx:12`. Blocked on the same ffmpeg decision; fold it into Task 9 once that's resolved.
+- **The case-study MP4 is deliberately untouched.** 11.3 MB at `app/engineering/into-your-stories/page.tsx:12`. Unlike the hero it is `preload="metadata"` behind `controls`, so it downloads only a few KB of container metadata on page load — it costs nothing until a visitor presses play. It is also content rather than decoration: the demo of Into Your Stories, with a "Watch demo →" CTA pointing at the same file. Re-encode it when ffmpeg is available, but do not remove it for weight.
 - **The light palette was never designed.** Theming is agreed in principle but pure `#ffffff` will fight the cream `#f0ede8` text and make the photographs look clinical — likely a warm off-white instead. Must be decided before branch 2.
 - ~~**All 39 photos need a human review pass.**~~ **Done 2026-08-07.** Rutvij reviewed
   all 21 bands against the running page and accepted every derived grouping; the only
@@ -131,7 +140,8 @@ Note the mobile hero was *larger* than the desktop one, and both were 4K. They a
   `lib/gallery-layout.ts` holds the tuning plus the authored exceptions — add a
   `BAND_OVERRIDES` entry for a specific pairing, or change `TUNING` if the whole scale
   is off rather than individual bands.
-- **Git identity: fixed going forward, not retroactively.** `user.name`/`user.email` are now set globally, so `fdb684e` onward is correctly attributed. The six earlier commits — `ec007e1` on `feature/paris-chapter`, plus `e32c401`, `abaf2c6`, `584622d`, `351db83`, `d453f5c` here — still carry `rutvijdhotey@Rutvijs-MacBook-Pro.local` and won't link to the GitHub account. Rewriting them spans both stacked branches, so the order matters: rewrite `feature/paris-chapter` first, then replay this branch with `git rebase --onto`. Nothing is pushed, so it's still free. The rewrite invalidates every commit hash quoted in this file.
+- ~~**Git identity: fixed going forward, not retroactively.**~~ **Resolved 2026-08-07, before the push.** The six commits carrying `rutvijdhotey@Rutvijs-MacBook-Pro.local` were rewritten across both stacked branches — `feature/paris-chapter` first, then the pipeline branch replayed with `git rebase --onto`. Verified afterwards that the diff against the pre-rewrite backups was empty (metadata only, no content change), the commit count was unchanged at 28, and every one of the 28 resolves to the `rutvijdhotey` GitHub account via the API. The rewrite invalidated every commit hash quoted in this file.
+  - **Still outstanding, and deliberately left alone:** roughly 40 older commits already on `main` are also unlinked, from before the global identity was set. Fixing those means rewriting published history on `main` — a materially different proposition from cleaning up unpushed work, and not recommended.
 
 - **The 8 Bend Oregon masters are only 2048px wide**, so they skip the 2560 overlay rung (the pipeline never upscales) — 21 of 29 photos have it. Task 8's overlay must fall back to the 1800 rung when the dedicated one is absent, rather than assuming it always exists.
 
@@ -139,17 +149,14 @@ Note the mobile hero was *larger* than the desktop one, and both were 4K. They a
 
 ## To resume
 
-> Continue the photo pipeline work on rutvijdhotey.com — read `PROGRESS.md`, then the plan's Progress section. Tasks 1–8 are done; Task 9 is blocked on ffmpeg, so the next thing needing a human is the photo review pass.
+> The photo pipeline and floating collage gallery on rutvijdhotey.com are shipped and live as of 2026-08-07. Read `PROGRESS.md` first. Two things remain: re-encoding the videos (needs ffmpeg, not installed) and theming (needs its own spec — the light palette was never designed).
 
-**The photo review is done** (2026-08-07) — every derived band was accepted, and the
-review badge is out. The gallery is finished as far as it can go on this branch.
+**This branch of work is finished.** Tasks 1–10 are complete, merged via #8 and #9, deployed, and verified against the live site.
 
-**The critical path is now ffmpeg**, which still blocks Task 9 — the 32 MB hero `.mov`
-and the 10.8 MB case-study MP4. Everything else on the branch is complete.
+**What is left, in the order it was agreed:**
 
-After that it is a merge problem, and the order matters: rewrite the six misattributed
-commits on `feature/paris-chapter` first, replay this branch with `git rebase --onto`,
-then merge Paris before this. Nothing is pushed; `main` is untouched.
+1. **Video re-encoding.** Blocked on ffmpeg, which is not installed — do not install it unprompted; Rutvij's standing preference is to supply converted assets himself. Three files, all still untouched on Supabase: `IMG_7855.mov` (32.4 MB), `IMG_7946 (1).mov` (33.1 MB), `movie.mp4` (11.3 MB). The first two are no longer referenced by the site; the third still is, but it sits behind `preload="metadata"` and `controls`, so it costs almost nothing until someone presses play.
+2. **Theming** — light/dark with dark as the forced default and media surfaces exempt. A separate branch, and it needs its own spec before any code. The light palette is the open design question.
 
 Verification habit worth keeping: check Supabase headers with a **ranged GET**, never HEAD.
 
