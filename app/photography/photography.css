@@ -1,0 +1,93 @@
+/* app/photography/photography.css */
+
+.ph-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px clamp(18px, 4vw, 44px);
+  background: linear-gradient(to bottom, var(--surface), transparent);
+}
+.ph-nav__name { font-family: var(--serif); font-size: 15px; }
+.ph-nav__right { display: flex; gap: 20px; align-items: center; }
+.ph-nav__link {
+  font-family: var(--sans); font-size: 12px; color: var(--content-muted);
+  transition: color 160ms var(--ease-out);
+}
+.ph-nav__link:hover { color: var(--content); }
+
+.theme-toggle {
+  font-family: var(--sans); font-size: 11px; letter-spacing: .08em;
+  padding: 6px 12px; border: 1px solid var(--hairline); border-radius: 999px;
+  background: transparent; color: var(--content-muted); cursor: pointer;
+  transition: color 160ms var(--ease-out), border-color 160ms var(--ease-out);
+  /* Reserve the width the label will take, so the rail does not jump when
+     the client resolves the theme and the placeholder becomes a button. */
+  min-width: 58px; min-height: 27px; display: inline-block; text-align: center;
+}
+.theme-toggle:hover { color: var(--content); border-color: var(--content-muted); }
+
+.ph-head {
+  width: var(--col); margin: 0 auto;
+  padding: clamp(150px, 22vh, 260px) 0 clamp(70px, 10vh, 120px);
+}
+.ph-head__title {
+  font-family: var(--serif); font-weight: 300;
+  font-size: clamp(44px, 7.2vw, 104px); line-height: .94;
+  letter-spacing: -0.02em; text-wrap: balance;
+}
+.ph-head__sub {
+  margin-top: 22px; max-width: 52ch;
+  font-family: var(--sans); font-size: 15px; line-height: 1.65;
+  color: var(--content-muted);
+}
+
+.print-room {
+  width: var(--col); max-width: 1440px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: clamp(80px, 11vw, 170px);
+}
+.print-frame { width: 100%; }
+.print-frame[data-orient="tall"] { width: min(53%, 720px); margin-inline: auto; }
+.print-frame .photo { box-shadow: var(--frame-edge); }
+
+.print-cap {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: 12px;
+  font-family: var(--sans); font-size: 11px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--content-muted);
+}
+.print-cap__n { color: var(--accent); font-variant-numeric: tabular-nums; }
+
+.ph-trips {
+  width: var(--col); margin: clamp(120px, 16vh, 200px) auto 0;
+  border-top: 1px solid var(--hairline); padding-top: 40px;
+}
+.ph-trips__label {
+  font-family: var(--sans); font-size: 11px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--content-muted);
+}
+.ph-trip {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 24px;
+  padding: 26px 0; border-bottom: 1px solid var(--hairline);
+}
+.ph-trip__title {
+  font-family: var(--serif); font-weight: 300;
+  font-size: clamp(26px, 3.4vw, 44px);
+  transition: color 200ms var(--ease-out);
+}
+.ph-trip__meta {
+  font-family: var(--sans); font-size: 11px; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--content-muted);
+}
+.ph-trip:hover .ph-trip__title { color: var(--accent); }
+
+.ph-foot {
+  width: var(--col); margin: clamp(100px, 14vh, 160px) auto 0;
+  border-top: 1px solid var(--hairline);
+  padding: 40px 0 120px;
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 18px;
+  font-family: var(--sans); font-size: 12px; color: var(--content-muted);
+}
+
+@media (max-width: 768px) {
+  .print-frame[data-orient="tall"] { width: 100%; }
+  .print-room { gap: clamp(48px, 14vw, 90px); }
+}

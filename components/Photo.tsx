@@ -1,6 +1,7 @@
 'use client'
 
 import { GalleryItem, srcSet, photoUrl, availableWidths } from '@/lib/gallery-items'
+import './photo.css'
 
 interface Props {
   item: GalleryItem
@@ -17,6 +18,7 @@ export default function Photo({ item, sizes, priority = false, onClick }: Props)
   return (
     <figure
       className="photo"
+      data-clickable={onClick ? 'true' : undefined}
       style={{ aspectRatio: `${item.width} / ${item.height}`, backgroundColor: item.tint }}
       onClick={onClick}
     >
