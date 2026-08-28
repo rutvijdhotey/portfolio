@@ -1,130 +1,38 @@
-// app/creative/page.tsx
-'use client'
-
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import GalleryFlow from '@/components/GalleryFlow'
-import OverlayViewer from '@/components/OverlayViewer'
-import {
-  cityItems, natureItems, randomItems, parisItems, copenhagenItems, allItems,
-} from '@/lib/gallery-items'
-import './creative.css'
+import type { Metadata } from 'next'
 
-gsap.registerPlugin(ScrollTrigger)
+export const metadata: Metadata = {
+  title: 'Moved',
+  alternates: { canonical: '/photography' },
+  robots: { index: false, follow: true },
+}
 
-// The hero was a 32 MB autoplaying .mov (plus a 33 MB "mobile" sibling), which
-// dwarfed the 6.9 MB of photographs on the rest of the page. Pulled out until
-// the files are re-encoded; the originals are untouched on Supabase under
-// Videos/, and PROGRESS.md records how to restore them.
-const HERO_IMAGE = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/optimized/covers/creative-hero-poster.avif'
-
-const chapters = [
-  { key: 'city',   num: '01', title: 'City',   meta: 'Japan · Street & Architecture',       items: cityItems,   offset: 0 },
-  { key: 'nature', num: '02', title: 'Nature',  meta: 'Bend, Oregon · Landscape',           items: natureItems, offset: cityItems.length },
-  { key: 'random', num: '03', title: 'Random',  meta: 'Various · Aerial & Candid',          items: randomItems, offset: cityItems.length + natureItems.length },
-  { key: 'paris',  num: '04', title: 'Paris',   meta: 'Paris, France · Streets & Architecture', items: parisItems,  offset: cityItems.length + natureItems.length + randomItems.length },
-  { key: 'copenhagen', num: '05', title: 'Copenhagen', meta: 'Copenhagen, Denmark · Streets & Harbour', items: copenhagenItems, offset: cityItems.length + natureItems.length + randomItems.length + parisItems.length },
-]
-
-export default function Creative() {
-  const [overlayOpen, setOverlayOpen]   = useState(false)
-  const [overlayIndex, setOverlayIndex] = useState(0)
-
-  function openOverlay(index: number) {
-    setOverlayIndex(index)
-    setOverlayOpen(true)
-  }
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from('nav > *', { opacity: 0, y: -10, duration: 1, ease: 'power3.out', delay: 0.2, stagger: 0.08 })
-      gsap.from('.hero-title', { opacity: 0, y: 30, duration: 1.2, ease: 'power3.out', delay: 0.4 })
-      gsap.from('.hero-sub',   { opacity: 0, y: 16, duration: 1,   ease: 'power3.out', delay: 0.65 })
-      gsap.from('.hero-scroll',{ opacity: 0, duration: 1.2, delay: 1.2 })
-
-      document.querySelectorAll<HTMLElement>('.chapter-intro').forEach(el => {
-        gsap.from(el.querySelectorAll('.chapter-num, .chapter-title, .chapter-meta'), {
-          scrollTrigger: { trigger: el, start: 'top 82%' },
-          opacity: 0, y: 40, duration: 1.1, ease: 'power3.out', stagger: 0.08,
-        })
-      })
-    })
-    return () => ctx.revert()
-  }, [])
-
+/**
+ * /creative moved to /photography on 2026-08-27. GitHub Pages serves static
+ * files only and cannot issue a 301, so this page redirects in the browser
+ * and points crawlers at the canonical URL. Do not delete it — every link
+ * shared before that date lands here.
+ */
+export default function CreativeMoved() {
   return (
     <>
-      <nav className="creative-nav">
-        <Link href="/" className="nav-back">← Home</Link>
-        <Link href="/" className="nav-name">Rutvij Dhotey</Link>
-        <div className="nav-right">
-          <a href="https://instagram.com/intoyourstories" className="nav-social" target="_blank" rel="noopener">@intoyourstories</a>
-          <a href="https://instagram.com/mytadkatruffle" className="nav-social" target="_blank" rel="noopener">@mytadkatruffle</a>
-          <span className="nav-section">Creative</span>
-        </div>
-      </nav>
-
-      {/* ── Video Hero ── */}
-      <section className="video-hero">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className="video-hero__video"
-          src={HERO_IMAGE}
-          alt="Commuters crossing a glass walkway at Shinjuku station, Tokyo"
-          fetchPriority="high"
-        />
-        <div className="video-hero__overlay" />
-        <div className="video-hero__content">
-          <h1 className="hero-title">Creative</h1>
-          <p className="hero-sub">Travel Photography &amp; Film &nbsp;·&nbsp; Japan · Paris · Oregon · California</p>
-        </div>
-        <div className="hero-scroll">scroll ↓</div>
-      </section>
-
-      {/* ── Chapters ── */}
-      {chapters.map(ch => (
-        <section key={ch.key} className="chapter">
-          <div className="chapter-intro">
-            <div className="chapter-left">
-              <div className="chapter-num">{ch.num}</div>
-              <div className="chapter-title">{ch.title}</div>
-            </div>
-            <div className="chapter-meta">{ch.meta}</div>
-          </div>
-          <GalleryFlow
-            items={ch.items}
-            indexOffset={ch.offset}
-            onItemClick={openOverlay}
-          />
-        </section>
-      ))}
-
-      <OverlayViewer
-        items={allItems}
-        open={overlayOpen}
-        currentIndex={overlayIndex}
-        onClose={() => setOverlayOpen(false)}
-        onNavigate={i => setOverlayIndex(i)}
-      />
-
-      {/* ── Contact ── */}
-      <section className="contact">
-        <div className="contact-label">Get in touch</div>
-        <a href="mailto:rutvij.dhotey@gmail.com" className="contact-email">
-          rutvij.dhotey@gmail.com
-        </a>
-      </section>
-
-      <footer className="creative-footer">
-        <span className="creative-footer-name">© 2026 Rutvij Dhotey</span>
-        <nav className="creative-footer-links">
-          <a href="https://linkedin.com/in/rutvij-dhotey" className="creative-footer-link" target="_blank" rel="noopener">LinkedIn</a>
-          <a href="https://github.com/rutvijdhotey" className="creative-footer-link" target="_blank" rel="noopener">GitHub</a>
-          <Link href="/" className="creative-footer-link">← Home</Link>
-        </nav>
-      </footer>
+      <meta httpEquiv="refresh" content="0; url=/photography" />
+      <main
+        style={{
+          display: 'grid', placeItems: 'center', minHeight: '100vh',
+          gap: 14, textAlign: 'center', padding: 24,
+        }}
+      >
+        <p style={{ fontFamily: 'var(--sans)', fontSize: 14, color: 'var(--content-muted)' }}>
+          This page is now at /photography.
+        </p>
+        <Link
+          href="/photography"
+          style={{ fontFamily: 'var(--sans)', fontSize: 14, color: 'var(--accent)' }}
+        >
+          Continue →
+        </Link>
+      </main>
     </>
   )
 }

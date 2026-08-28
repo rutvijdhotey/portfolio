@@ -1,80 +1,37 @@
-// app/page.tsx
-'use client'
-
-import { useEffect, useRef } from 'react'
-import { useRouter } from 'next/navigation'
-import gsap from 'gsap'
+import Link from 'next/link'
+import ThemeToggle from '@/components/ThemeToggle'
 import './home.css'
 
+/* The Shinjuku walkway frame, already on Supabase as a purpose-built AVIF poster. */
+const HERO = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/optimized/covers/creative-hero-poster.avif'
+
 export default function Home() {
-  const engRef = useRef<HTMLDivElement>(null)
-  const creativeRef = useRef<HTMLDivElement>(null)
-  const router = useRouter()
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from('.panel__content', {
-        opacity: 0,
-        duration: 1.4,
-        ease: 'power3.out',
-        stagger: 0.2,
-        delay: 0.3,
-      })
-      gsap.from('.site-name', {
-        opacity: 0,
-        y: -10,
-        duration: 1.2,
-        ease: 'power3.out',
-        delay: 0.6,
-      })
-      gsap.from('.divider', {
-        scaleY: 0,
-        transformOrigin: 'top center',
-        duration: 1.4,
-        ease: 'power3.inOut',
-        delay: 0.2,
-      })
-    })
-    return () => ctx.revert()
-  }, [])
-
-  function navigate(dest: 'engineering' | 'creative') {
-    const panel = dest === 'engineering' ? engRef.current : creativeRef.current
-    const other = dest === 'engineering' ? creativeRef.current : engRef.current
-    gsap.to(other, { opacity: 0, duration: 0.4, ease: 'power2.in' })
-    gsap.to(panel, {
-      width: '100vw',
-      duration: 0.7,
-      ease: 'power3.inOut',
-      onComplete: () => router.push(`/${dest}`),
-    })
-  }
-
   return (
-    <>
-      <div className="site-name">Rutvij Dhotey</div>
-      <div className="divider" />
-      <div className="split">
-        <div ref={engRef} className="panel panel--eng" onClick={() => navigate('engineering')}>
-          <div className="bg-img" />
-          <div className="panel-overlay" />
-          <div className="panel__content">
-            <h2 className="panel__heading">Engineering</h2>
-            <p className="panel__sub">Work experience &amp; projects</p>
-          </div>
-          <div className="panel__enter">Enter →</div>
-        </div>
+    <main className="landing">
+      <div className="landing__bg" style={{ backgroundImage: `url(${HERO})` }} />
 
-        <div ref={creativeRef} className="panel panel--creative" onClick={() => navigate('creative')}>
-          <div className="bg-img" />
-          <div className="panel-overlay" />
-          <div className="panel__content">
-            <h2 className="panel__heading">Creative</h2>
-            <p className="panel__sub">Travel &amp; photography</p>
-          </div>
-          <div className="panel__enter">Enter →</div>
+      <div className="landing__top">
+        <span className="landing__name">Rutvij Dhotey</span>
+        <ThemeToggle />
+      </div>
+
+      <div className="landing__mid">
+        <h1 className="landing__statement">
+          I&rsquo;m a software engineer at YouTube.
+          I also photograph <em>cities after dark</em>.
+        </h1>
+        <div className="landing__doors">
+          <Link href="/photography" className="landing__door">Photography →</Link>
+          <Link href="/about" className="landing__door">About &amp; engineering →</Link>
         </div>
       </div>
-    </>
+
+      <div className="landing__bottom">
+        <div className="landing__meta">
+          <span>Japan</span><span>Copenhagen</span><span>Paris</span>
+          <a href="https://instagram.com/intoyourstories" target="_blank" rel="noopener">@intoyourstories</a>
+        </div>
+      </div>
+    </main>
   )
 }
