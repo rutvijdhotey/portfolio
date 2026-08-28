@@ -1,7 +1,11 @@
 // scripts/photos/build-derivatives.mjs
 // masters/ -> derivatives/ (AVIF + WebP ladder) + lib/photo-manifest.json
+//
+// Incremental: a derivative newer than its master is left alone. Pass --force
+// to re-encode everything. The manifest is always rebuilt in full — reading
+// metadata is cheap, and a partial manifest would be a broken manifest.
 
-import { mkdir, writeFile, readFile } from 'node:fs/promises'
+import { mkdir, writeFile, readFile, stat } from 'node:fs/promises'
 import { join, dirname } from 'node:path'
 import sharp from 'sharp'
 import {
@@ -9,6 +13,18 @@ import {
 } from './config.mjs'
 import { photoId, derivativeKey } from './urls.mjs'
 import { SOURCE_PHOTOS } from './sources.mjs'
+import { needsRebuild } from './freshness.mjs'
+
+const FORCE = process.argv.includes('--force')
+
+/** mtime in ms, or null when the file does not exist. */
+async function mtimeMs(path) {
+  try {
+    return (await stat(path)).mtimeMs
+  } catch {
+    return null
+  }
+}
 
 /** Average colour, used as a placeholder tint while a photo loads. */
 async function averageColour(image) {
@@ -18,11 +34,14 @@ async function averageColour(image) {
 }
 
 const manifest = {}
-let totalOut = 0
+let built = 0, skipped = 0, totalOut = 0
 
 for (const { category, filename } of SOURCE_PHOTOS) {
   const id = photoId(filename)
   const srcPath = join(MASTERS_DIR, category, filename)
+  const srcMtime = await mtimeMs(srcPath)
+  if (srcMtime === null) throw new Error(`Master missing: ${srcPath} — run npm run photos:fetch first`)
+
   const input = await readFile(srcPath)
   const image = sharp(input, { failOn: 'none' })
   const meta = await image.metadata()
@@ -44,6 +63,12 @@ for (const { category, filename } of SOURCE_PHOTOS) {
     for (const { ext, options } of FORMATS) {
       const key = derivativeKey(category, id, w, ext)
       const dest = join(DERIVATIVES_DIR, key)
+
+      if (!needsRebuild(await mtimeMs(dest), srcMtime, FORCE)) {
+        skipped++
+        continue
+      }
+
       await mkdir(dirname(dest), { recursive: true })
       const buf = await sharp(input, { failOn: 'none' })
         .rotate()                       // bake in EXIF orientation
@@ -51,6 +76,7 @@ for (const { category, filename } of SOURCE_PHOTOS) {
         [ext](options)
         .toBuffer()
       await writeFile(dest, buf)
+      built++
       totalOut += buf.length
     }
   }
@@ -58,5 +84,6 @@ for (const { category, filename } of SOURCE_PHOTOS) {
 }
 
 await writeFile(MANIFEST_PATH, JSON.stringify(manifest, null, 2) + '\n')
-console.log(`\n${Object.keys(manifest).length} photos -> ${(totalOut / 1048576).toFixed(1)} MB of derivatives`)
+console.log(`\n${Object.keys(manifest).length} photos in the manifest`)
+console.log(`${built} derivatives written (${(totalOut / 1048576).toFixed(1)} MB), ${skipped} already current`)
 console.log(`Manifest written to ${MANIFEST_PATH}`)
