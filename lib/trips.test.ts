@@ -52,26 +52,27 @@ test('every photo in the manifest belongs to exactly one trip', () => {
   assert.equal(new Set(ids).size, ids.length)
 })
 
-test('tall frames are the near-square shots: three Copenhagen, one Paris', () => {
-  // Deriving orientation from the shared classify() folds the square band
-  // [0.85, 1.3) into 'tall' (see frameOrientation), which now also catches
-  // RJ402666 (Paris, ratio 1.25) — a real consequence of one vocabulary
-  // replacing the old, disagreeing 0.95 threshold, not a bug.
+test('Copenhagen contributes the only tall frames', () => {
   const tall = allFrames().filter(f => f.orientation === 'tall')
-  assert.deepEqual(tall.map(f => f.id).sort(), ['RJ400008', 'RJ400074', 'RJ400204', 'RJ402666'])
+  assert.deepEqual(tall.map(f => f.id).sort(), ['RJ400008', 'RJ400074', 'RJ400204'])
+  for (const f of tall) assert.equal(f.tripSlug, 'copenhagen')
 })
 
-test('frameOrientation pins the classify() boundary, including the square band', () => {
-  // classify(): tall < 0.85 <= square < 1.3 <= wide. Frame collapses square
-  // into 'tall'. The corpus only exercises the extremes (0.81 and below,
-  // 1.25 and above) — pin the boundary itself with synthetic ratios so it
-  // stays intentional as new photos land in between.
-  assert.equal(frameOrientation(84, 100), 'tall')   // 0.84, below square
-  assert.equal(frameOrientation(85, 100), 'tall')   // 0.85, square lower edge
-  assert.equal(frameOrientation(90, 100), 'tall')   // 0.90, mid-square
-  assert.equal(frameOrientation(129, 100), 'tall')  // 1.29, square upper edge
-  assert.equal(frameOrientation(130, 100), 'wide')  // 1.30, wide lower edge
-  assert.equal(frameOrientation(220, 100), 'wide')  // 2.20, pano still counts wide
+test('a mildly landscape frame is shown at full width, not constrained', () => {
+  // RJ402666 is 1.25 — 'square' to classify(), but constraining it here would
+  // render it at 763px in a layout built to escape exactly that.
+  const f = allFrames().find(x => x.id === 'RJ402666')
+  assert.ok(f)
+  assert.equal(f.orientation, 'wide')
+})
+
+test('frameOrientation pins the 1.0 boundary with synthetic ratios', () => {
+  assert.equal(frameOrientation(80, 100), 'tall')   // 0.80
+  assert.equal(frameOrientation(99, 100), 'tall')   // 0.99
+  assert.equal(frameOrientation(100, 100), 'tall')  // 1.00, inclusive edge
+  assert.equal(frameOrientation(101, 100), 'wide')  // 1.01
+  assert.equal(frameOrientation(125, 100), 'wide')  // 1.25
+  assert.equal(frameOrientation(178, 100), 'wide')  // 1.78
 })
 
 test('Selected is exactly twelve frames', () => {

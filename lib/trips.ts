@@ -7,7 +7,6 @@
 
 import manifest from './photo-manifest.json' with { type: 'json' }
 import type { GalleryCategory, GalleryItem } from './gallery-items.ts'
-import { classify } from './gallery-bands.ts'
 
 export interface Trip {
   /** URL segment: /photography/<slug> */
@@ -32,7 +31,7 @@ export interface Frame {
   height: number
   tint: string
   alt: string
-  /** 'tall' below the square threshold, otherwise 'wide'. Drives layout, nothing else. */
+  /** 'tall' at ratio <= 1.0, otherwise 'wide'. See frameOrientation(). */
   orientation: 'tall' | 'wide'
 }
 
@@ -121,14 +120,20 @@ function altFor(id: string, trip: Trip): string {
 }
 
 /**
- * One aspect-ratio vocabulary: classify() is the existing authority on
- * aspect-ratio buckets (lib/gallery-bands.ts). Frame only needs the coarse
- * tall/wide split, so a square photo collapses into 'tall' — at full column
- * width a square runs past the viewport, so it is constrained like a portrait.
+ * Ratio at or below which a frame is constrained in a single column. A frame
+ * taller than it is wide runs past the viewport at full column width, so the
+ * Print Room holds it back.
+ *
+ * This deliberately differs from classify() in gallery-bands.ts, which buckets
+ * at 0.85/1.3/2.2. That function answers a different question — how a frame
+ * pairs inside a band — and its boundaries are tuned for pairing legality.
+ * Do not unify them: a 1.25 frame is 'square' for pairing purposes but should
+ * still be shown at full width here (1440x1152, not 763x611).
  */
+const PORTRAIT_MAX_RATIO = 1.0
+
 export function frameOrientation(width: number, height: number): 'tall' | 'wide' {
-  const shape = classify({ id: '', category: 'city', width, height, tint: '', alt: '' })
-  return shape === 'tall' || shape === 'square' ? 'tall' : 'wide'
+  return width / height <= PORTRAIT_MAX_RATIO ? 'tall' : 'wide'
 }
 
 function toFrame(id: string, m: ManifestEntry, trip: Trip): Frame {
