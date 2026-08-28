@@ -45,7 +45,13 @@ export const allItems = [
 const DERIVATIVE_PREFIX =
   'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/optimized'
 
-export const GRID_WIDTHS = [480, 768, 1200, 1800] as const
+/**
+ * Widths offered in the page srcset. 2560 is included because the Print Room
+ * renders frames up to 1440 CSS px, which needs 2880 device px at DPR 2 —
+ * the 1800 rung is visibly short there. Frames narrower than a rung skip it;
+ * see availableWidths().
+ */
+export const GRID_WIDTHS = [480, 768, 1200, 1800, 2560] as const
 export const OVERLAY_WIDTH = 2560
 
 export function photoUrl(item: GalleryItem, width: number, ext: 'avif' | 'webp'): string {

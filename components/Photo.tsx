@@ -13,7 +13,9 @@ interface Props {
 
 export default function Photo({ item, sizes, priority = false, onClick }: Props) {
   const widths = availableWidths(item)
-  const fallbackWidth = widths.at(-1) ?? item.width
+  // The <img> src is only reached by browsers that match no <source> at all.
+  // Give them a sane middle rung rather than the largest file we have.
+  const fallbackWidth = widths.find(w => w >= 1200) ?? widths.at(-1) ?? item.width
 
   return (
     <figure
