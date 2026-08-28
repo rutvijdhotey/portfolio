@@ -6,6 +6,8 @@
 // prefix would mean re-uploading every derivative for no gain.
 
 import manifest from './photo-manifest.json' with { type: 'json' }
+import type { GalleryCategory, GalleryItem } from './gallery-items.ts'
+import { classify } from './gallery-bands.ts'
 
 export interface Trip {
   /** URL segment: /photography/<slug> */
@@ -15,7 +17,7 @@ export interface Trip {
   place: string
   year: number
   /** Prefix under optimized/ on Supabase. Never change this. */
-  storageCategory: string
+  storageCategory: GalleryCategory
   blurb: string
 }
 
@@ -25,17 +27,29 @@ export interface Frame {
   /** Trip title, for captions. */
   tripTitle: string
   /** Supabase prefix under optimized/. Needed to build derivative URLs. */
-  storageCategory: string
+  storageCategory: GalleryCategory
   width: number
   height: number
   tint: string
   alt: string
-  /** 'tall' below 0.95, otherwise 'wide'. Drives layout, nothing else. */
+  /** 'tall' below the square threshold, otherwise 'wide'. Drives layout, nothing else. */
   orientation: 'tall' | 'wide'
 }
 
+/** Bridge to the existing <Photo> component and URL helpers, which predate Frame. */
+export function frameAsItem(f: Frame): GalleryItem {
+  return {
+    id: f.id,
+    category: f.storageCategory,
+    width: f.width,
+    height: f.height,
+    tint: f.tint,
+    alt: f.alt,
+  }
+}
+
 /** Newest first — the index reads as a body of work in reverse chronology. */
-export const TRIPS: Trip[] = [
+export const TRIPS: readonly Trip[] = [
   {
     slug: 'paris',
     title: 'Paris',
@@ -69,6 +83,54 @@ export function tripBySlug(slug: string): Trip | undefined {
 type ManifestEntry = { category: string; width: number; height: number; tint: string }
 const entries = Object.entries(manifest) as [string, ManifestEntry][]
 
+/**
+ * Per-frame alt text. A shared per-trip string makes a screen reader announce
+ * the same sentence eight times, so each frame describes what is actually in it.
+ * Falls back to the trip for anything unlisted.
+ */
+const ALT: Record<string, string> = {
+  // Japan
+  'RJ405650': 'Commuters crossing a glass walkway at Shinjuku station, Tokyo',
+  'RJ405690': 'Crowds beneath the neon signs of Dotonbori, Osaka',
+  'RJ405702': 'Red paper lanterns strung outside an izakaya',
+  'RJ405710-copy': 'A man with an umbrella on wet steps, in black and white',
+  'RJ405757': 'A narrow alley of lit signage after rain',
+  'RJ405760': 'A lone figure standing still in a neon-lit street at night',
+  'RJ405776': 'A red taxi waiting at a crossing after dark',
+  'RJ405808': 'The length of a covered shopping arcade, lit and almost empty',
+  // Copenhagen
+  'RJ400008': 'A figure on a warm-lit stairwell',
+  'RJ400034': 'A stairwell interior in warm lamplight',
+  'RJ400074': 'A figure on the steps of a yellow building',
+  'RJ400173': 'Parked bicycles and a passing figure, in black and white',
+  'RJ400190': 'Cyclists crossing an open square, in black and white',
+  'RJ400204': 'A cyclist passing an arched doorway, in black and white',
+  'RJ400207': 'A bicycle leaning against a building wall, in black and white',
+  'RJ409387': 'A queue at a ticket booth, in black and white',
+  'RJ409814': 'Figures walking a path through a park, in black and white',
+  // Paris
+  'RJ402344': 'A figure at dusk with the river behind',
+  'RJ402371': 'A street lamp against an orange evening sky',
+  'RJ402536': 'People sitting on the steps below a Haussmann facade',
+  'RJ402605': 'A figure walking past an ornate cream facade',
+  'RJ402666': 'A man in a suit crossing the street, a green coat in the foreground',
+}
+
+function altFor(id: string, trip: Trip): string {
+  return ALT[id] ?? `${trip.title} — ${trip.place}`
+}
+
+/**
+ * One aspect-ratio vocabulary: classify() is the existing authority on
+ * aspect-ratio buckets (lib/gallery-bands.ts). Frame only needs the coarse
+ * tall/wide split, so a square photo collapses into 'tall' — at full column
+ * width a square runs past the viewport, so it is constrained like a portrait.
+ */
+export function frameOrientation(width: number, height: number): 'tall' | 'wide' {
+  const shape = classify({ id: '', category: 'city', width, height, tint: '', alt: '' })
+  return shape === 'tall' || shape === 'square' ? 'tall' : 'wide'
+}
+
 function toFrame(id: string, m: ManifestEntry, trip: Trip): Frame {
   return {
     id,
@@ -78,8 +140,8 @@ function toFrame(id: string, m: ManifestEntry, trip: Trip): Frame {
     width: m.width,
     height: m.height,
     tint: m.tint,
-    alt: `${trip.title} — ${trip.place}`,
-    orientation: m.width / m.height < 0.95 ? 'tall' : 'wide',
+    alt: altFor(id, trip),
+    orientation: frameOrientation(m.width, m.height),
   }
 }
 
@@ -101,7 +163,7 @@ export function allFrames(): Frame[] {
  * The Selected cut — the front door. Fixed length by design: nothing enters
  * without displacing something. Sequenced by feel, not by trip or date.
  */
-export const SELECTED_IDS: string[] = [
+export const SELECTED_IDS: readonly string[] = [
   'RJ405710-copy',  // Japan      — B&W, umbrella on the steps
   'RJ400008',       // Copenhagen — warm stairwell
   'RJ402605',       // Paris      — figure passing an ornate facade
@@ -116,12 +178,17 @@ export const SELECTED_IDS: string[] = [
   'RJ405650',       // Japan      — Shinjuku walkway
 ]
 
-/** Selected frames in authored order. Throws if an id has gone stale. */
+/** Resolves ids against a lookup map, throwing once with every stale id. */
+export function resolveSelected(ids: readonly string[], byId: Map<string, Frame>): Frame[] {
+  const missing = ids.filter(id => !byId.has(id))
+  if (missing.length > 0) {
+    throw new Error(`SELECTED_IDS references frames not in the manifest: ${missing.join(', ')}`)
+  }
+  return ids.map(id => byId.get(id)!)
+}
+
+/** Selected frames in authored order. Throws if any id has gone stale. */
 export function selectedFrames(): Frame[] {
   const byId = new Map(allFrames().map(f => [f.id, f]))
-  return SELECTED_IDS.map(id => {
-    const frame = byId.get(id)
-    if (!frame) throw new Error(`SELECTED_IDS references a frame not in the manifest: ${id}`)
-    return frame
-  })
+  return resolveSelected(SELECTED_IDS, byId)
 }
