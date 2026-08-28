@@ -1,3 +1,14 @@
+/* ── Legacy page ground ──────────────────────────────────────────
+   This page predates theming and hardcodes light-on-dark colours
+   throughout (51 literal white/near-white values). It paints its own
+   dark ground so it stays readable when the rest of the site is in
+   light mode. Remove when /engineering is rebuilt.              */
+.engineering-page {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
 /* ── NAV ── */
 .engineering-nav {
   position: fixed;

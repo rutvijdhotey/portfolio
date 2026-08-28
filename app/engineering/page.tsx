@@ -122,7 +122,7 @@ export default function EngineeringPage() {
   }, [])
 
   return (
-    <>
+    <div className="engineering-page">
       {/* NAV */}
       <nav className="engineering-nav">
         <Link href="/" className="nav-back">← Home</Link>
@@ -491,6 +491,6 @@ export default function EngineeringPage() {
           <Link href="/" className="footer-link">← Home</Link>
         </nav>
       </footer>
-    </>
+    </div>
   )
 }
