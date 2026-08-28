@@ -1,12 +1,15 @@
 // scripts/photos/build-derivatives.mjs
 // masters/ -> derivatives/ (AVIF + WebP ladder) + lib/photo-manifest.json
 //
-// Incremental: a derivative newer than its master is left alone. Pass --force
-// to re-encode everything. The manifest is always rebuilt in full — reading
-// metadata is cheap, and a partial manifest would be a broken manifest.
+// Incremental: a derivative is left alone when it is newer than both its
+// master and config.mjs. Pass --force to re-encode everything — still needed
+// after a sharp upgrade, which no mtime can detect. The manifest is always
+// rebuilt in full; a partial manifest would be a broken one, and the
+// per-photo decode costs seconds against minutes of encoding.
 
 import { mkdir, writeFile, readFile, stat } from 'node:fs/promises'
 import { join, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 import {
   ALL_WIDTHS, FORMATS, MASTERS_DIR, DERIVATIVES_DIR, MANIFEST_PATH,
@@ -17,14 +20,22 @@ import { needsRebuild } from './freshness.mjs'
 
 const FORCE = process.argv.includes('--force')
 
-/** mtime in ms, or null when the file does not exist. */
+/** mtime in ms, or null when the file is genuinely absent. Any other stat error propagates. */
 async function mtimeMs(path) {
   try {
     return (await stat(path)).mtimeMs
-  } catch {
-    return null
+  } catch (err) {
+    // Genuinely absent -> null. Anything else (EACCES, EIO) must not be
+    // reported as "master missing"; let it propagate with its real code.
+    if (err.code === 'ENOENT' || err.code === 'ENOTDIR') return null
+    throw err
   }
 }
+
+// Derivatives depend on FORMATS and ALL_WIDTHS as much as on the master, so
+// editing config.mjs must invalidate them. Treated as a floor on every
+// master's mtime rather than a separate check.
+const CONFIG_MTIME = (await mtimeMs(fileURLToPath(new URL('./config.mjs', import.meta.url)))) ?? 0
 
 /** Average colour, used as a placeholder tint while a photo loads. */
 async function averageColour(image) {
@@ -34,7 +45,7 @@ async function averageColour(image) {
 }
 
 const manifest = {}
-let built = 0, skipped = 0, totalOut = 0
+let built = 0, skipped = 0, bytesWritten = 0
 
 for (const { category, filename } of SOURCE_PHOTOS) {
   const id = photoId(filename)
@@ -64,7 +75,7 @@ for (const { category, filename } of SOURCE_PHOTOS) {
       const key = derivativeKey(category, id, w, ext)
       const dest = join(DERIVATIVES_DIR, key)
 
-      if (!needsRebuild(await mtimeMs(dest), srcMtime, FORCE)) {
+      if (!needsRebuild(await mtimeMs(dest), Math.max(srcMtime, CONFIG_MTIME), FORCE)) {
         skipped++
         continue
       }
@@ -77,7 +88,7 @@ for (const { category, filename } of SOURCE_PHOTOS) {
         .toBuffer()
       await writeFile(dest, buf)
       built++
-      totalOut += buf.length
+      bytesWritten += buf.length
     }
   }
   console.log(`  ${id.padEnd(28)} ${width}x${height}  ${manifest[id].tint}`)
@@ -85,5 +96,5 @@ for (const { category, filename } of SOURCE_PHOTOS) {
 
 await writeFile(MANIFEST_PATH, JSON.stringify(manifest, null, 2) + '\n')
 console.log(`\n${Object.keys(manifest).length} photos in the manifest`)
-console.log(`${built} derivatives written (${(totalOut / 1048576).toFixed(1)} MB), ${skipped} already current`)
+console.log(`${built} derivatives written (${(bytesWritten / 1048576).toFixed(1)} MB), ${skipped} already current`)
 console.log(`Manifest written to ${MANIFEST_PATH}`)
