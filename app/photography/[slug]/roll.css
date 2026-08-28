@@ -1,0 +1,71 @@
+/* app/photography/[slug]/roll.css */
+
+.roll { position: relative; }
+
+.roll__stage {
+  position: sticky; top: 0;
+  /* svh misresolves inside iframes and embeds; vh does not. dvh refines it
+     on mobile browsers where the URL bar moves. */
+  height: 100vh; height: 100dvh;
+  display: flex; align-items: center; overflow: hidden;
+}
+
+.roll__track {
+  display: flex; align-items: center; gap: clamp(16px, 2.2vw, 40px);
+  will-change: transform;
+}
+
+/* Bound on BOTH axes. A 16:9 frame at 62vh wants ~1490px, wider than most
+   viewports — height alone would crop the frame being looked at. */
+.roll__frame {
+  flex: 0 0 auto;
+  width: min(72vw, calc(62vh * var(--arn)));
+  opacity: .28; filter: saturate(.72);
+  transition: opacity 420ms var(--ease-out), filter 420ms var(--ease-out);
+}
+.roll__frame[data-active="true"] { opacity: 1; filter: none; }
+.roll__frame .photo { box-shadow: var(--frame-edge); }
+
+.roll__cap {
+  position: absolute; left: clamp(20px, 5vw, 64px); bottom: clamp(84px, 12vh, 124px);
+  display: flex; flex-direction: column; gap: 5px; pointer-events: none;
+}
+.roll__cap b {
+  font-family: var(--serif); font-weight: 300;
+  font-size: clamp(22px, 3vw, 38px); letter-spacing: -0.01em; color: var(--content);
+}
+.roll__cap span {
+  font-family: var(--sans); font-size: 10.5px; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--content-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sprocket rail — the frame counter, in the vernacular of the medium. */
+.sprockets {
+  position: absolute; left: clamp(20px, 5vw, 64px); right: clamp(20px, 5vw, 64px);
+  bottom: clamp(40px, 6vh, 64px);
+  display: flex; gap: 5px; align-items: center;
+}
+.sprk {
+  flex: 1 1 0; height: 9px; border-radius: 2px;
+  background: rgb(var(--content-rgb) / 0.13);
+  transition: background 320ms var(--ease-out), transform 320ms var(--ease-out);
+}
+.sprk[data-on="true"] { background: var(--accent); transform: scaleY(1.5); }
+
+/* Reduced motion: the strip becomes an ordinary vertical stack. */
+@media (prefers-reduced-motion: reduce) {
+  .roll { height: auto !important; }
+  .roll__stage { position: static; height: auto; display: block; }
+  .roll__track {
+    flex-direction: column; transform: none !important;
+    gap: clamp(40px, 7vw, 90px);
+  }
+  .roll__frame { width: 100%; opacity: 1; filter: none; }
+  .roll__cap, .sprockets { display: none; }
+  .sprk { transition: none; }
+}
+
+@media (max-width: 768px) {
+  .roll__frame { width: min(88vw, calc(52vh * var(--arn))); }
+}
