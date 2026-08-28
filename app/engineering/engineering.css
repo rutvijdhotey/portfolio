@@ -508,7 +508,7 @@
   align-items: flex-start;
   margin-bottom: 32px;
   padding-bottom: 32px;
-  border-bottom: 1px solid var(--accent);
+  border-bottom: 1px solid var(--faint);
 }
 
 .exp-item:last-child {

@@ -1,26 +1,42 @@
 @import "tailwindcss";
+@import "./tokens.css";
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+:root {
+  --serif: var(--font-serif), 'Georgia', serif;
+  --sans: var(--font-sans), 'Helvetica Neue', Arial, sans-serif;
+  --col: min(1440px, 92vw);
+}
+
+/* ── Legacy palette, deliberately NOT theme-aware ─────────────────
+   /engineering and its case study predate theming and hardcode
+   light-on-dark colours alongside these tokens. Flipping them would
+   put white text on paper. They keep their original literal values so
+   those pages render exactly as they do today, in either theme.
+   Delete this block when /engineering is rebuilt.               */
 :root {
   --bg: #0a0a0a;
   --bg-eng: #0e0e0e;
   --text: #f0ede8;
   --muted: rgba(240,237,232,0.35);
   --faint: rgba(240,237,232,0.10);
-  --accent: rgba(240,237,232,0.06);
-  --serif: var(--font-serif), 'Georgia', serif;
-  --sans: var(--font-sans), 'Helvetica Neue', Arial, sans-serif;
   --gap: 4px;
 }
 
 html { scroll-behavior: smooth; }
 
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: var(--surface);
+  color: var(--content);
   font-family: var(--serif);
   overflow-x: hidden;
 }
 
 a { color: inherit; text-decoration: none; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
