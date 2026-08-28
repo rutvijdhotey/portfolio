@@ -1,10 +1,10 @@
 // lib/gallery-items.ts
-// Gallery data derived from the generated photo manifest. Placement and art
-// direction live in lib/gallery-layout.ts, not here.
+// URL and srcset helpers over the derivative ladder. This module no longer
+// sources gallery data itself — PrintRoom and Roll read directly from the
+// photo manifest and pass GalleryItem values in; placement and art direction
+// for the retained band-pairing algorithm live in lib/gallery-layout.ts.
 
-import manifest from './photo-manifest.json'
-
-export type GalleryCategory = 'city' | 'nature' | 'random' | 'paris' | 'copenhagen'
+export type GalleryCategory = 'city' | 'copenhagen' | 'paris'
 
 export interface GalleryItem {
   id: string
@@ -14,33 +14,6 @@ export interface GalleryItem {
   tint: string
   alt: string
 }
-
-const ALT: Record<GalleryCategory, string> = {
-  city: 'Japan',
-  nature: 'Bend, Oregon',
-  random: 'Photo',
-  paris: 'Paris',
-  copenhagen: 'Copenhagen',
-}
-
-type ManifestEntry = Omit<GalleryItem, 'id' | 'alt' | 'category'> & { category: string }
-
-const entries = Object.entries(manifest) as [string, ManifestEntry][]
-
-const byCategory = (category: GalleryCategory): GalleryItem[] =>
-  entries
-    .filter(([, m]) => m.category === category)
-    .map(([id, m]) => ({ ...m, id, category, alt: ALT[category] }))
-
-export const cityItems = byCategory('city')
-export const natureItems = byCategory('nature')
-export const randomItems = byCategory('random')
-export const parisItems = byCategory('paris')
-export const copenhagenItems = byCategory('copenhagen')
-
-export const allItems = [
-  ...cityItems, ...natureItems, ...randomItems, ...parisItems, ...copenhagenItems,
-]
 
 const DERIVATIVE_PREFIX =
   'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/optimized'
@@ -68,9 +41,10 @@ export function srcSet(item: GalleryItem, ext: 'avif' | 'webp'): string {
 }
 
 /**
- * Widest rung available for the fullscreen overlay. The 8 Bend Oregon masters
- * are only 2048px wide, so the dedicated 2560 rung does not exist for them —
- * callers must not assume it does.
+ * Widest rung available for the fullscreen overlay. The pipeline never
+ * upscales, so a master narrower than 2560 has no 2560 rung — RJ400204 is
+ * 2304px wide and is the only such frame in the current corpus. Callers must
+ * not assume the dedicated rung exists.
  */
 export function overlayWidth(item: GalleryItem): number {
   if (item.width >= OVERLAY_WIDTH) return OVERLAY_WIDTH
