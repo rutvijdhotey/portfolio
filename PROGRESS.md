@@ -1,6 +1,6 @@
 # Progress — Photography-First Rebuild
 
-**Last updated:** 2026-08-28
+**Last updated:** 2026-08-28 (rev 2)
 **Plan:** [`docs/superpowers/plans/2026-08-27-photography-first-rebuild.md`](docs/superpowers/plans/2026-08-27-photography-first-rebuild.md)
 
 This file is a cold-start handoff. Read it first, then the plan.
@@ -16,7 +16,7 @@ This file is a cold-start handoff. Read it first, then the plan.
 
 **Plan 1 of 3 is built and pushed. Not merged.**
 
-- Branch: `feature/photography-first-rebuild`, 15 commits ahead of `main`
+- Branch: `feature/photography-first-rebuild`, 17 commits ahead of `main`
 - PR: **https://github.com/rutvijdhotey/portfolio/pull/11** — `MERGEABLE`, 42 files, +3,776 / −1,171
 - `main` is untouched; rutvijdhotey.com still serves the old split-door site
 
@@ -26,15 +26,24 @@ Every check below was run locally.
 
 | Check | Result |
 |---|---|
-| `npm test` | 78 / 78 |
+| `npm test` | 81 / 81 |
 | `npx tsc --noEmit` | exit 0 |
 | `npm run build` | 9 routes, 11 HTML files |
-| `node scripts/photos/measure.mjs after` | 121.1 MB masters → **2.7 MB** served, avg 0.12 MB |
+| `node scripts/photos/measure.mjs after` | 121.1 MB masters → 2.7 MB, avg 0.12 MB — **understated, see below** |
+| real page weight @1280×720 DPR2 | `/photography` 2.44 MB · paris 0.42 · copenhagen 0.76 · japan 1.14 |
 | cache-control | `public, max-age=31536000, immutable` ×22 |
 
 Verified in a browser: every route 200 with correct titles; theme survives a
 reload; zero horizontal overflow at 375px; overlay opens / arrow-advances /
 escape-closes and restores scroll; reduced motion collapses the filmstrip.
+
+**Fixed after that first pass (`66b67de`): every Roll frame over-fetched.**
+`.roll__frame` is bounded on both axes — `min(72vw, calc(62vh * --arn))` — but
+`sizes` declared only the `72vw` half, and `sizes` is what picks the rung. All
+22 frames on the three trip pages pulled a rung or two too high: 4.68 MB where
+2.32 MB does. `rollSizes()` in `lib/roll.ts` now emits both bounds per frame.
+Same class of defect as the retina gap — a layout/ladder mismatch that tests,
+`tsc` and `npm run build` all pass straight through.
 
 ---
 
@@ -146,6 +155,19 @@ and hand-editable (film scans carry only the scanner's date).
 - **The ladder now includes 2560** because the Print Room renders to 1440 CSS px
   = 2880 device px at DPR 2. `RJ400204` is 2304px wide and has no 2560 rung —
   `availableWidths()` handles that; never assume the rung exists.
+- **`sizes` must mirror EVERY bound in the CSS width.** The Roll sizes frames by
+  height, so a vw-only `sizes` silently over-fetched all 22. If you add a layout,
+  check `sizes` against the computed box on the running page, not against intent.
+- **`measure.mjs` cannot see the top rung.** `scripts/photos/config.mjs` stops
+  `GRID_WIDTHS` at 1800 while `lib/gallery-items.ts` ships 2560, so every figure
+  the script reports is below what the site actually serves. Use it for
+  before/after ratios, never as the real page weight.
+- **Cached candidates mask srcset bugs.** The browser prefers an
+  already-downloaded larger rung, so a second page reusing a frame will look
+  correct while a cold visit over-fetches. Probe with a cache-busted `srcset`.
+- **Screenshots of The Roll come back black.** `will-change: transform` on
+  `.roll__track` promotes it to a compositor layer the screenshotter cannot
+  read. The page is fine; clear `will-change` before capturing.
 - **Supabase HEAD lies about `cache-control`.** Always verify with a ranged GET:
   `curl -s -o /dev/null -D- -r 0-1 "<url>"`.
 - **Never modify anything under `masters/`.** Supabase holds the only remote copy
