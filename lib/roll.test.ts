@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { rollProgress, trackOffset, activeIndex, rollHeightPx } from './roll.ts'
+import { rollProgress, trackOffset, activeIndex, rollHeightPx, rollSizes } from './roll.ts'
 
 test('progress is 0 before the roll and 1 after it', () => {
   // roll spans document y 1000..3000, viewport 500 => scrollable range 1500
@@ -53,4 +53,29 @@ test('activeIndex is safe on an empty strip', () => {
 
 test('rollHeightPx allows one screen of travel per frame plus the sticky screen', () => {
   assert.equal(rollHeightPx(9, 1000, 0.62), 6580)
+})
+
+// rollSizes must mirror .roll__frame in roll.css, which bounds width on BOTH
+// axes. Declaring only the vw half made every one of the 22 frames fetch a rung
+// or two too high: the trip pages shipped 4.68 MB where 2.32 MB would do.
+test('rollSizes carries the height-derived bound, not just the vw bound', () => {
+  // 16:9 landscape — 62vh * 1.7778 = 110.2vh, so 72vw wins on a wide viewport
+  assert.equal(
+    rollSizes(1920, 1080),
+    '(max-width: 768px) min(88vw, 92.4vh), min(72vw, 110.2vh)',
+  )
+})
+
+test('rollSizes holds a tall frame back to its height-derived width', () => {
+  // RJ400008 is 0.805:1. 62vh * 0.805 = 49.9vh = 359px at 720px tall, and it is
+  // that term — not 72vw (922px) — that decides the rung.
+  assert.equal(
+    rollSizes(921, 1144),
+    '(max-width: 768px) min(88vw, 41.9vh), min(72vw, 49.9vh)',
+  )
+})
+
+test('rollSizes survives a degenerate frame', () => {
+  assert.equal(rollSizes(100, 0), '(max-width: 768px) 88vw, 72vw')
+  assert.equal(rollSizes(0, 100), '(max-width: 768px) 88vw, 72vw')
 })

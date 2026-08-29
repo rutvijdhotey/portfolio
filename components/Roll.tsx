@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Photo from './Photo'
-import { rollProgress, trackOffset, activeIndex, rollHeightPx } from '@/lib/roll'
+import { rollProgress, trackOffset, activeIndex, rollHeightPx, rollSizes } from '@/lib/roll'
 import { frameAsItem, type Frame } from '@/lib/trips'
 
 interface Props {
@@ -76,7 +76,7 @@ export default function Roll({ frames, tripTitle, place, year }: Props) {
             >
               <Photo
                 item={frameAsItem(f)}
-                sizes="(max-width: 768px) 88vw, 72vw"
+                sizes={rollSizes(f.width, f.height)}
                 priority={i === 0}
               />
             </figure>

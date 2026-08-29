@@ -51,3 +51,36 @@ export function rollHeightPx(
 ): number {
   return Math.round(count * perFrame * viewportHeight + viewportHeight)
 }
+
+/**
+ * Frame width in roll.css, as numbers. `.roll__frame` is bounded on BOTH axes —
+ *   width: min(72vw, calc(62vh * var(--arn)))   (88vw / 52vh under 768px)
+ * — and for all but the widest frames it is the height-derived term that wins.
+ *
+ * These are layout constants and are unrelated to SCROLL_PER_FRAME, which
+ * happens to also be 0.62. Do not collapse them.
+ */
+const FRAME_VW = 72
+const FRAME_VH = 62
+const FRAME_VW_SM = 88
+const FRAME_VH_SM = 52
+
+/**
+ * The `sizes` value for one frame, mirroring both bounds above.
+ *
+ * Declaring only the vw half is a silent bug: `sizes` is what picks the srcset
+ * rung, so a 0.8:1 frame occupying 359 CSS px would claim 922 and pull the
+ * 2560 rung instead of the 768. Tests, types and the build all pass while the
+ * page ships several times the bytes it needs.
+ */
+export function rollSizes(width: number, height: number): string {
+  if (!(width > 0) || !(height > 0)) {
+    return `(max-width: 768px) ${FRAME_VW_SM}vw, ${FRAME_VW}vw`
+  }
+  const arn = width / height
+  const vh = (base: number) => (base * arn).toFixed(1)
+  return (
+    `(max-width: 768px) min(${FRAME_VW_SM}vw, ${vh(FRAME_VH_SM)}vh), ` +
+    `min(${FRAME_VW}vw, ${vh(FRAME_VH)}vh)`
+  )
+}
