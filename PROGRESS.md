@@ -1,6 +1,6 @@
 # Progress — Photography-First Rebuild
 
-**Last updated:** 2026-09-04 (rev 3)
+**Last updated:** 2026-09-04 (rev 4)
 **Plan:** [`docs/superpowers/plans/2026-08-27-photography-first-rebuild.md`](docs/superpowers/plans/2026-08-27-photography-first-rebuild.md)
 
 This file is a cold-start handoff. Read it first, then the plan.
@@ -14,13 +14,14 @@ This file is a cold-start handoff. Read it first, then the plan.
 
 ## Where things stand
 
-**Plan 1 of 3 is built and pushed. Not merged.**
+**Plan 1 of 3 is merged and live.**
 
-- Branch: `feature/photography-first-rebuild`, 17 commits ahead of `main`
-- PR: **https://github.com/rutvijdhotey/portfolio/pull/11** — `MERGEABLE`, 42 files, +3,776 / −1,171
-- `main` is untouched; rutvijdhotey.com still serves the old split-door site
+- PR **#11** merged 2026-09-04, 21 commits. `main` deployed green — the build
+  job ran tests and `tsc` before publishing, both passing.
+- rutvijdhotey.com now serves the rebuild. Verified live: `/`, `/photography`,
+  `/about` and `/photography/japan` all 200 with the new titles and copy.
 
-**CI now gates this PR.** `ci.yml` runs tests, `tsc` and the build on every
+**CI now gates every PR.** `ci.yml` runs tests, `tsc` and the build on every
 pull request; `deploy.yml` runs the same three before it publishes, so a direct
 push to `main` can no longer ship a red build. Lint runs as an advisory job —
 see "Known red" below.
@@ -65,6 +66,15 @@ Same class of defect as the retina gap — a layout/ladder mismatch that tests,
 - **The Roll:** native vertical scroll drives horizontal travel inside a sticky
   stage. **The wheel is never intercepted.** Continuous scrub, not snap — an
   explicit design decision.
+- **The framing changed on 2026-09-04.** The site used to call itself "Cities,
+  mostly after dark" and title itself "Rutvij Dhotey — Street Photography".
+  Rutvij rejected that: he is documenting his travels so he can look back on
+  them in fifty years, not presenting as a street photographer. The contact
+  sheet agreed — 7 of the 12 Selected frames are daylight. Landing statement,
+  site title and description, Print Room masthead and the About opening were
+  rewritten. **Alt text was deliberately left literal** (it describes what is in
+  each frame), and Copenhagen's and Paris's blurbs stand because they describe
+  trips rather than claim an identity.
 - **Theme:** three-tier tokens in `app/tokens.css`. Only the semantic tier flips.
   Dark is the bare `:root`, so no OS signal → dark; a light OS preference is
   respected; the toggle overrides both and persists in `localStorage`.
@@ -73,16 +83,16 @@ Same class of defect as the retina gap — a layout/ladder mismatch that tests,
 
 ## Action items for Rutvij
 
-**Before merging PR #11:**
+**Resolved at merge (2026-09-04):** `SELECTED_IDS`, its order and the `ALT` map
+were reviewed against a contact sheet of all 12 frames and accepted as they
+stand. Continuous scrub was accepted too — snap remains a two-line change if it
+ever stops feeling right.
 
-1. `npm run dev`, then look at `/photography` and `/photography/copenhagen`.
-2. **Does continuous scrub feel right?** The maths is verified (frames centre
-   exactly, counter tracks). Whether it *feels* good is a judgment call. Snap is
-   a two-line change if not.
-3. **Review `SELECTED_IDS` and its order** in `lib/trips.ts`, and the `ALT` map
-   beside it. Both were authored by Claude from looking at the contact sheet —
-   the sequence is the most visible editorial decision in the rebuild, and the
-   alt text is what screen readers announce.
+**Open editorial question, not a bug.** All 12 Selected frames are strangers at
+a distance: no one Rutvij knows, no food, no rooms, no travel companions. The
+copy now promises a record of his travels and the corpus does not quite reach
+there. Closing that gap means new frames from the archive, not a re-ordering of
+these 22.
 
 **Known red — lint, 2 errors.** `react-hooks/set-state-in-effect` fires on
 `components/ThemeToggle.tsx:12` and `components/OverlayViewer.tsx:33`. Both read
@@ -208,9 +218,17 @@ and hand-editable (film scans carry only the scanner's date).
   makes `tsc` reject any syntax Node cannot strip — enums, namespaces,
   parameter properties would all typecheck fine and then break `npm test`.
 - **`deploy.yml`'s Pages actions are still on old majors** —
-  `upload-pages-artifact@v3` and `deploy-pages@v4`, where v5 is current.
+  `upload-pages-artifact@v3` and `deploy-pages@v4`, where v5 is current. The
+  2026-09-04 deploy warned that its nested `upload-artifact@v4` is on the
+  deprecated Node 20 runtime.
   Left alone on purpose: they run only on a real deploy, so no PR can prove an
   upgrade safe. Bump them in their own commit and watch that deploy run.
+- **Trailing slashes 404 in production.** The export writes flat files
+  (`out/photography.html`), and `next.config.ts` sets no `trailingSlash`, so
+  `rutvijdhotey.com/photography` is 200 while `/photography/` is 404. Long
+  standing, not from the rebuild — but do not hand anyone a link with a
+  trailing slash, and decide deliberately before setting `trailingSlash: true`
+  (it rewrites every output path).
 - **Never modify anything under `masters/`.** Supabase holds the only remote copy
   of 16 of those files.
 - **`public/creative/`** has 33 local files, gitignored, zero tracked. It never
