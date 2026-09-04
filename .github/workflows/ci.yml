@@ -16,8 +16,8 @@ jobs:
     name: Tests, types and build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           # .nvmrc, not a literal. The suite imports `.ts` test files directly
           # and relies on Node's native type stripping, which Node 20 does not
@@ -40,8 +40,8 @@ jobs:
     # real refactor, not a lint tidy. Visible on every PR until it is paid off.
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm

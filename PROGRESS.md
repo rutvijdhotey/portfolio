@@ -123,7 +123,7 @@ derivatives are already on Supabase, so a cache step now would archive two empty
 directories. Add it in Plan 2, in the same job that first runs the pipeline:
 
 ```yaml
-- uses: actions/cache@v4
+- uses: actions/cache@v6
   with:
     path: |
       masters
@@ -207,6 +207,10 @@ and hand-editable (film scans carry only the scanner's date).
   declares `engines.node >= 24`, and `erasableSyntaxOnly` in `tsconfig.json`
   makes `tsc` reject any syntax Node cannot strip — enums, namespaces,
   parameter properties would all typecheck fine and then break `npm test`.
+- **`deploy.yml`'s Pages actions are still on old majors** —
+  `upload-pages-artifact@v3` and `deploy-pages@v4`, where v5 is current.
+  Left alone on purpose: they run only on a real deploy, so no PR can prove an
+  upgrade safe. Bump them in their own commit and watch that deploy run.
 - **Never modify anything under `masters/`.** Supabase holds the only remote copy
   of 16 of those files.
 - **`public/creative/`** has 33 local files, gitignored, zero tracked. It never
