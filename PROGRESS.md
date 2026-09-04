@@ -1,6 +1,6 @@
 # Progress — Photography-First Rebuild
 
-**Last updated:** 2026-08-28 (rev 2)
+**Last updated:** 2026-09-04 (rev 3)
 **Plan:** [`docs/superpowers/plans/2026-08-27-photography-first-rebuild.md`](docs/superpowers/plans/2026-08-27-photography-first-rebuild.md)
 
 This file is a cold-start handoff. Read it first, then the plan.
@@ -20,9 +20,10 @@ This file is a cold-start handoff. Read it first, then the plan.
 - PR: **https://github.com/rutvijdhotey/portfolio/pull/11** — `MERGEABLE`, 42 files, +3,776 / −1,171
 - `main` is untouched; rutvijdhotey.com still serves the old split-door site
 
-**No CI runs on this PR.** `deploy.yml` triggers on `push` to `main` only, so
-nothing validates the build before it goes live. Merging deploys immediately.
-Every check below was run locally.
+**CI now gates this PR.** `ci.yml` runs tests, `tsc` and the build on every
+pull request; `deploy.yml` runs the same three before it publishes, so a direct
+push to `main` can no longer ship a red build. Lint runs as an advisory job —
+see "Known red" below.
 
 | Check | Result |
 |---|---|
@@ -83,6 +84,15 @@ Same class of defect as the retina gap — a layout/ladder mismatch that tests,
    the sequence is the most visible editorial decision in the rebuild, and the
    alt text is what screen readers announce.
 
+**Known red — lint, 2 errors.** `react-hooks/set-state-in-effect` fires on
+`components/ThemeToggle.tsx:12` and `components/OverlayViewer.tsx:33`. Both read
+client-only state on mount (localStorage / matchMedia; a prop mirror held local
+during a GSAP transition), which is legitimate but is the pattern the new React
+Compiler rule rejects. The fixes are real refactors of browser-verified
+behaviour — `useSyncExternalStore` for the toggle, adjust-during-render for the
+viewer — not a lint tidy, so lint is advisory in CI rather than blocking. Pay it
+off deliberately, with the running page open.
+
 **Only Rutvij can do:**
 
 4. **Re-request high-resolution film scans.** All seven current scans are
@@ -95,16 +105,36 @@ Same class of defect as the retina gap — a layout/ladder mismatch that tests,
 
 ---
 
-## Blocked on a decision — needed before Plan 2
+## Settled — the derivative cache (decided 2026-09-04)
 
 **mtime freshness will not survive a cold CI runner.** `photos:fetch` rewrites
 every master with a fresh timestamp, so all derivatives look stale and the whole
-ladder re-encodes — exactly what Task 1 exists to prevent. Two options:
+ladder re-encodes — exactly what Task 1 exists to prevent.
 
-- **Cache `masters/` and `derivatives/` together.** `actions/cache` uses tar,
-  which preserves mtimes. Simpler, no pipeline change. **Recommended.**
-- **Content hashes** via built-in `node:crypto` in a sidecar. Portable across
-  machines, but more machinery.
+**Decision: cache `masters/` and `derivatives/` together via `actions/cache`.**
+It archives with tar, which preserves mtimes on restore, so `needsRebuild()` in
+`scripts/photos/freshness.mjs` keeps working unchanged. Content hashing was the
+alternative; it is more portable but buys nothing until the pipeline runs on
+more than one machine, and it means a sidecar to write and keep in sync.
+
+**Not implemented yet, and deliberately so.** Neither workflow runs
+`photos:fetch` or `photos:build` today — the manifest is committed and the
+derivatives are already on Supabase, so a cache step now would archive two empty
+directories. Add it in Plan 2, in the same job that first runs the pipeline:
+
+```yaml
+- uses: actions/cache@v4
+  with:
+    path: |
+      masters
+      derivatives
+    key: photos-${{ hashFiles('lib/photo-manifest.json') }}
+    restore-keys: photos-
+```
+
+Both paths must sit in **one** cache entry. Split across two, a hit on
+`derivatives/` alongside a miss on `masters/` restores fresh master mtimes
+against old derivatives and re-encodes the whole ladder anyway.
 
 ---
 
@@ -170,6 +200,13 @@ and hand-editable (film scans carry only the scanner's date).
   read. The page is fine; clear `will-change` before capturing.
 - **Supabase HEAD lies about `cache-control`.** Always verify with a ranged GET:
   `curl -s -o /dev/null -D- -r 0-1 "<url>"`.
+- **CI cannot run the tests on Node 20.** `lib/*.test.ts` import `.ts` files
+  directly and use import attributes, so the suite needs Node's native type
+  stripping. `deploy.yml` was pinned to 20 and would have failed the moment
+  tests were added to it. Both workflows now read `.nvmrc` (24), `package.json`
+  declares `engines.node >= 24`, and `erasableSyntaxOnly` in `tsconfig.json`
+  makes `tsc` reject any syntax Node cannot strip — enums, namespaces,
+  parameter properties would all typecheck fine and then break `npm test`.
 - **Never modify anything under `masters/`.** Supabase holds the only remote copy
   of 16 of those files.
 - **`public/creative/`** has 33 local files, gitignored, zero tracked. It never
