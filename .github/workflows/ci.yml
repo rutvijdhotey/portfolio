@@ -1,0 +1,49 @@
+name: CI
+
+# Validates every pull request before it can reach main. `deploy.yml` fires on
+# push to main and publishes straight to rutvijdhotey.com, so this is the only
+# gate between a broken commit and production.
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Tests, types and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          # .nvmrc, not a literal. The suite imports `.ts` test files directly
+          # and relies on Node's native type stripping, which Node 20 does not
+          # have — pinning the version in one place keeps CI and local in step.
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Tests
+        run: npm test
+      - name: Types
+        run: npx tsc --noEmit
+      - name: Build
+        run: npm run build
+
+  lint:
+    name: Lint (advisory)
+    runs-on: ubuntu-latest
+    # Non-blocking on purpose. `react-hooks/set-state-in-effect` is red in
+    # ThemeToggle and OverlayViewer; both are browser-verified and the fix is a
+    # real refactor, not a lint tidy. Visible on every PR until it is paid off.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run lint

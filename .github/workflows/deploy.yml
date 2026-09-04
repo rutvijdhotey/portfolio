@@ -17,12 +17,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          # See .nvmrc — the test suite needs Node's native type stripping.
+          node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      # main deploys straight to rutvijdhotey.com. Gate it on the same checks
+      # CI runs, so a direct push to main cannot ship a red build.
+      - name: Tests
+        run: npm test
+      - name: Types
+        run: npx tsc --noEmit
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -3,6 +3,12 @@
 // no runtime import of the manifest (a value import of gallery-items would pull
 // in photo-manifest.json, which plain Node cannot load).
 
+// NOTE: no route currently renders bands — /photography uses PrintRoom and
+// trip pages use Roll. This module is retained rather than deleted because
+// the pairing algorithm is non-trivial and tested, and multi-column trip
+// layouts return once trips outgrow a single strip. If it is still unused
+// when that decision is revisited, delete it then.
+
 import type { GalleryItem } from './gallery-items.ts'
 
 export type Shape = 'pano' | 'wide' | 'square' | 'tall'

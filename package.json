@@ -2,6 +2,9 @@
   "name": "photo-video-website",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,6 +12,7 @@
     "lint": "eslint",
     "photos:fetch": "node scripts/photos/fetch-masters.mjs",
     "photos:build": "node scripts/photos/build-derivatives.mjs",
+    "photos:rebuild": "node scripts/photos/build-derivatives.mjs --force",
     "photos:upload": "node --env-file=.env.local scripts/photos/upload.mjs",
     "photos:measure": "node scripts/photos/measure.mjs",
     "test": "node --test \"scripts/**/*.test.mjs\" \"lib/**/*.test.ts\"",

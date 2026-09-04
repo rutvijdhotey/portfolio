@@ -1,0 +1,26 @@
+/* components/photo.css
+   Owned by the Photo component. Previously lived in gallery.css, which
+   belonged to the band layout that is being retired. */
+
+.photo {
+  width: 100%;
+  display: block;
+  overflow: hidden;
+  /* aspect-ratio and the tint background are set inline from the manifest,
+     which reserves exact space and prevents layout shift. */
+}
+
+.photo img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.photo[data-clickable="true"] { cursor: pointer; }
+.photo[data-clickable="true"]:hover img { transform: scale(1.02); }
+
+@media (prefers-reduced-motion: reduce) {
+  .photo img { transition: none; }
+  .photo[data-clickable="true"]:hover img { transform: none; }
+}

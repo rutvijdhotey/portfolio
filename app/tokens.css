@@ -1,0 +1,76 @@
+/* app/tokens.css
+   The only file in this repo that defines a NEW colour.
+   Components read tier 2. Tier 1 never changes. Theming swaps tier 2 only.
+
+   The amber accent is hue 33 degrees — the measured mean tint of the 22
+   frames in the manifest. The ground stays near-neutral on purpose: three of
+   the twenty-two frames are portraits and nine are near-monochrome, and
+   warmth in the surrounding surface makes true black-and-white read sepia. */
+
+/* ── Tier 1 · primitives ─────────────────────────────────────── */
+:root {
+  --ink-950:#0a0a0a;
+  --ink-900:#141210;
+  --ink-300:#8a8378;
+  --ink-100:#f0ede8;
+
+  --paper-050:#f1efec;
+  --paper-100:#e7e4df;
+  --paper-600:#6b6358;
+  --paper-900:#302a21;
+
+  --amber-400:#e8a24d;
+  --amber-700:#b8701a;
+
+  --ease-out:cubic-bezier(0.23,1,0.32,1);
+}
+
+/* ── Tier 2 · semantic · DARK is the bare :root ──────────────────
+   A viewer with no OS signal gets this set. That is the decision. */
+:root {
+  --surface:var(--ink-950);
+  --surface-raised:var(--ink-900);
+  --content:var(--ink-100);
+  --content-muted:var(--ink-300);
+  --content-rgb:240 237 232;
+  --accent:var(--amber-400);
+  --hairline:rgb(240 237 232 / 0.12);
+  /* A photograph on paper floats without an edge; on black it must not have one. */
+  --frame-edge:none;
+}
+
+/* A light OS preference, unless the visitor explicitly chose dark. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --surface:var(--paper-050);
+    --surface-raised:#ffffff;
+    --content:var(--paper-900);
+    --content-muted:var(--paper-600);
+    --content-rgb:48 42 33;
+    --accent:var(--amber-700);
+    --hairline:rgb(48 42 33 / 0.14);
+    --frame-edge:0 0 0 1px rgb(48 42 33 / 0.10);
+  }
+}
+
+/* The toggle wins in both directions. */
+:root[data-theme="light"] {
+  --surface:var(--paper-050);
+  --surface-raised:#ffffff;
+  --content:var(--paper-900);
+  --content-muted:var(--paper-600);
+  --content-rgb:48 42 33;
+  --accent:var(--amber-700);
+  --hairline:rgb(48 42 33 / 0.14);
+  --frame-edge:0 0 0 1px rgb(48 42 33 / 0.10);
+}
+:root[data-theme="dark"] {
+  --surface:var(--ink-950);
+  --surface-raised:var(--ink-900);
+  --content:var(--ink-100);
+  --content-muted:var(--ink-300);
+  --content-rgb:240 237 232;
+  --accent:var(--amber-400);
+  --hairline:rgb(240 237 232 / 0.12);
+  --frame-edge:none;
+}

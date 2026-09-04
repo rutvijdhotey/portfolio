@@ -1,6 +1,7 @@
 // app/layout.tsx
 import type { Metadata } from 'next'
 import { Fraunces, DM_Sans } from 'next/font/google'
+import ThemeScript from '@/components/ThemeScript'
 import './globals.css'
 
 const fraunces = Fraunces({
@@ -17,13 +18,18 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'Rutvij Dhotey',
-  description: 'Software engineer at YouTube and travel photographer.',
+  metadataBase: new URL('https://rutvijdhotey.com'),
+  title: {
+    default: 'Rutvij Dhotey — Photography',
+    template: '%s — Rutvij Dhotey',
+  },
+  description: 'Photographs from Japan, Copenhagen and Paris — a record of my travels, kept so I can look back on them.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head><ThemeScript /></head>
       <body className={`${fraunces.variable} ${dmSans.variable}`}>{children}</body>
     </html>
   )
