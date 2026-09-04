@@ -71,7 +71,7 @@ export const TRIPS: readonly Trip[] = [
     place: 'Tokyo & Osaka',
     year: 2023,
     storageCategory: 'city',
-    blurb: 'Neon after rain. Most of these were taken standing still for a long time.',
+    blurb: 'Tokyo and Osaka on foot. Neon after rain, and long stretches of just walking.',
   },
 ]
 

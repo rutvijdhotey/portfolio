@@ -20,10 +20,10 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL('https://rutvijdhotey.com'),
   title: {
-    default: 'Rutvij Dhotey — Street Photography',
+    default: 'Rutvij Dhotey — Photography',
     template: '%s — Rutvij Dhotey',
   },
-  description: 'Street photography from Japan, Copenhagen and Paris. Cities, mostly after dark.',
+  description: 'Photographs from Japan, Copenhagen and Paris — a record of my travels, kept so I can look back on them.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

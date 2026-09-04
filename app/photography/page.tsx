@@ -26,10 +26,10 @@ export default function PhotographyPage() {
       </nav>
 
       <header className="ph-head">
-        <h1 className="ph-head__title">Cities, mostly<br />after dark.</h1>
+        <h1 className="ph-head__title">Things I want<br />to look back on.</h1>
         <p className="ph-head__sub">
-          Twelve frames from three cities. Neon, rain, and people who didn&rsquo;t know
-          they were being photographed.
+          Twelve frames from three trips. Less a portfolio than a record — the places
+          I walked through, and whoever happened to be passing.
         </p>
       </header>
 

@@ -7,7 +7,7 @@ import './about.css'
 
 export const metadata: Metadata = {
   title: 'About',
-  description: 'Software engineer at YouTube, street photographer. How this site is built.',
+  description: 'Software engineer at YouTube. Photographs from my travels, and how this site is built.',
 }
 
 export default function AboutPage() {
@@ -29,8 +29,8 @@ export default function AboutPage() {
         <div className="about__body">
           <p>
             I&rsquo;m Rutvij. I build software at <strong>YouTube</strong>, and I photograph
-            cities — usually at night, usually standing still for longer than is reasonable,
-            waiting for someone to walk into the frame.
+            the places I travel to. Not to build a portfolio — so that in fifty years I can
+            look back at all of it and laugh and cry.
           </p>
           <p>
             Everything here was shot on a Sony A7 IV across{' '}

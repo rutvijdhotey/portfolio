@@ -18,7 +18,7 @@ export default function Home() {
       <div className="landing__mid">
         <h1 className="landing__statement">
           I&rsquo;m a software engineer at YouTube.
-          I also photograph <em>cities after dark</em>.
+          I photograph my travels so I can <em>look back on them in fifty years</em>.
         </h1>
         <div className="landing__doors">
           <Link href="/photography" className="landing__door">Photography →</Link>
