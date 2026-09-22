@@ -40,7 +40,7 @@ export default function AboutPage() {
 
         <section className="about__section">
           <div className="about__label">Engineering</div>
-          <h2 className="about__h2">Into Your Stories</h2>
+          <h2 className="about__h2">Notebound</h2>
           <div className="about__body">
             <p>
               A journaling app built around the idea that the hard part isn&rsquo;t the
@@ -48,7 +48,7 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="about__links">
-            <Link href="/engineering/into-your-stories">Read the case study →</Link>
+            <Link href="/engineering/notebound">Read the case study →</Link>
             <Link href="/engineering">More engineering →</Link>
           </div>
         </section>
