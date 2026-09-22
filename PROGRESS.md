@@ -1,6 +1,6 @@
 # Progress — Photography-First Rebuild
 
-**Last updated:** 2026-09-21 (rev 5)
+**Last updated:** 2026-09-21 (rev 6)
 **Plan:** [`docs/superpowers/plans/2026-08-27-photography-first-rebuild.md`](docs/superpowers/plans/2026-08-27-photography-first-rebuild.md)
 
 This file is a cold-start handoff. Read it first, then the plan.
@@ -29,6 +29,10 @@ they are real names, not copy. PR #13 gave the engineering pages real titles.
 All ten routes verified 200 on the live site.
 
 **Parked by Rutvij on 2026-09-21:** Plans 2 and 3, and film. Pick them up later.
+
+**Branches cleaned up on 2026-09-21.** The repo is down to `main` alone, locally
+and on GitHub. See "Deleted branches" at the bottom for what went and how to
+get any of it back.
 
 **CI now gates every PR.** `ci.yml` runs tests, `tsc` and the build on every
 pull request; `deploy.yml` runs the same three before it publishes, so a direct
@@ -122,6 +126,8 @@ off deliberately, with the running page open.
 5. **ffmpeg / video** — still unresolved from the previous project. Standing
    preference is to supply converted assets rather than install tooling.
 
+These two are parked along with Plans 2 and 3, by Rutvij's call on 2026-09-21.
+
 ---
 
 ## Settled — the derivative cache (decided 2026-09-04)
@@ -157,7 +163,7 @@ against old derivatives and re-encodes the whole ladder anyway.
 
 ---
 
-## Still to write
+## Still to write — parked until Rutvij picks them up
 
 - **Plan 2 — CMS backend.** Supabase schema (`trips`, `assets`, `collections`,
   `collection_assets`), RLS, manifest generation from Postgres, GitHub Actions
@@ -264,3 +270,39 @@ the implementation**, and three were invisible to tests, types, and the build:
 
 **Load the running page.** Greps, `tsc` and `npm run build` all pass on a site
 that looks wrong.
+
+---
+
+## Deleted branches (2026-09-21)
+
+Every branch except `main` was deleted, locally and on GitHub. Each one was
+checked before deletion: either every commit was already on `main`, or its
+content had been superseded by later work. SHAs are recorded so anything can be
+restored while GitHub still holds the commit:
+
+```bash
+git fetch origin <sha> && git branch <name> <sha>
+```
+
+| Branch | SHA | Why it went |
+|---|---|---|
+| `feature/photography-first-rebuild` | `60b0714` | merged as PR #11 |
+| `feature/photo-pipeline-floating-gallery` | `a7eaaf5` | merged as PR #9 |
+| `feature/paris-chapter` | `a1e5a3f` | merged as PR #8 |
+| `docs/progress-shipped` | `3a89c45` | merged as PR #10 |
+| `feat/nextjs-portfolio` | `d6ea1d8` | merged |
+| `feature/theming` | `9f303da` | empty — no commits beyond `main` |
+| `backup/paris-0807` | `ec007e1` | pre-rewrite backup; every patch is on `main` |
+| `backup/pipeline-0807` | `ffd23a5` | pre-rewrite backup; every patch is on `main` |
+| `claude/fix-creative-headers-vquxc` | `1405702` | LinkedIn/GitHub nav — already on `main` |
+| `claude/portfolio-label-fix` | `67831da` | Mountain View, "Expertise" label — already on `main` |
+| `claude/update-portfolio-agent-tech-ehuc5` | `ae1b459` | early draft of "AI Agentic Engineer"; `main` has the rewrite |
+| `claude/create-ui-guidelines-IcdFE` | `dfe16b4` | **only branch with content not on `main`** — see below |
+
+`claude/create-ui-guidelines-IcdFE` held two May 2026 docs that exist nowhere
+else: `docs/ui-guidelines.md`, which describes the old dark-only "cinematic"
+design, and `docs/superpowers/plans/2026-05-05-creative-blog-extension.md`, a
+blog plan for the retired `/creative` page. Both are superseded by the rebuild's
+token system and IA, so they were deleted as stale. Restore from `dfe16b4` if
+either is ever wanted.
+
