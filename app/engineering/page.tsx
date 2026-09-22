@@ -203,11 +203,11 @@ export default function EngineeringPage() {
         />
       </section>
 
-      {/* FEATURED PROJECT 02: INTO YOUR STORIES */}
+      {/* FEATURED PROJECT 02: NOTEBOUND */}
       <section className="hero hero--02">
         <div className="hero-content">
           <p className="hero-eyebrow">Featured Project · 02</p>
-          <h2 className="hero-title">Into Your Stories</h2>
+          <h2 className="hero-title">Notebound</h2>
           <p className="hero-desc">
             An iOS app that turns a trip&apos;s photos, notes, and voice into a written
             story and a mapped, day-by-day itinerary. The opposite mode of agentic AI to
@@ -243,7 +243,7 @@ export default function EngineeringPage() {
             <span className="tag">Claude Opus + Haiku</span>
             <span className="tag">TypeScript</span>
           </div>
-          <Link href="/engineering/into-your-stories" className="hero-cta">
+          <Link href="/engineering/notebound" className="hero-cta">
             Read case study <span>→</span>
           </Link>
         </div>
@@ -263,7 +263,7 @@ export default function EngineeringPage() {
             <p className="agent-desc">
               The other is intelligence embedded inside a shipped product — voice capture
               routed through intent classification into multimodal generation, working
-              offline-first on a phone in someone&apos;s pocket (Into Your Stories). The craft
+              offline-first on a phone in someone&apos;s pocket (Notebound). The craft
               is the same: choosing the right model for each job, chaining them across APIs,
               and wiring it so the whole thing holds together under real conditions.
             </p>
