@@ -1,6 +1,6 @@
 # Progress — Photography-First Rebuild
 
-**Last updated:** 2026-09-04 (rev 4)
+**Last updated:** 2026-09-21 (rev 5)
 **Plan:** [`docs/superpowers/plans/2026-08-27-photography-first-rebuild.md`](docs/superpowers/plans/2026-08-27-photography-first-rebuild.md)
 
 This file is a cold-start handoff. Read it first, then the plan.
@@ -20,6 +20,15 @@ This file is a cold-start handoff. Read it first, then the plan.
   job ran tests and `tsc` before publishing, both passing.
 - rutvijdhotey.com now serves the rebuild. Verified live: `/`, `/photography`,
   `/about` and `/photography/japan` all 200 with the new titles and copy.
+
+**Since then (2026-09-21):** the app shipped as **Notebound**, so the case study
+moved to `/engineering/notebound` (PR #12) with a redirect stub left at
+`/engineering/into-your-stories`. The GitHub repo URL, the Supabase storage path
+and the `@intoyourstories` Instagram handle were deliberately left as they are —
+they are real names, not copy. PR #13 gave the engineering pages real titles.
+All ten routes verified 200 on the live site.
+
+**Parked by Rutvij on 2026-09-21:** Plans 2 and 3, and film. Pick them up later.
 
 **CI now gates every PR.** `ci.yml` runs tests, `tsc` and the build on every
 pull request; `deploy.yml` runs the same three before it publishes, so a direct
@@ -164,9 +173,12 @@ and hand-editable (film scans carry only the scanner's date).
 
 ## Deliberately out of scope
 
-- **`/engineering`** keeps its 51 hardcoded light-on-dark colours and reports the
-  site-wide title "Rutvij Dhotey — Street Photography". It is pinned to dark via
-  the `.engineering-page` wrapper and works in both themes. Rebuild later.
+- **`/engineering`** keeps its 51 hardcoded light-on-dark colours. It is pinned
+  to dark via the `.engineering-page` wrapper and works in both themes. Rebuild
+  later. Its title is fixed (PR #13): both engineering pages are client
+  components, so pass-through server layouts carry their metadata. The
+  engineering layout uses `{ default, template }` — a plain title string there
+  resets the root template and strips the suffix from every nested route.
 - **`lib/gallery-bands.ts` / `gallery-layout.ts`** are referenced by nothing but
   their own 20 tests. Retained on purpose — the pairing algorithm is non-trivial
   and multi-column trip layouts return once trips outgrow a single strip. There
