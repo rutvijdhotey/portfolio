@@ -61,7 +61,7 @@ export default function NoteboundPage() {
         </p>
         <div className="iys-ctas">
           <a href="#demo" className="iys-cta iys-cta--primary">Watch demo →</a>
-          <a href="https://github.com/rutvijdhotey/into-your-stories" className="iys-cta iys-cta--ghost" target="_blank" rel="noopener">View code →</a>
+          <a href="https://github.com/rutvijdhotey/notebound" className="iys-cta iys-cta--ghost" target="_blank" rel="noopener">View code →</a>
         </div>
       </section>
 
@@ -211,7 +211,7 @@ export default function NoteboundPage() {
       {/* FOOTER */}
       <footer className="iys-footer">
         <a href={VIDEO} className="iys-cta iys-cta--primary" target="_blank" rel="noopener">Watch demo →</a>
-        <a href="https://github.com/rutvijdhotey/into-your-stories" className="iys-cta iys-cta--ghost" target="_blank" rel="noopener">View code →</a>
+        <a href="https://github.com/rutvijdhotey/notebound" className="iys-cta iys-cta--ghost" target="_blank" rel="noopener">View code →</a>
         <Link href="/engineering" className="iys-back-link">← Back to Engineering</Link>
       </footer>
     </main>
