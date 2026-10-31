@@ -1,3 +1,41 @@
+# rutvijdhotey.com
+
+Photography and engineering portfolio. Next.js, exported as static HTML and
+served by GitHub Pages at [rutvijdhotey.com](https://rutvijdhotey.com).
+
+## Where the current work is written down
+
+| Branch | Handoff document |
+|---|---|
+| `rebuild/speed-and-engineering` | [`docs/rebuild/REBUILD_PROGRESS.md`](docs/rebuild/REBUILD_PROGRESS.md) — **active**: speed fixes + `/engineering` restructure |
+| `main` | [`PROGRESS.md`](PROGRESS.md) — the photography-first rebuild, merged |
+
+Read the handoff for the branch you are on before changing anything. Agent
+instructions live in [`AGENTS.md`](AGENTS.md).
+
+## Running it
+
+Node 24 (see `.nvmrc`):
+
+```bash
+nvm use
+npm ci
+npm run dev
+```
+
+Use `npm ci`, not `npm install` — `npm install` on an older npm rewrites
+`package-lock.json`.
+
+Verification gates, the same three CI runs on every PR:
+
+```bash
+npm test          # node:test — unit tests for the photo pipeline and libs
+npx tsc --noEmit  # types
+npm run build     # static export into out/
+```
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
