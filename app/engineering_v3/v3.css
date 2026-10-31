@@ -1,0 +1,185 @@
+/* app/engineering_v3/v3.css
+   Version 3 — the argument version.
+
+   v1 shows taste, v2 shows legibility. This one has a thesis: the two projects
+   are the same craft pointed in opposite directions, and the page is built
+   around that axis rather than around a list of cards. Everything else —
+   numbered sections, the spec header, the mono rails — exists to make the site
+   read like a document written by someone who builds systems, not like a
+   portfolio template.
+
+   Serif display against mono structure. Zero JavaScript. */
+
+.v3 {
+  --void: #09090b;
+  --panel: #101013;
+  --chalk: #ededf0;
+  --dim: #8f8f99;
+  --rule: rgb(237 237 240 / 0.11);
+  --signal: #7fd1c1;
+
+  background: var(--void);
+  color: var(--chalk);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  min-height: 100dvh;
+  position: relative;
+}
+
+/* A faint engineering grid. Decorative, so it is behind everything and
+   invisible to assistive tech by virtue of being a background. */
+.v3::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(to right, rgb(237 237 240 / 0.028) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(237 237 240 / 0.028) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 35%, transparent 78%);
+}
+
+/* Lift real content above the decorative grid. The version switch is
+   excluded: it is fixed to the viewport, and position:relative here
+   would drop it back into the flow. */
+.v3 > *:not(.vswitch) { position: relative; z-index: 1; }
+:where(.v3 a) { color: inherit; }
+.v3 ::selection { background: var(--signal); color: var(--void); }
+.v3 :focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+
+.v3-wrap { max-width: 1080px; margin: 0 auto; padding-inline: clamp(20px, 5vw, 56px); }
+
+.v3-mono {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ── spec header ───────────────────────────────────────────────── */
+.v3-bar {
+  display: flex; flex-wrap: wrap; gap: 12px 28px;
+  justify-content: space-between; align-items: center;
+  padding-block: 22px; border-bottom: 1px solid var(--rule);
+}
+.v3-bar nav { display: flex; flex-wrap: wrap; gap: 22px; }
+.v3-bar nav a { transition: color 0.2s; }
+.v3-bar nav a:hover { color: var(--chalk); }
+
+.v3-hero { padding-block: clamp(72px, 11vw, 136px) clamp(56px, 8vw, 96px); }
+.v3-h1 {
+  font-family: var(--font-instrument), Georgia, serif;
+  font-size: clamp(44px, 8.4vw, 104px);
+  font-weight: 400; line-height: 0.98; letter-spacing: -0.028em;
+  max-width: 15ch; margin-bottom: 44px;
+}
+.v3-h1 em { font-style: italic; color: var(--signal); }
+
+.v3-spec {
+  display: grid; gap: 1px; background: var(--rule);
+  border-block: 1px solid var(--rule);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+.v3-spec > div { background: var(--void); padding: 20px 4px 20px 0; }
+.v3-spec dt { margin-bottom: 9px; }
+.v3-spec dd { font-size: 15px; color: var(--chalk); }
+
+/* ── numbered sections ─────────────────────────────────────────── */
+.v3-section { padding-block: clamp(64px, 9vw, 112px); border-bottom: 1px solid var(--rule); }
+.v3-shead { display: flex; gap: 18px; align-items: baseline; margin-bottom: 40px; }
+.v3-num { color: var(--signal); }
+.v3-h2 {
+  font-family: var(--font-instrument), Georgia, serif;
+  font-size: clamp(26px, 4vw, 40px); font-weight: 400; letter-spacing: -0.02em;
+}
+.v3-say { font-size: clamp(17px, 2vw, 19px); line-height: 1.7; color: var(--dim); max-width: 64ch; }
+.v3-say strong { color: var(--chalk); font-weight: 500; }
+
+/* ── the axis: this page's one real idea ───────────────────────── */
+.v3-axis { margin-block: clamp(40px, 6vw, 64px); }
+.v3-axis-svg { width: 100%; height: auto; display: block; overflow: visible; }
+.v3-axis-label {
+  font-family: var(--font-instrument), Georgia, serif;
+  font-size: 15px;
+  fill: var(--chalk);
+}
+.v3-axis-ends {
+  display: flex; justify-content: space-between; gap: 16px; margin-top: 14px;
+}
+
+.v3-modes { display: grid; gap: 20px; grid-template-columns: 1fr; }
+@media (min-width: 860px) { .v3-modes { grid-template-columns: 1fr 1fr; } }
+
+.v3-mode {
+  border: 1px solid var(--rule); background: var(--panel);
+  padding: clamp(24px, 3.2vw, 36px);
+  display: flex; flex-direction: column;
+  transition: border-color 0.25s, transform 0.25s;
+}
+.v3-mode:hover { border-color: rgb(127 209 193 / 0.45); transform: translateY(-3px); }
+@media (prefers-reduced-motion: reduce) { .v3-mode:hover { transform: none; } }
+
+.v3-mode-kind { margin-bottom: 20px; }
+.v3-mode h3 {
+  font-family: var(--font-instrument), Georgia, serif;
+  font-size: clamp(28px, 3.6vw, 38px); font-weight: 400; letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+.v3-mode p { font-size: 15px; line-height: 1.75; color: var(--dim); margin-bottom: 18px; }
+.v3-flow {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  padding-block: 18px; margin-block: 4px 20px;
+  border-block: 1px solid var(--rule);
+}
+.v3-step {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 11px; letter-spacing: 0.05em; color: var(--chalk);
+  border: 1px solid var(--rule); padding: 5px 10px;
+}
+.v3-step--human { border-color: rgb(127 209 193 / 0.6); color: var(--signal); }
+.v3-arrow { color: var(--dim); font-size: 11px; }
+.v3-mode-facts { display: flex; flex-wrap: wrap; gap: 24px; margin-top: auto; }
+.v3-fn { font-family: var(--font-instrument), Georgia, serif; font-size: 28px; letter-spacing: -0.02em; }
+.v3-fl { font-size: 12px; color: var(--dim); margin-top: 2px; }
+.v3-go { margin-top: 24px; font-size: 15px; color: var(--signal); }
+.v3-go:hover { text-decoration: underline; }
+
+/* ── ledger (experience + record) ──────────────────────────────── */
+.v3-row {
+  display: grid; gap: 10px 32px; grid-template-columns: 1fr;
+  padding-block: 24px; border-top: 1px solid var(--rule);
+}
+@media (min-width: 760px) { .v3-row { grid-template-columns: 140px 1fr auto; align-items: baseline; } }
+.v3-row:first-of-type { border-top: 0; }
+.v3-row h3 { font-family: var(--font-instrument), Georgia, serif; font-size: 24px; font-weight: 400; letter-spacing: -0.02em; }
+.v3-row p { font-size: 15px; line-height: 1.7; color: var(--dim); }
+.v3-row p b { color: var(--chalk); font-weight: 500; display: block; margin-bottom: 5px; font-size: 15px; }
+
+.v3-record { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.v3-record div { border-left: 1px solid var(--rule); padding-left: 18px; }
+.v3-record h4 { font-size: 15px; font-weight: 500; margin-bottom: 5px; }
+.v3-record p { font-size: 13px; line-height: 1.6; color: var(--dim); }
+
+/* ── end ───────────────────────────────────────────────────────── */
+.v3-end { padding-block: clamp(64px, 9vw, 112px) clamp(96px, 12vw, 140px); }
+.v3-mail {
+  font-family: var(--font-instrument), Georgia, serif;
+  font-size: clamp(26px, 5vw, 52px); font-weight: 400; letter-spacing: -0.025em;
+  display: inline-block; margin-block: 18px 28px;
+}
+.v3-mail:hover { color: var(--signal); }
+.v3-end-links { display: flex; flex-wrap: wrap; gap: 24px; }
+.v3-end-links a { font-size: 15px; color: var(--dim); border-bottom: 1px solid var(--rule); padding-bottom: 2px; }
+.v3-end-links a:hover { color: var(--chalk); border-color: var(--signal); }
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .v3-reveal {
+      animation: v3-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 58%;
+    }
+  }
+}
+/* See the note in v1.css: a reveal may move content, never hide it. */
+@keyframes v3-in {
+  from { transform: translateY(18px); }
+  to { transform: none; }
+}
