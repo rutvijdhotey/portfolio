@@ -1,8 +1,10 @@
 # Rebuild: Speed + Engineering Restructure (handoff)
 
-**Last updated:** 2026-10-31
-**Branch:** `rebuild/speed-and-engineering`. No code has changed yet. Only this file has been updated.
-**Read this first in a new session.**
+**Last updated:** 2026-10-31 (session 3)
+**Branch:** `rebuild/speed-and-engineering`. No code has changed yet. Only docs.
+**Read this first in a new session.** Then read `DESIGN_PLAN.md` next to this file.
+**Both session-2 blockers are resolved — see "Session 3" at the bottom before
+acting on anything above it. Several findings above are now known to be wrong.**
 
 ---
 
@@ -31,7 +33,7 @@ Open: should Education (Penn State M.Eng. 2015–16, PICT B.E. 2011–15) stay o
 
 ---
 
-## Blockers for the next session
+## Blockers for the next session — BOTH RESOLVED in session 3
 1. **Network policy.** These hosts were denied: `www.poulo.site`, `poulo.site`, `knlwzjvuqipjrjpgnovc.supabase.co`, `mskwqqbigtauakojpyhn.supabase.co`, `rutvijdhotey.com`. Rutvij is changing the environment's Network access before starting the new tab. Verify with `curl -sI https://www.poulo.site/` first.
 2. **Supabase projects may be gone.** The connected Supabase account lists only `dcejrbyujfcxartywpis` (Travel Diary App). Neither image host is in it, so they may be deleted, paused, or under another account. If they don't respond, ask Rutvij for the original images (Drive, a folder or a zip).
 
@@ -189,3 +191,109 @@ actually sees before guessing.
   installed dependencies, re-verified the network block, ran the local
   baseline, mapped every external asset reference, and corrected diagnosis
   E2. No code changed. No design plan written — poulo.site is unreachable.
+
+---
+
+## Session 3 (2026-10-31) — blockers cleared, and three corrections
+
+Run from Rutvij's own machine in the Claude desktop app, not the sandboxed
+container the first two sessions used. That is the whole reason the blockers
+lifted: **the network was never going to open in that container.**
+
+### Blocker 1 — network: OPEN
+Every host the rebuild needs answers from here:
+
+| Host | Result |
+|---|---|
+| `rutvijdhotey.com` | 200 |
+| `knlwzjvuqipjrjpgnovc.supabase.co` | 200 on real objects |
+| `mskwqqbigtauakojpyhn.supabase.co` | host resolves |
+| `upload.wikimedia.org` | 301 |
+| `www.poulo.site` | 429 to curl (Vercel bot checkpoint), **200 in a real browser** |
+
+poulo.site was read in the built-in browser and inspected with the DOM
+inspector. The curl path hits a Vercel Security Checkpoint; that was not
+worked around, the page was simply opened in a browser like any reader would.
+
+### Blocker 2 — Supabase: NOT gone
+Session 1 guessed the image projects were deleted because they were missing
+from the connected Supabase account. They are alive. They are simply under a
+different account than the MCP connector is signed in to. Measured:
+
+| Asset | Size |
+|---|---|
+| `optimized/covers/creative-hero-poster.avif` | 160 KB |
+| `optimized/covers/engineering-hero.avif` | 179 KB |
+| `optimized/covers/engineering-hero.webp` | 212 KB |
+| `Engineering/ChatGPT Image ….png` (architecture diagram) | **1.27 MB** |
+| `Engineering/Into Your Stories/IMG_1352.PNG` | **3.54 MB** (one of four) |
+| `Videos/movie.mp4` | **11.3 MB** |
+
+So `/engineering/notebound` ships roughly **14 MB of raw iPhone PNGs** plus an
+11 MB video with no poster. That, not the Supabase host, is the weight problem.
+
+### Correction 1 — `/about` is not broken
+`/about` was loaded live at 1440×900 and at 375×812. It renders correctly at
+both, has **no console errors**, and has **no horizontal overflow** at 375px.
+The session-1 theory that failing Supabase hosts were breaking it is wrong, and
+open question 3 ("what exactly looks wrong?") is answered: on the live site, as
+of today, nothing. If Rutvij still sees a problem it is browser- or
+device-specific and needs a screenshot from him.
+
+### Correction 2 — `/engineering` does not go blank, it flashes
+Session 2 predicted five `ScrollTrigger` sections could stay at `opacity: 0`.
+Measured live: **every section reports `opacity: 1`** — `.hero`, `.arch-section`,
+`.hero--02`, `.agent-section`, `.about`, `.credentials`, `.contact`, footer. No
+section is stuck hidden, and no image fails to load.
+
+The real defect is a **cold-load flash**. A screenshot taken seconds after
+navigation on a 375px viewport shows the hero as a full-bleed artwork with *no
+text at all*; a later screenshot of the same scroll position shows the
+headline, both paragraphs, the stat row and the tech chips. Hit-testing
+confirms `.hero-content` sits at `z-index: 2`, `opacity: 1`, above `.hero-bg`.
+So the content arrives late rather than never. **That delay is what "the page
+doesn't render properly" means**, and it is caused by the GSAP intro plus heavy,
+undeclared-dimension images — which is still fixed by the same change: make
+content visible by default and stop animating it in.
+
+### Correction 3 — the live page-weight number is misleading
+`performance.getEntriesByType('resource')` reports **293 KB over 25 requests**
+for `/engineering`. That figure is wrong to quote. The Supabase and Wikimedia
+responses carry no `Timing-Allow-Origin` header, so their `transferSize` comes
+back as **0**. The 1.27 MB diagram and the 179 KB hero are in that list at
+0 KB. Real first-load weight is closer to **1.8 MB**. Any before/after
+comparison has to measure bytes at the network layer, not from
+`transferSize`.
+
+### Minor, still worth fixing
+`.hero-bg` has `transform: scale(1.04)`, so at 375px its right edge lands at
+383px — 8px past the viewport. It does not cause document overflow today
+(`scrollWidth === clientWidth`) because the parent clips it, but it is fragile.
+
+### Environment notes
+- Node **v25.8.1** here, so `engines: >=24` is satisfied. No need to downgrade.
+- **Playwright is not installed** in this repo and is not a dependency. The
+  session-1 note that it is "pre-installed" was true of the container only.
+  Measurements above were taken with the built-in browser instead. If
+  before/after numbers need to be reproducible in CI, Playwright has to be
+  added deliberately.
+- `npm` deps are installed (289 packages). Tests are `node --test` over
+  `scripts/**/*.test.mjs` and `lib/**/*.test.ts`.
+
+### What was produced
+`docs/rebuild/DESIGN_PLAN.md` — the design plan that was blocked since session
+1, now written from a real reading of poulo.site. It ends with five decisions
+(D1–D5) that need Rutvij's answer before any code is written, which is the
+order he asked for.
+
+### Still not done, deliberately
+Steps 4–7 (fetch masters, build derivatives, rebuild the pages). Rutvij's own
+sequence puts design approval ahead of them, and D5 — whether 220 derivative
+files and an 11 MB video get committed into the repo — changes what step 4
+even does.
+
+### Log
+- 2026-10-31 (session 3): Ran from the desktop app. Confirmed network open and
+  Supabase alive. Read poulo.site in a browser and measured its design system.
+  Measured the live site at desktop and mobile. Corrected three findings from
+  earlier sessions. Wrote `DESIGN_PLAN.md`. No code changed.
