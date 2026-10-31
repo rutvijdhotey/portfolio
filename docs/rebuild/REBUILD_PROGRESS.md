@@ -104,3 +104,88 @@ Open: should Education (Penn State M.Eng. 2015–16, PICT B.E. 2011–15) stay o
 ## Log
 - 2026-10-31: Diagnosis from source. Read the resume. The poulo.site fetch failed (network policy). Found the Supabase image projects are missing from the connected account. Repo attached with push access. Saved this handoff on branch `rebuild/speed-and-engineering`.
 - 2026-10-31 (session 2): Network **still closed**. The proxy answers 403 for every external host, including example.com, poulo.site, both Supabase hosts and rutvijdhotey.com. The WebFetch tool also fails (ENOTFOUND). Ran the local baseline (above). Steps 1–3 are blocked: waiting on Rutvij to change Network access, or to describe poulo.site in text.
+
+---
+
+## Session 2 — detail behind the baseline above
+
+### Network: exactly which hosts, and what still works
+Every host this rebuild needs is denied at the proxy
+(`curl: (56) CONNECT tunnel failed, response 403`):
+`www.poulo.site`, `poulo.site`, `rutvijdhotey.com`,
+`knlwzjvuqipjrjpgnovc.supabase.co`, `mskwqqbigtauakojpyhn.supabase.co`,
+`upload.wikimedia.org`. WebFetch fails separately with DNS `ENOTFOUND` for
+both poulo.site hosts, so there is no second route to it.
+
+Reachable: `registry.npmjs.org`, `fonts.googleapis.com`, `github.com`.
+That is why `npm install`, the `next/font/google` fonts in
+`app/layout.tsx`, and git all work while nothing image-related does.
+
+**poulo.site was never read. No design plan has been written.** Writing one
+from an invented description of that site would be worthless, so it is not
+in this file.
+
+### Extra baseline numbers
+Beyond the section above: the export's `out/_next` is 1.1 MB of the 1.9 MB,
+including **852 KB of JavaScript**. Page HTML: `index.html` 10.7 KB,
+`about.html` 15.6 KB, `engineering.html` 23.0 KB. Build is Next.js 16.2.4
+on Turbopack, 13 static routes, compile ~5.3 s.
+
+### Correction to the previous diagnosis (E2)
+The handoff says content "stays invisible until JS runs". That is **not
+accurate**, and it changes the fix:
+- `app/engineering/page.tsx` has 13 `gsap.from(...)` calls and **no
+  `opacity: 0` in `engineering.css`** — the only `opacity` rules there are
+  hover transitions (lines 47-49, 689-693). With JS disabled entirely the
+  page renders **fully visible**.
+- The real hazard is the **five `ScrollTrigger`-driven `from` tweens**:
+  `.agent-section` (line 72), `.hero--02` children (82), `.about` (92),
+  `.credentials` (102), `footer` (112). A `from` tween renders its start
+  state immediately, so once JS runs those five regions are set to
+  `opacity: 0` and are only revealed when their trigger fires. If trigger
+  positions are computed against a layout that then changes — exactly what
+  happens when the Supabase images 404 or load with no declared dimensions —
+  those sections can stay at zero.
+- So "the page breaks" is most likely **those five sections going blank
+  after hydration**, not a blank page from the start. Confirm against the
+  live site once the network is open.
+
+### Confirmed external-asset map (everything that must be self-hosted)
+Supabase host `knlwzjvuqipjrjpgnovc`:
+| Where | What |
+|---|---|
+| `app/page.tsx:6` | landing hero poster (AVIF) |
+| `app/engineering/page.tsx:200` | the raw ChatGPT architecture PNG |
+| `app/engineering/engineering.css:93-94` | engineering hero AVIF/WebP |
+| `app/engineering/notebound/page.tsx:11` | the four iPhone screenshots |
+| `app/engineering/notebound/page.tsx:12` | `Videos/movie.mp4` |
+| `lib/gallery-items.ts:19` | base URL for the whole photography gallery |
+| `scripts/photos/config.mjs:4` | the pipeline's master host |
+
+Supabase host `mskwqqbigtauakojpyhn`: only
+`scripts/photos/build-covers.mjs:27,35`.
+Hotlinked from Wikimedia: `app/engineering/page.tsx:315` (YouTube icon),
+`:351` (Penn State logo). `next.config.ts:4-11` allows all four hosts.
+
+### `/about` — the reported breakage is not an image on that page
+`app/about/page.tsx` references **no images at all**, and the CSS it imports
+(`photography.css`, `about.css`) contains no Supabase URLs. Whatever is wrong
+on `/about` is therefore something else. Need Rutvij to describe what he
+actually sees before guessing.
+
+### Open questions for Rutvij
+1. **poulo.site** — open Network access for it, or paste its HTML/CSS as text?
+   (Nothing visual can be planned until one of these happens.)
+2. **Education** (Penn State M.Eng. 2015-16, PICT B.E. 2011-15) — keep it on
+   `/engineering`, drop it, or move it to `/about`? Still unanswered from
+   session 1.
+3. **`/about`** — what exactly looks wrong?
+4. **`/creative` and `/engineering/into-your-stories`** — the stub and the
+   extra page noted above are not in the planned structure. Keep, redirect,
+   or delete?
+
+### Log
+- 2026-10-31 (session 2, cont.): Cloned the repo and checked out this branch,
+  installed dependencies, re-verified the network block, ran the local
+  baseline, mapped every external asset reference, and corrected diagnosis
+  E2. No code changed. No design plan written — poulo.site is unreachable.
