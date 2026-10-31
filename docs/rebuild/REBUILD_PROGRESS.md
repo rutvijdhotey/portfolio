@@ -1,7 +1,7 @@
 # Rebuild: Speed + Engineering Restructure (handoff)
 
 **Last updated:** 2026-10-31
-**Branch:** `rebuild/speed-and-engineering`. No code has changed yet. This file is the only commit.
+**Branch:** `rebuild/speed-and-engineering`. No code has changed yet. Only this file has been updated.
 **Read this first in a new session.**
 
 ---
@@ -89,6 +89,12 @@ Open: should Education (Penn State M.Eng. 2015–16, PICT B.E. 2011–15) stay o
 6. Fix `/about` and apply the new design across the site.
 7. Measure again, then open a PR from this branch (only when Rutvij asks).
 
+## Local baseline (2026-10-31, session 2, before any changes)
+- `npm ci` works (the npm registry bypasses the proxy). `npm test`: 81 pass, 0 fail. `tsc --noEmit`: clean. `npm run build`: 13 static routes, `out/` is 1.9 MB.
+- The container runs Node v22.23.4, but `package.json` asks for `>=24`. The build works anyway. CI should use 24.
+- `/engineering/into-your-stories` is a "Moved" stub. `/creative` exists too. Neither was mentioned in the plan above.
+- The live baseline (Playwright on rutvijdhotey.com) is **not done yet** because of the network block.
+
 ## Rutvij's working preferences
 - Ask clarifying questions. Ask for text before screenshots.
 - Break the work down by part. Keep a progress `.md` (this file). No PDFs.
@@ -97,3 +103,4 @@ Open: should Education (Penn State M.Eng. 2015–16, PICT B.E. 2011–15) stay o
 
 ## Log
 - 2026-10-31: Diagnosis from source. Read the resume. The poulo.site fetch failed (network policy). Found the Supabase image projects are missing from the connected account. Repo attached with push access. Saved this handoff on branch `rebuild/speed-and-engineering`.
+- 2026-10-31 (session 2): Network **still closed**. The proxy answers 403 for every external host, including example.com, poulo.site, both Supabase hosts and rutvijdhotey.com. The WebFetch tool also fails (ENOTFOUND). Ran the local baseline (above). Steps 1–3 are blocked: waiting on Rutvij to change Network access, or to describe poulo.site in text.
