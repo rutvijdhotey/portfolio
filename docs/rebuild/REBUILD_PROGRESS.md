@@ -297,3 +297,244 @@ even does.
   Supabase alive. Read poulo.site in a browser and measured its design system.
   Measured the live site at desktop and mobile. Corrected three findings from
   earlier sessions. Wrote `DESIGN_PLAN.md`. No code changed.
+
+---
+
+## Session 4 (2026-10-31, desktop app) — plan, previews, and design feedback
+
+**Nothing was committed this session.** Rutvij has not asked for commits. Do not
+commit until he does.
+
+### Where things stand
+| Item | State |
+|---|---|
+| Implementation plan | Written: `docs/superpowers/plans/2026-10-31-poulo-faithful-engineering-site.md` (Tasks 0-10). **Needs Revision A, see its top section**, before more tasks run. |
+| Subagent-driven execution | Chosen by Rutvij. Task 0 (baseline) done. Task 1 (`lib/scene.ts` + `lib/scene.test.ts`) implemented by a subagent, which reported 8/8 tests and a clean `tsc`. **Not yet reviewed** by the spec or quality reviewer. Paused at Rutvij's request: he wants a lightweight preview before any more coding. |
+| Preview v2 (all seven feedback points) | Saved: `docs/rebuild/preview/engineering-preview-v2.html`. Tested in the browser: hero scenes, both themes, scroll rail, experience buttons, project filter, stack grid, tour button; console clean. |
+| Portrait reference photo | `docs/rebuild/reference/portrait-reference.png` (untracked; the repo may be public, so ask Rutvij before committing it). |
+| Portrait | **Approved and built (session 5).** `components/engineering/Portrait.tsx` + pure `lib/gaze.ts` (5 tests). Mounted in `app/engineering_v1/page.tsx` in place of `CursorPortrait`. See "Session 5" below. |
+| Uncommitted files | `lib/scene.ts`, `lib/scene.test.ts`, the plan, `docs/rebuild/preview/`, `docs/rebuild/reference/`, and Rutvij's own `components/CursorPortrait.tsx` redraw (**deleted in session 5 at his request**; the original is in git history). `.claude/` and the two `docs/superpowers/*2026-06-2x*` files were already untracked. |
+
+Baseline measured at the start (Task 0): `npm test` 81 pass / 0 fail, `tsc --noEmit` clean,
+`npm run lint` has **2 pre-existing errors** (`components/OverlayViewer.tsx:33` and
+`components/ThemeToggle.tsx:12`, both `react-hooks/set-state-in-effect`). New code must not add
+a third. For a theme reader, use `useSyncExternalStore` on `<html data-theme>` instead of
+setState-in-effect.
+
+### What poulo.site does (re-read live this session)
+Measured from its CSS/DOM: keyframes `site-loader-failsafe`, `vapor-in`, `vapor-out`,
+`hero-cloud-drift`, `hero-sun-breathe`, `theme-reveal`, `hw-wipe`; two full-viewport hero canvases.
+Observed in screenshots: a line-art loader with a progress bar; a pinned hero whose background goes
+starfield, then clouds, then sun rays as the role headline cycles; a fixed pill nav (5 icons, round
+theme button, filled CTA); filter chips with "Showing N of N projects"; project blocks (framed UI
+screenshot + chat-bubble pill on the left, text and a "Learn more" pill on the right, four small
+feature cards below); a grey monochrome logo grid for the stack; a left-edge scroll rail of dashes.
+**Not measured:** the timings and easings of its scroll-linked effects. Ours are tuned by eye.
+Not copied: markup, CSS, assets, copy, the lime accent, the avatar, the keyboard art.
+
+### Rutvij's seven feedback points on the first preview, and where each stands
+1. **Portrait looks bad.** Make it nicer, keep pupils that follow the cursor, base it on the
+   photo. v2 has a sticker-outline cartoon with pupil tracking, but it was drawn *before* he sent
+   the photo and has known faults: skin far too pale, beard too heavy, no moustache/stubble
+   distinction, hair reads as a helmet. **Redraw from the photo (see below), preview it, get his OK.**
+2. **Light and dark must work on everything**, like poulo. Done in v2: one theme switch drives
+   hero, nav, cards, mockups. This **overrides** the plan's "hero is always dark".
+3. **Experience as buttons** (YouTube, eBay, NetApp) with details on select; the generic
+   experience line when none is selected. Done in v2 (buttons newest-first; timeline
+   chronological, proportional to months). Logos: Tabler has `ti-brand-youtube` only; eBay and
+   NetApp fall back to text marks. Real build needs inline SVGs (open question).
+4. **Projects** (Notebound, LaCuriosity) in poulo's block style with UI mockups of the site and
+   the app. Done in v2 (browser mock; phone mock; four feature cards each). Copy sticks to facts
+   already in the approved text.
+5. **Stack as icons**, creative fallback when no icon. Done in v2: tiles, dashed monogram tile
+   where no brand icon exists (Claude, Make.com, ElevenLabs).
+6. **Left scroller** like poulo's. Done in v2: dashes, active one long and bright, name pill on
+   hover/focus only (an always-on label collided with content in a 680px frame).
+7. **Similar colour scheme, not many colours.** Done in v2: neutrals plus one clay accent
+   `#d98b5a` (still D2-open).
+
+### Portrait: what the reference photo shows (facts, to draw from)
+Short dark hair, swept up at the front and to one side; thick dark eyebrows; a moustache plus short
+stubble that follows the jaw (not a full thick beard); a wide open smile showing teeth; medium-brown
+skin; in the photo he wears a black tuxedo jacket with satin lapels, white shirt, black bow tie and a
+white boutonniere. The cartoon style to keep: bold dark outlines, flat fills, a thick sticker-style
+outer outline, cut off flat at the chest. **Ask Rutvij** whether the outfit should be the tuxedo and
+bow tie, or the camera strap the earlier `CursorPortrait.tsx` used.
+
+### Preview-only simplifications (the real page differs)
+The preview scrolls an inner pane and swaps themes instantly. The real page scrolls the window,
+reveals the new theme as an expanding circle (View Transitions API), and has the camera intro loader,
+which the preview does not show.
+
+### What to do next, in order
+1. Read this section, the plan (top section "Revision A"), and open the preview:
+   `cd docs/rebuild/preview && python3 -m http.server 8765`, then
+   http://localhost:8765/engineering-preview-v2.html (needs internet for the Tabler icon CSS).
+2. ~~**Preview-first:** redraw the portrait from the photo and show it to Rutvij *before* touching~~ Done in session 5, see below.
+   the repo's components. He asked for lightweight previews before code, and for work to be
+   re-checked in a browser before it is shown.
+3. Get answers to the open questions below.
+4. Run the spec and quality reviewers on Task 1, then resume subagent-driven execution with the
+   revised plan. Subagents must not commit.
+5. Measure at the end (build, tests, 375px overflow, both themes, reduced motion).
+
+### Open questions for Rutvij
+- ~~Portrait outfit~~ Settled in session 5: a plain collared shirt, no tuxedo or camera.
+- ~~Keep or delete `CursorPortrait.tsx`~~ Deleted in session 5 at Rutvij's request.
+- Deleting `/engineering_v1..v3` and `VersionSwitch` (plan Task 8): fine? Recoverable from `d3f7869`.
+- Logos for eBay, NetApp and Claude/Make/ElevenLabs: inline official SVGs, or the monogram fallback?
+- Hero role titles (`Agentic AI Engineer` / `Backend Engineer` / `Systems Builder`) are my defaults.
+- Still open from before: D2 accent colour, D3 Education, D4 `/creative` and
+  `/engineering/into-your-stories`, D5 asset volume (including the 11 MB `movie.mp4`).
+- May the reference photo be committed to the repo, or stay local?
+
+### Rutvij's working preferences (additions)
+- Show a lightweight preview in chat **before** coding. Re-check and test it in a browser first.
+- No commits until he says so.
+
+### Log
+- 2026-10-31 (session 4): Re-read poulo.site; wrote the plan; ran Task 0 myself and Task 1 via a subagent;
+  paused for a preview; built and browser-tested preview v2 from seven feedback points; saved
+  preview, reference photo and this handoff. No commits.
+
+## Session 5 (2026-10-31, desktop app) — portrait approved and built
+
+**Nothing committed.** Rutvij has not asked for commits.
+
+### What Rutvij decided about the portrait
+He rejected the detailed cartoon (skin tone, teeth, lips, moustache, tuxedo) and asked for
+**"super lightweight, just a simple outline like poulo's"**. Iterated in chat to:
+- Monochrome like poulo's avatar: white face, near-black `#111` lines, flat `#2b2b2b` hair with
+  one grey sweep line, one pale grey `#e2e2e2` stubble shape. No skin colour.
+- Mouth is **one smile line**. No lips, teeth or moustache.
+- **Simple round glasses** (two rims, bridge, arms to the ears).
+- **A plain white collared shirt** (two collar points, button line, two buttons). No suit.
+- Sticker edge in `currentColor`, so the parent's `color` makes it white on dark and black on
+  light. No theme reader needed.
+- Dot pupils follow the cursor; aimed from the eyes; off under reduced motion; drawn in the
+  markup so it shows with JS off.
+
+### What was built
+| File | State |
+|---|---|
+| `lib/gaze.ts`, `lib/gaze.test.ts` | New. `gazeOffset(dx, dy)` -> pupil offset inside a 3.5 x 2.5 ellipse, eases in over 200px. 5 tests, written first. |
+| `components/engineering/Portrait.tsx` | New client component, replaces `CursorPortrait` per Revision A. |
+| `app/engineering_v1/page.tsx` | Import and one JSX line swapped to `Portrait`. |
+| `components/CursorPortrait.tsx` | **Deleted** at Rutvij's request (his uncommitted redraw went with it). `tsc` clean and lint unchanged after. |
+
+Checked: `tsc` clean; `npm test` 94/94; lint still only the 2 pre-existing errors; in the browser
+at `/engineering_v1` the drawing renders, the pupils track both corners, the console is clean, a
+light-theme colour swap works, the SVG is in the server HTML, and 375px has no overflow.
+The final chat preview is also saved outside the repo in the session scratchpad (not needed).
+
+### Next
+Back to step 3 of "What to do next" above: open questions, then the Task 1 reviews, then the
+revised plan via subagents (no commits).
+
+### Log
+- 2026-10-31 (session 5): portrait iterated in chat to a poulo-simple outline; built `Portrait` +
+  `lib/gaze.ts`; verified in the browser. No commits.
+
+## Session 5, part 2 (2026-10-31) — /engineering rebuilt, studies deleted
+
+**Nothing committed.** Rutvij asked for the whole UI with his seven feedback points, to see it in
+the browser, and said the other versions can go. Built directly (not via subagents); the
+Revision A table in the plan was the spec, preview v2 the visual reference.
+
+### Deleted (recoverable from `d3f7869`)
+`app/engineering_v1..v3/`, `components/VersionSwitch.tsx`, `components/version-switch.css`, the old
+GSAP `app/engineering/page.tsx` and `engineering.css`.
+
+### Built
+| File | What |
+|---|---|
+| `lib/stars.ts` (+test) | Seeded stars and rain (`makeDrops`, `dropY`). |
+| `lib/profile.ts` (+test) | Roles, experience (with tag, months, years label), stack (mark or monogram), email, links. |
+| `lib/experience.ts` (+test) | `timelineSegments(roles, now)`, `toggleSelection`. |
+| `lib/projects.ts` (+test) | Projects with four feature cards and `mock: 'site' \| 'phone'`; filter and count. |
+| `lib/sections.ts` (+test) | The five sections, `activeIndex`, `maskOpacity`. |
+| `components/engineering/` | `PillNav`, `ThemeOrb` (no React state: both icons rendered, CSS picks), `useActiveSection` (useSyncExternalStore), `ScrollRail`, `HeroScene`, `Sky` (canvas), `EdgeMasks`, `Intro`/`IntroSeen`, `ExperienceSwitcher`, `Works`, `ProjectShowcase` (drawn site and phone mocks), `StackGrid`, `marks.tsx` (all icons inline), `Portrait`. |
+| `app/engineering/` | `page.tsx` (server, static), `layout.tsx` (TikTok Sans + IBM Plex Mono), `engineering.css` (all styles, both themes). |
+
+### The hero background (Rutvij asked where poulo's rain is)
+Read live from poulo this session: its hero canvas draws **stars in dark mode and short grey rain
+streaks under a pale mist in light mode**, and the sky also changes with scroll. Ours: scene one is
+stars (dark) or rain + mist (light), then drifting clouds, then the sun with rays; the role headline
+changes with each. Two canvases are rendered and CSS hides the wrong one; a hidden canvas stops
+animating on its own (IntersectionObserver), so no theme reader exists anywhere.
+Pinned (260svh) only at ≥1000×640 with motion allowed; otherwise one static viewport.
+
+### Checked
+`npm test` 120/120; `tsc` clean; lint only the 2 pre-existing errors; `npm run build` passes (one
+run failed with a transient Turbopack `next/font/google` error while the dev server was running;
+the rerun passed). In the browser at 1100×720: all three skies and roles, nav and rail active
+states, experience select/overview, filter chips (Mobile app → 1 of 2), rail lights the last dash at
+the bottom, light theme via the orb, no console errors after catching an aborted View Transition.
+At 375px: no horizontal overflow, hero not pinned, rail hidden, timeline becomes stacked rows.
+Static HTML contains every section. **Not checked in a browser:** reduced motion (CSS only),
+the circular reveal itself (the emulated pane aborts View Transitions), a real phone.
+
+### Stack: work tools added (same session)
+Poulo has one "My Stack" section (one mixed logo grid plus a category text list). Rutvij chose one
+section with two labelled groups: **At work** (C++, Python, Spanner, gRPC, REST, GCP — his list)
+and **Side projects** (the project tools plus ChatGPT, placed there by me; move it if it was work).
+`lib/profile.ts` `STACK` became `STACK_GROUPS`. Spanner, gRPC, REST and GCP use generic glyphs
+(database, arrows, braces, cloud), not logos; C++, Python and ChatGPT use monograms. Checked at
+1100px (work fits one row of six) and 375px (two columns, no overflow), both themes.
+
+### Quote and credit (same session)
+After Stack, as on poulo: Rutvij's quote "Build something that sparks an emotion, only then will it
+be real! — Someone wise!", centred, in Caveat (one weight, loaded only on /engineering; poulo's
+Reenie Beanie is not used). The footer now reads "Design referenced from poulo.site" with a link.
+Postgres was added to Side projects as a "Pg" monogram tile.
+
+### Still open (for Rutvij)
+- Hero role titles are defaults. eBay and NetApp use text marks; the stack icons are simple
+  sketches, with dashed monograms for Claude, Make.com and ElevenLabs.
+- D2 accent, D3 Education, D4 `/creative` and `into-your-stories`, D5 assets, and whether the
+  reference photo may be committed.
+- Task 1 (`lib/scene.ts`) never had its spec/quality review.
+
+## Session 6 (2026-10-31) — deploy prep, then glass nav, seasons, lake and vapor title
+
+**Nothing committed yet.** Rutvij asked to ship `/engineering`; the deploy plan was ready (below),
+then he asked for four poulo details first. All four are built and browser-checked.
+
+### How the site deploys (checked, not guessed)
+`origin` is `github.com/rutvijdhotey/portfolio`. GitHub Pages, `build_type: workflow`, custom
+domain `rutvijdhotey.com` (HTTPS enforced). `.github/workflows/deploy.yml` runs on every push to
+`main`: `npm test`, `tsc`, `npm run build`, upload `out/`. `ci.yml` runs the same on PRs (lint is
+advisory). `main` has no branch protection; PRs have been merged with merge commits. PR #17 put
+`d3f7869` on `main`, so `/engineering_v1..v3` are live until this lands.
+
+### What poulo actually does (read live)
+- **Glass nav**: no gradient. `bg white/35` (dark `white/10`), `border white/50` (dark `/15`),
+  `backdrop-filter: blur(40px) saturate(2)`, shadow `0 10px 40px -10px`, inset 1px white top edge.
+- **Sky**: changes on a **timer** (~3s), not scroll: clouds, sun, aurora, rain, snow.
+- **Lake**: the "About me" button holds a wave-topped liquid layer parked below it, coloured by
+  `--hero-liquid` per scene; holding the button fills it ("Keep holding").
+- **Role title**: per-letter `vapor-out` (drift up, blur 14px, fade) and `vapor-in` (condense up
+  from blur 12px, scale 1.35), staggered, ~6s per role.
+
+### What we built (Rutvij chose: seasons none → rain → snow → sun, on a timer like poulo)
+| File | What |
+|---|---|
+| `lib/seasons.ts` (+test) | `SEASONS`, `SEASON_MS` 3500, `ROLE_MS` 5000, `nextSeason`, `vaporWords` (seeded per text so SSR matches). |
+| `lib/stars.ts` (+test) | Stars removed (season one is a clear sky); `makeFlakes`, `flakeAt` added for snow. |
+| `lib/scene.ts` | **Deleted** with its test: the hero is no longer pinned or scroll-driven. |
+| `HeroScene.tsx` | One viewport. `data-season` on a timer, paused off-screen and under reduced motion. |
+| `HeroRoles.tsx` | New. Vapor swap; sr-only full role list; invisible sizers stop layout jumps. |
+| `Sky.tsx` | `rain` / `snow`, animates only while its season shows (plus the fade). Colour read per frame. |
+| `page.tsx`, `engineering.css` | Lake on "About me" (season colour, drifting wave, fills on press); glass nav and orb; "Skip intro", clouds and the scroll weights removed. |
+
+Our lake sits a little higher than poulo's so a thin water line spans the button and the wave drifts.
+Pressing fills it; a click still navigates as a normal link (no forced hold).
+
+### Checked (static export in the browser)
+Tests 118/118, `tsc` clean, lint only the 2 pre-existing errors, build passes. 1100px dark and light:
+season order none → rain → snow → sun → none at 3.5s, roles every 5s with the vapor swap, lake
+colour follows the season, glass nav, eyes still follow the cursor, no console errors. 375px both
+themes: no horizontal scroll, seasons and lake work. **Not checked in a browser:** reduced motion
+(the timers do not start; CSS stops the wave and vapor), a real phone.
+
+Preview used to agree the design: `docs/rebuild/preview/glass-seasons-preview.html`.
