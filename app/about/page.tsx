@@ -16,7 +16,7 @@ export default function AboutPage() {
   return (
     <>
       <nav className="ph-nav">
-        <Link href="/" className="ph-nav__name">Rutvij Dhotey</Link>
+        <Link href="/home" className="ph-nav__name">Rutvij Dhotey</Link>
         <div className="ph-nav__right">
           <Link href="/photography" className="ph-nav__link">Photography</Link>
           <ThemeToggle />

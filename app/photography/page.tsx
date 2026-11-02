@@ -18,7 +18,7 @@ export default function PhotographyPage() {
   return (
     <>
       <nav className="ph-nav">
-        <Link href="/" className="ph-nav__name">Rutvij Dhotey</Link>
+        <Link href="/home" className="ph-nav__name">Rutvij Dhotey</Link>
         <div className="ph-nav__right">
           <Link href="/about" className="ph-nav__link">About</Link>
           <ThemeToggle />

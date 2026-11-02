@@ -42,7 +42,7 @@ export default function NoteboundPage() {
       {/* NAV */}
       <nav className="engineering-nav">
         <Link href="/engineering" className="nav-back">← Engineering</Link>
-        <Link href="/" className="nav-name">Rutvij Dhotey</Link>
+        <Link href="/engineering" className="nav-name">Rutvij Dhotey</Link>
         <div className="nav-right">
           <a href="https://linkedin.com/in/rutvij-dhotey" className="nav-social" target="_blank" rel="noopener">LinkedIn</a>
           <a href="https://github.com/rutvijdhotey" className="nav-social" target="_blank" rel="noopener">GitHub</a>

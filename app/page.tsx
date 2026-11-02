@@ -1,37 +1,28 @@
-import Link from 'next/link'
-import ThemeToggle from '@/components/ThemeToggle'
-import './home.css'
+import type { Metadata } from 'next'
 
-/* The Shinjuku walkway frame, already on Supabase as a purpose-built AVIF poster. */
-const HERO = 'https://knlwzjvuqipjrjpgnovc.supabase.co/storage/v1/object/public/portfolio/optimized/covers/creative-hero-poster.avif'
+/*
+ * rutvijdhotey.com/ sends visitors to /engineering.
+ * The site is a static export on GitHub Pages, so next.config redirects and
+ * server 3xx responses are not available. A zero-delay meta refresh does the
+ * work without JavaScript; the inline script covers browsers that ignore it,
+ * and the link is there if both fail. The old landing page lives at /home.
+ */
+const TARGET = '/engineering'
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: { absolute: 'Rutvij Dhotey' },
+  alternates: { canonical: TARGET },
+  robots: { index: false, follow: true },
+}
+
+export default function RootRedirect() {
   return (
-    <main className="landing">
-      <div className="landing__bg" style={{ backgroundImage: `url(${HERO})` }} />
-
-      <div className="landing__top">
-        <span className="landing__name">Rutvij Dhotey</span>
-        <ThemeToggle />
-      </div>
-
-      <div className="landing__mid">
-        <h1 className="landing__statement">
-          I&rsquo;m a software engineer at YouTube.
-          I photograph my travels so I can <em>look back on them in fifty years</em>.
-        </h1>
-        <div className="landing__doors">
-          <Link href="/photography" className="landing__door">Photography →</Link>
-          <Link href="/about" className="landing__door">About &amp; engineering →</Link>
-        </div>
-      </div>
-
-      <div className="landing__bottom">
-        <div className="landing__meta">
-          <span>Japan</span><span>Copenhagen</span><span>Paris</span>
-          <a href="https://instagram.com/intoyourstories" target="_blank" rel="noopener">@intoyourstories</a>
-        </div>
-      </div>
-    </main>
+    <>
+      <meta httpEquiv="refresh" content={`0;url=${TARGET}`} />
+      <script dangerouslySetInnerHTML={{ __html: `location.replace(${JSON.stringify(TARGET)})` }} />
+      <p style={{ padding: 16 }}>
+        Redirecting to <a href={TARGET}>{TARGET}</a>…
+      </p>
+    </>
   )
 }

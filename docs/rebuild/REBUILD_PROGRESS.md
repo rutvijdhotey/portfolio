@@ -538,3 +538,20 @@ themes: no horizontal scroll, seasons and lake work. **Not checked in a browser:
 (the timers do not start; CSS stops the wave and vapor), a real phone.
 
 Preview used to agree the design: `docs/rebuild/preview/glass-seasons-preview.html`.
+
+## Session 7 (2026-11-02) — root now redirects to /engineering
+
+Rutvij asked that `rutvijdhotey.com/` send visitors to `/engineering`, keep the old landing page at
+a new path, and push straight to `main`.
+
+- The static export (GitHub Pages) cannot use `next.config` redirects or a 3xx response
+  (`node_modules/next/dist/docs/01-app/02-guides/static-exports.md`, "Unsupported Features").
+  `app/page.tsx` is now a stub that does three things: a zero-delay `<meta http-equiv="refresh">`, an inline
+  `location.replace`, and a fallback link. It also sets canonical `/engineering` and `noindex, follow`.
+- The old landing moved to `/home` (`app/home/page.tsx`, `app/home/home.css`).
+- The name link on `/photography` and `/about` now goes to `/home`, so it no longer bounces to
+  engineering. On `/engineering/notebound` it goes to `/engineering`.
+- Checked: tests 118/118, `tsc` clean, build passes. Ran the built `out/` under Playwright and `/` landed
+  on `/engineering` with JS on and off. `/home` renders the old landing.
+- **Not checked:** the live site (this sandbox's proxy blocks rutvijdhotey.com). After the deploy, open
+  `rutvijdhotey.com` and confirm it lands on `/engineering`.
