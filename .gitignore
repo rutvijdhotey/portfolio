@@ -46,3 +46,6 @@ next-env.d.ts
 # Photo pipeline working directories — large binaries, never committed
 /masters/
 /derivatives/
+
+# case-study originals (scripts/engineering/fetch-case-assets.mjs)
+/.cache/

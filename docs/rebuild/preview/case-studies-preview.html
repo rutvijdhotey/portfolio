@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Case Studies Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=TikTok+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Lightweight preview only. Tokens copied from app/engineering/engineering.css. */
+:root{--bg:#0a0a0a;--tx:#fafafa;--mu:#8f8f94;--card:#19191b;--in:#0e0e0f;--bd:rgb(255 255 255/.12);--hover:rgb(255 255 255/.07);--clay:#d98b5a;--tile:color-mix(in srgb,var(--clay) 24%,var(--card));--inv:#fafafa;--ivt:#0a0a0a;
+--glass:rgb(255 255 255/.1);--glass-bd:rgb(255 255 255/.15);--glass-sh:0 10px 40px -10px rgb(0 0 0/.7),inset 0 1px 0 rgb(255 255 255/.2);--glass-on:rgb(255 255 255/.1)}
+:root[data-theme=light]{--bg:#fbfbfa;--tx:#121212;--mu:#6c6c70;--card:#f1f1ef;--in:#fff;--bd:rgb(0 0 0/.12);--hover:rgb(0 0 0/.05);--inv:#121212;--ivt:#fafafa;
+--glass:rgb(255 255 255/.35);--glass-bd:rgb(255 255 255/.5);--glass-sh:0 10px 40px -10px rgb(0 0 0/.25),inset 0 1px 0 rgb(255 255 255/.7);--glass-on:rgb(235 235 235/.8)}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--tx);font-family:"TikTok Sans",system-ui,sans-serif;letter-spacing:-.03em;transition:background .3s,color .3s}
+h1,h2,h3,h4,p{margin:0}a{color:inherit;text-decoration:none}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;letter-spacing:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:clamp(16px,5vw,72px)}
+/* note bar (preview only) */
+.note{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:60;display:flex;gap:6px;background:var(--card);border:1px solid var(--bd);border-radius:999px;padding:4px;font-size:13px}
+.note button{font:inherit;border:0;background:none;color:var(--mu);padding:8px 14px;border-radius:999px;cursor:pointer}
+.note button[aria-pressed=true]{background:var(--tx);color:var(--bg)}
+/* nav */
+.navbar{position:fixed;top:20px;left:0;right:0;z-index:50;display:flex;justify-content:center;gap:8px;padding-inline:16px;pointer-events:none}
+.navbar>*{pointer-events:auto}
+.glass{background:var(--glass);backdrop-filter:blur(40px) saturate(2);-webkit-backdrop-filter:blur(40px) saturate(2);border:1px solid var(--glass-bd);box-shadow:var(--glass-sh);border-radius:999px}
+.nav{display:flex;align-items:center;gap:2px;padding:4px}
+.ni{height:44px;min-width:44px;padding-inline:12px;border-radius:999px;display:grid;place-items:center;color:var(--mu);font-size:14px}
+.ni:hover{color:var(--tx);background:var(--hover)}.ni.on{color:var(--tx);background:var(--glass-on)}
+.orb{width:52px;height:52px;display:grid;place-items:center;cursor:pointer}
+.cta{display:flex;align-items:center;gap:8px;background:var(--inv);color:var(--ivt);border-radius:999px;padding:4px 16px 4px 4px;font-size:14px;font-weight:500}
+.av{width:44px;height:44px;border-radius:50%;background:var(--clay);color:#141416;display:grid;place-items:center;font-size:13px}
+@media(max-width:600px){.cta span:last-child{display:none}.cta{padding:4px}.ni.txt{display:none}}
+/* hero */
+.hero{padding-top:140px;display:grid;gap:32px;grid-template-columns:1.05fr .95fr;align-items:end}
+@media(max-width:900px){.hero{grid-template-columns:1fr}}
+.kick{font-size:13px;color:var(--mu);margin-bottom:16px}
+.h1{font-size:clamp(48px,7vw,88px);font-weight:600;letter-spacing:-.05em;line-height:.95;margin-bottom:20px}
+.lede{font-size:18px;line-height:1.55;color:var(--mu);max-width:560px}
+.lede+.lede{margin-top:14px}
+.pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--bd);border-radius:999px;padding:12px 20px;font-size:15px}
+.pill.solid{background:var(--inv);color:var(--ivt);border-color:transparent}
+.tile{background:var(--tile);border-radius:24px;padding:14px;min-height:300px;display:grid;place-items:center}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:48px}
+.stat{background:var(--card);border-radius:18px;padding:20px}
+.stat b{display:block;font-size:clamp(36px,5vw,52px);font-weight:600;letter-spacing:-.05em}
+.stat span{font-size:14px;color:var(--mu)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.tag{font-size:12px;color:var(--mu);border:1px solid var(--bd);border-radius:999px;padding:6px 12px}
+/* sections */
+.sec{padding-top:clamp(80px,10vw,128px)}
+.h{font-size:clamp(36px,4.6vw,52px);font-weight:600;letter-spacing:-.045em;margin-bottom:12px}
+.sub{font-size:16px;line-height:1.6;color:var(--mu);max-width:620px;margin-bottom:28px}
+.shots{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:900px){.shots{grid-template-columns:repeat(2,1fr)}}
+.phone{aspect-ratio:9/19.5;border-radius:28px;border:6px solid var(--card);background:repeating-linear-gradient(135deg,var(--card) 0 8px,var(--in) 8px 16px);display:grid;place-items:center;color:var(--mu);font-size:12px;text-align:center;padding:12px}
+.cap{font-size:13px;line-height:1.5;color:var(--mu);margin-top:10px}
+.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:900px){.feat{grid-template-columns:1fr}}
+.fc{background:var(--card);border-radius:18px;padding:20px}
+.fc h4{font-size:14px;font-weight:500;color:var(--mu);margin-bottom:6px}.fc p{font-size:14px;line-height:1.5}
+.feat.two{grid-template-columns:repeat(2,1fr)}@media(max-width:700px){.feat.two{grid-template-columns:1fr}}
+.panel{background:var(--card);border-radius:24px;padding:clamp(14px,3vw,28px);margin-bottom:12px}
+.panel svg{width:100%;height:auto;display:block}
+.png{aspect-ratio:16/10;border-radius:14px;background:repeating-linear-gradient(135deg,var(--card) 0 10px,var(--in) 10px 20px);display:grid;place-items:center;color:var(--mu);font-size:14px;text-align:center;padding:20px}
+.video{aspect-ratio:16/9;border-radius:18px;background:var(--in);display:grid;place-items:center;color:var(--mu)}
+.next{display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--tile);border-radius:24px;padding:28px;margin-top:clamp(80px,10vw,128px)}
+.next b{font-size:clamp(28px,4vw,40px);font-weight:600;letter-spacing:-.045em}
+.foot{font-size:13px;color:var(--mu);padding:40px 0 100px}
+[hidden]{display:none!important}
+.d-node{fill:var(--tx);font-size:13px}.d-cap{fill:var(--mu);font-size:12px;font-family:"IBM Plex Mono",monospace}
+</style>
+</head>
+<body>
+
+<div class="note" role="group" aria-label="Preview controls">
+  <button data-page="nb" aria-pressed="true">Notebound</button>
+  <button data-page="lc" aria-pressed="false">LaCuriosity</button>
+  <button id="th">Theme</button>
+</div>
+
+<!-- ═════════════ NOTEBOUND ═════════════ -->
+<main id="nb">
+  <div class="navbar">
+    <nav class="nav glass" aria-label="Sections">
+      <a class="ni" href="#" aria-label="Back to Engineering">←</a>
+      <a class="ni txt on" href="#">Overview</a>
+      <a class="ni txt" href="#">Design</a>
+      <a class="ni txt" href="#">Architecture</a>
+      <a class="ni txt" href="#">Demo</a>
+    </nav>
+    <button class="orb glass" aria-label="Theme">◐</button>
+    <a class="cta" href="#"><span class="av">RD</span><span>Get in touch</span></a>
+  </div>
+
+  <div class="wrap">
+    <section class="hero">
+      <div>
+        <p class="kick mono">Case study · Mobile + AI · 2026</p>
+        <h1 class="h1">Notebound.</h1>
+        <p class="lede">An iOS app that turns a trip’s photos, notes, and voice into a written story and a mapped, day-by-day itinerary — powered by a multi-model Claude pipeline, built offline-first.</p>
+        <div class="pills">
+          <a class="pill solid" href="#">Watch demo ↓</a>
+          <a class="pill" href="#">View code ↗</a>
+        </div>
+      </div>
+      <div class="tile mono" style="color:var(--mu);font-size:13px">[ the same drawn phone mock as the homepage card ]</div>
+    </section>
+
+    <div class="stats">
+      <div class="stat"><b>3</b><span>Claude models</span></div>
+      <div class="stat"><b>289</b><span>Tests passing</span></div>
+      <div class="stat"><b>100%</b><span>Offline-first capture</span></div>
+    </div>
+
+    <section class="sec">
+      <h2 class="h">Design.</h2>
+      <p class="sub">Travel is messy and hands-busy, so capture had to be effortless: hold to speak, or jot a line, tag it, and move on. The aesthetic is warm and quiet — the photos carry the color, the UI gets out of the way.</p>
+      <div class="shots">
+        <figure style="margin:0"><div class="phone">IMG_1353<br>self-hosted AVIF</div><figcaption class="cap">Voice-first capture — hold to record, or type; auto-tagged by category.</figcaption></figure>
+        <figure style="margin:0"><div class="phone">IMG_1352</div><figcaption class="cap">Trip feed — notes with categories, locations, and a map toggle.</figcaption></figure>
+        <figure style="margin:0"><div class="phone">IMG_1354</div><figcaption class="cap">The generated story — narrative written from your notes and photos.</figcaption></figure>
+        <figure style="margin:0"><div class="phone">IMG_1355</div><figcaption class="cap">Itinerary view — a day-by-day plan with a category-pinned map.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2 class="h">Features.</h2>
+      <p class="sub">From a spoken note to a published story.</p>
+      <div class="feat">
+        <div class="fc"><h4>Voice → intent capture</h4><p>Hold to record. A transcript is classified by a Claude Haiku function into the right kind of note and auto-tagged — food, stay, activity — with location attached.</p></div>
+        <div class="fc"><h4>Multimodal photo curation</h4><p>Claude Opus actually looks at the photos, judges the strongest few per note, and picks a cover.</p></div>
+        <div class="fc"><h4>Auto-itinerary with map</h4><p>The same call emits a structured day-by-day itinerary with coordinates.</p></div>
+        <div class="fc"><h4>Offline-first capture & sync</h4><p>Notes and photos capture with no signal and drain through queues when connectivity returns.</p></div>
+        <div class="fc"><h4>EXIF & trip-aware location</h4><p>Dates come from photo EXIF; a GPS fix is validated against the trip’s anchors.</p></div>
+        <div class="fc"><h4>Readiness gates</h4><p>A local gate and a server-side LLM gate return an honest “not enough notes” state.</p></div>
+      </div>
+      <p class="cap mono" style="margin-top:12px">(copy shortened here for the preview — the page keeps the full existing text)</p>
+    </section>
+
+    <section class="sec">
+      <h2 class="h">Architecture.</h2>
+      <p class="sub">One generation call, the right model for each job. A React Native client talks to Supabase. Three Deno edge functions front Claude.</p>
+      <div class="panel">
+        <svg viewBox="0 0 900 460" role="img" aria-label="Notebound system architecture">
+          <g stroke="var(--mu)" stroke-width="1.5" opacity=".6">
+            <line x1="190" y1="130" x2="330" y2="130"/><line x1="190" y1="230" x2="330" y2="230"/><line x1="190" y1="330" x2="330" y2="330"/>
+            <line x1="560" y1="130" x2="690" y2="130"/><line x1="560" y1="230" x2="690" y2="230"/><line x1="560" y1="330" x2="690" y2="330"/>
+          </g>
+          <rect x="30" y="90" width="160" height="280" rx="14" fill="var(--in)" stroke="var(--bd)"/>
+          <text x="110" y="78" text-anchor="middle" class="d-cap">React Native · Expo</text>
+          <text x="110" y="134" text-anchor="middle" class="d-node">Voice / Text capture</text><text x="110" y="234" text-anchor="middle" class="d-node">Offline queues</text><text x="110" y="334" text-anchor="middle" class="d-node">Realtime status</text>
+          <rect x="330" y="90" width="230" height="280" rx="14" fill="var(--tile)" stroke="var(--clay)"/>
+          <text x="445" y="78" text-anchor="middle" class="d-cap">Supabase · Edge Functions</text>
+          <text x="445" y="134" text-anchor="middle" class="d-node">detect-intent</text><text x="445" y="234" text-anchor="middle" class="d-node">tag-note</text><text x="445" y="334" text-anchor="middle" class="d-node">generate-blog</text>
+          <rect x="690" y="90" width="180" height="280" rx="14" fill="var(--in)" stroke="var(--bd)"/>
+          <text x="780" y="78" text-anchor="middle" class="d-cap">Claude</text>
+          <text x="780" y="134" text-anchor="middle" class="d-node">Haiku 4.5 · intent</text><text x="780" y="234" text-anchor="middle" class="d-node">Haiku 4.5 · tags</text><text x="780" y="334" text-anchor="middle" class="d-node">Opus 4.8 · multimodal</text>
+          <rect x="330" y="400" width="540" height="42" rx="10" fill="var(--in)" stroke="var(--bd)"/>
+          <text x="600" y="426" text-anchor="middle" class="d-node">Postgres · pg_cron stale-sweep</text>
+        </svg>
+      </div>
+      <div class="feat two">
+        <div class="fc"><h4>Model selection</h4><p>Haiku keeps per-note cost near zero; Opus is reserved for the one call that warrants it.</p></div>
+        <div class="fc"><h4>Vision without blowing the budget</h4><p>Photos downsized to ~1536px for the model; the blog embeds the originals.</p></div>
+        <div class="fc"><h4>Supplementary, never fatal</h4><p>A malformed itinerary stores null but the narrative still saves.</p></div>
+        <div class="fc"><h4>Reliability backstop</h4><p>pg_cron marks any run stuck past 5 minutes as errored.</p></div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2 class="h">Demo.</h2>
+      <p class="sub">See it run.</p>
+      <div class="panel"><div class="video mono">▶ movie.mp4 · self-hosted · poster frame · preload="none"</div></div>
+    </section>
+
+    <section class="sec">
+      <h2 class="h">Practice.</h2>
+      <p class="sub">Built spec → plan → task-by-task with review at each step. 289 tests, TypeScript clean, migrations verified live against Supabase before merge. Built with the help of Claude Code.</p>
+    </section>
+
+    <a class="next" href="#" data-goto="lc">
+      <div><p class="kick mono" style="margin:0 0 6px">Next case study</p><b>LaCuriosity</b></div>
+      <span class="pill solid">→</span>
+    </a>
+    <p class="foot">© 2026 Rutvij Dhotey · <a href="#">← Back to Engineering</a></p>
+  </div>
+</main>
+
+<!-- ═════════════ LACURIOSITY ═════════════ -->
+<main id="lc" hidden>
+  <div class="navbar">
+    <nav class="nav glass" aria-label="Sections">
+      <a class="ni" href="#" aria-label="Back to Engineering">←</a>
+      <a class="ni txt on" href="#">Overview</a>
+      <a class="ni txt" href="#">Pipeline</a>
+    </nav>
+    <button class="orb glass" aria-label="Theme">◐</button>
+    <a class="cta" href="#"><span class="av">RD</span><span>Get in touch</span></a>
+  </div>
+
+  <div class="wrap">
+    <section class="hero">
+      <div>
+        <p class="kick mono">Case study · Agentic AI · 2026</p>
+        <h1 class="h1">LaCuriosity.</h1>
+        <p class="lede">A fully automated editorial platform publishing daily long-form articles across five thematic streams — Science, Psychology, Technology, Mathematics, and Ecology — each driven by a specialized Claude instance with its own persona, research mandate, and visual identity.</p>
+        <p class="lede">The pipeline handles everything without human intervention: demand-signal research via Tavily and Reddit, multi-agent drafting and fact-checking, Risograph-style image generation with Gemini, voiceover via ElevenLabs, video assembly via Creatomate, and distribution through Ghost CMS, email, and social. One daily trigger. Fifty-five nodes. Zero human touchpoints.</p>
+        <div class="pills">
+          <a class="pill solid" href="#">Visit lacuriosity.com ↗</a>
+          <a class="pill" href="#">See the pipeline ↓</a>
+        </div>
+      </div>
+      <div class="tile mono" style="color:var(--mu);font-size:13px">[ the same drawn browser mock as the homepage card ]</div>
+    </section>
+
+    <div class="stats">
+      <div class="stat"><b>5</b><span>Editorial streams</span></div>
+      <div class="stat"><b>55</b><span>Automation nodes</span></div>
+      <div class="stat"><b>0</b><span>Human touchpoints</span></div>
+    </div>
+    <div class="tags">
+      <span class="tag">Claude API</span><span class="tag">Gemini API</span><span class="tag">Make.com</span><span class="tag">Ghost CMS</span><span class="tag">Supabase</span><span class="tag">ElevenLabs</span><span class="tag">Prompt Engineering</span>
+    </div>
+
+    <section class="sec">
+      <h2 class="h">Pipeline.</h2>
+      <p class="sub mono" style="font-size:13px">Make.com · 55 nodes · 1 daily trigger</p>
+      <div class="panel"><div class="png mono">The original architecture PNG, self-hosted as AVIF/WebP with width/height, lazy-loaded.<br>Tap to open full size.</div></div>
+    </section>
+
+    <a class="next" href="#" data-goto="nb">
+      <div><p class="kick mono" style="margin:0 0 6px">Next case study</p><b>Notebound</b></div>
+      <span class="pill solid">→</span>
+    </a>
+    <p class="foot">© 2026 Rutvij Dhotey · <a href="#">← Back to Engineering</a></p>
+  </div>
+</main>
+
+<script>
+const show = id => {
+  document.querySelectorAll('main').forEach(m => m.hidden = m.id !== id)
+  document.querySelectorAll('[data-page]').forEach(b => b.setAttribute('aria-pressed', b.dataset.page === id))
+  scrollTo(0, 0)
+}
+document.querySelectorAll('[data-page]').forEach(b => b.onclick = () => show(b.dataset.page))
+document.querySelectorAll('[data-goto]').forEach(a => a.onclick = e => { e.preventDefault(); show(a.dataset.goto) })
+const flip = () => { const r = document.documentElement; r.dataset.theme = r.dataset.theme === 'dark' ? 'light' : 'dark' }
+document.getElementById('th').onclick = flip
+document.querySelectorAll('.orb').forEach(o => o.onclick = flip)
+</script>
+</body>
+</html>

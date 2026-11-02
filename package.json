@@ -17,7 +17,8 @@
     "photos:measure": "node scripts/photos/measure.mjs",
     "test": "node --test \"scripts/**/*.test.mjs\" \"lib/**/*.test.ts\"",
     "covers:build": "node scripts/photos/build-covers.mjs",
-    "covers:upload": "node --env-file=.env.local scripts/photos/upload.mjs covers"
+    "covers:upload": "node --env-file=.env.local scripts/photos/upload.mjs covers",
+    "case-assets": "node scripts/engineering/fetch-case-assets.mjs"
   },
   "dependencies": {
     "gsap": "^3.15.0",

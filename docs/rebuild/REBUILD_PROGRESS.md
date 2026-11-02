@@ -555,3 +555,77 @@ a new path, and push straight to `main`.
   on `/engineering` with JS on and off. `/home` renders the old landing.
 - **Not checked:** the live site (this sandbox's proxy blocks rutvijdhotey.com). After the deploy, open
   `rutvijdhotey.com` and confirm it lands on `/engineering`.
+
+## Session 8 (2026-11-02) — case studies: Notebound restyle + new LaCuriosity page
+
+Rutvij asked for two things: restyle `/engineering/notebound` to the new `/engineering` design, and
+add `/engineering/lacuriosity` built from the old version's content. The homepage card should link
+to it the way the Notebound card does. **Nothing built or committed yet. Waiting on his answers.**
+
+### What I found (read from the code and git history)
+- `/engineering/notebound` is still the old page: `'use client'` + GSAP opacity-from-0 reveals, and
+  its nav uses `.engineering-nav`, which was deleted with the old `engineering.css` in `4c989c7`.
+  **So the nav on the live case study is unstyled today.**
+- Its four screenshots and the demo video still hotlink `knlwzjvuqipjrjpgnovc.supabase.co` (N1, N3).
+- No LaCuriosity route ever existed. The "previous version" is the hero + "Pipeline Architecture"
+  block of the old `/engineering` page (`git show 4c989c7^:app/engineering/page.tsx`): two
+  paragraphs, stats 5 / 55 / 0, seven tags, a lacuriosity.com link, and a ChatGPT PNG diagram on Supabase.
+- History also has `components/LaCuriosityPipeline.tsx` (242 lines, SVG: 7 research nodes, router,
+  5 pillars × 12 steps). It was not used by the old page at `4c989c7^`.
+- **Network is closed again this session**: the proxy returns 403 for the Supabase host,
+  lacuriosity.com and poulo.site. Assets cannot be pulled to self-host until it opens.
+
+### Open questions (asked 2026-11-02)
+Page layout, LaCuriosity diagram source, Notebound assets, homepage CTA for LaCuriosity.
+
+### Rutvij's answers (2026-11-02)
+| Question | Decision |
+|---|---|
+| Layout | Same kit as `/engineering` (glass pill nav, orb, TikTok Sans, "Design." headings, cards). Static hero, no seasons. No GSAP. |
+| LaCuriosity diagram | **The original PNG**, self-hosted (not the SVG component). |
+| Notebound assets | Rutvij opens the Supabase host in Network settings; then self-host screenshots as AVIF/WebP and the video with a poster. |
+| Homepage CTA | LaCuriosity card button becomes "Read the case study" → `/engineering/lacuriosity`; the page carries "Visit lacuriosity.com". |
+
+### Preview
+`docs/rebuild/preview/case-studies-preview.html`: both pages, with a theme toggle. Checked under Playwright at
+1200px and 375px: no horizontal overflow, no console errors. **Waiting for Rutvij to approve it.**
+
+### Plan once approved, by part
+- **Assets (infra):** fetch 4 PNGs, movie.mp4 and the diagram PNG → `public/img/engineering/…`
+  (AVIF + WebP, width/height); extract a video poster frame. Blocked until the network opens.
+- **Shared UI:** a `CaseNav` (back arrow, section pills, ThemeOrb, Get in touch); a case-study CSS file
+  that reuses the `.eng` tokens; reuse the `SiteMock`/`PhoneMock` from `ProjectShowcase` as the hero tile.
+- **Notebound:** server component, same copy (also fixes the literal `&apos;` that renders in two
+  feature strings today), sections Design / Features / Architecture (SVG redrawn in theme tokens) / Demo / Practice.
+- **LaCuriosity:** new route with the old hero copy, stats, tags and the Pipeline PNG.
+- **Homepage:** `lib/projects.ts` LaCuriosity link → case study (+ test update).
+- **Verify:** tests, `tsc`, build, Playwright at 1100 and 375 in both themes. No commits until Rutvij says so.
+
+### Built (2026-11-02, after Rutvij approved the preview) — nothing committed
+| File | What |
+|---|---|
+| `lib/case-assets.ts` (+test), `lib/case-assets.json` | The 6 case-study assets (4 phone shots, demo video, pipeline PNG), their Supabase sources and self-hosted paths. The manifest is `{}` until the fetch runs. |
+| `scripts/engineering/fetch-case-assets.mjs`, `npm run case-assets` | Downloads into `.cache/case-assets` (gitignored), builds AVIF+WebP (phones 400/800, diagram 800/1400/2000, never upscaled), re-encodes the video to ≤1280px H.264 with faststart plus a WebP poster frame, and writes the manifest. `--force` re-downloads. |
+| `components/engineering/CaseMedia.tsx` | `CaseImage` / `CaseVideo`: self-hosted `<picture>` with width/height when the manifest lists the asset, otherwise the Supabase URL, lazy. Video is `preload="none"`. |
+| `CaseNav.tsx`, `CaseParts.tsx` | Glass nav with back arrow + section text pills (hidden <720px), orb, Get in touch; stats row, "Next case study" card, footer. |
+| `useActiveSection.ts` | Takes optional section ids (defaults to the home sections). |
+| `ProjectShowcase.tsx`, `marks.tsx` | `SiteMock`/`PhoneMock` exported for the hero tiles; `arrow-left`, `arrow-down` icons. |
+| `app/engineering/case-study.css` | Shared case-study styles built on `.eng` tokens. |
+| `app/engineering/notebound/page.tsx` | Rewritten as a server component, no GSAP. Same copy; `&apos;` bug fixed. Architecture SVG redrawn in theme tokens. Old `notebound.css` and `layout.tsx` deleted. |
+| `app/engineering/lacuriosity/page.tsx` | New. Old hero copy, stats, tags, "Visit lacuriosity.com", Pipeline PNG with a full-size link. |
+| `lib/projects.ts` (+test) | LaCuriosity card now "Read the case study" → `/engineering/lacuriosity`. |
+
+### Checked
+Tests 124/124, `tsc` clean, lint only the 2 pre-existing errors (`OverlayViewer`, `ThemeToggle`), build passes
+(the first build hit the known transient `next/font/google` Turbopack error; rerun passed).
+Ran the fetch script on **stand-in** images/video (the real host is blocked): all 6 assets built, manifest written.
+With those, Playwright on the exported `out/` at 1100 and 375, dark and light: AVIF chosen at the right width,
+video poster set, no horizontal overflow, no console errors, nav highlights the section in view; homepage cards
+both read "Read the case study". **All stand-ins were then deleted** (`public/img`, `.cache`, manifest back to `{}`).
+
+### Not done / open
+- **Real assets not fetched**: `knlwzjvuqipjrjpgnovc.supabase.co` still 403 in this session. Once the
+  network allows it: `npm run case-assets`, check the video size it prints, rebuild, look at both pages, commit
+  `public/img/engineering/**` and `lib/case-assets.json`. Until then the pages use the Supabase URLs (same as live).
+- Not checked: reduced motion, a real phone, the pages with the real PNG (its own colours may not suit both themes).
+- The checkout is a **detached HEAD at `origin/main` (`a0d3a6c`)**; create a branch before committing.

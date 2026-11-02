@@ -60,7 +60,7 @@ export default function ProjectShowcase({ project: p }: { project: Project }) {
 }
 
 /* LaCuriosity: a browser window showing the five stream chips and a feed. */
-function SiteMock() {
+export function SiteMock() {
   return (
     <div className="mk-win">
       <div className="mk-bar"><i /><i /><i /><u>lacuriosity.com</u></div>
@@ -82,7 +82,7 @@ function SiteMock() {
 const WAVE = [6, 12, 8, 16, 10, 18, 7, 14, 9, 12, 6]
 
 /* Notebound: a phone showing a day's photos, a voice note and its text. */
-function PhoneMock() {
+export function PhoneMock() {
   return (
     <div className="mk-phone">
       <div className="mk-notch" />

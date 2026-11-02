@@ -1,0 +1,96 @@
+/* app/engineering/case-study.css
+   The two case studies (/engineering/notebound, /engineering/lacuriosity).
+   Loaded after engineering.css and built only from its tokens and parts
+   (.eng theme, glass nav, orb, cards, mocks), so both themes and the
+   scroll-driven reveals carry over. Content is visible by default. */
+
+/* nav: text pills instead of icons, hidden on narrow screens */
+.eng-nav .cs-nav-text { width: auto; padding-inline: 14px; font-size: 14px; }
+@media (max-width: 719px) { .eng-nav .cs-nav-text { display: none; } }
+
+/* ── hero ─────────────────────────────────────────────────────── */
+.cs-hero {
+  display: grid; gap: 32px; grid-template-columns: 1fr; align-items: end;
+  padding-top: clamp(120px, 14vw, 156px);
+}
+@media (min-width: 900px) { .cs-hero { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); } }
+.cs-kick {
+  font-family: var(--font-mono), ui-monospace, monospace; letter-spacing: 0;
+  font-size: 13px; color: var(--mu); margin-bottom: 16px;
+}
+.cs-title { font-size: clamp(48px, 7vw, 88px); font-weight: 600; letter-spacing: -0.05em; line-height: 0.95; margin-bottom: 20px; }
+.cs-lede { font-size: 18px; line-height: 1.55; color: var(--mu); max-width: 580px; }
+.cs-lede + .cs-lede { margin-top: 14px; }
+.cs-hero .eng-pills { margin-top: 28px; }
+.eng .cs-pill-inv { background: var(--inv); color: var(--ivt); border-color: transparent; }
+.cs-tile { background: var(--tile); border-radius: 24px; padding: 14px; }
+.cs-tile .eng-shot { min-height: 300px; }
+
+/* ── stats and tags ───────────────────────────────────────────── */
+.cs-stats { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 48px; }
+.cs-stat { background: var(--card); border-radius: 20px; padding: clamp(14px, 2.4vw, 22px); }
+.cs-stat b { display: block; font-size: clamp(30px, 5vw, 52px); font-weight: 600; letter-spacing: -0.05em; line-height: 1.1; }
+.cs-stat span { font-size: 14px; color: var(--mu); }
+.cs-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.cs-tags li { font-size: 13px; color: var(--mu); border: 1px solid var(--bd); border-radius: 999px; padding: 5px 12px; }
+
+/* ── sections ─────────────────────────────────────────────────── */
+.cs-sub { max-width: 640px; }
+.cs-lead { font-size: clamp(19px, 2.2vw, 24px); font-weight: 500; line-height: 1.35; max-width: 640px; margin-bottom: 12px; }
+.cs-meta { font-family: var(--font-mono), ui-monospace, monospace; letter-spacing: 0; font-size: 13px; }
+
+.cs-shots { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 900px) { .cs-shots { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.cs-shot { margin: 0; }
+.cs-phone { border-radius: 30px; border: 6px solid var(--card); background: var(--card); overflow: hidden; aspect-ratio: 9 / 19.5; }
+.cs-phone img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.cs-shot figcaption { font-size: 13px; line-height: 1.5; color: var(--mu); margin-top: 10px; }
+
+.cs-cards { display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 700px) { .cs-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .cs-cards--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.cs-cards .eng-fc { min-height: 0; justify-content: flex-start; }
+.cs-cards .eng-fc p { color: var(--tx); }
+
+.cs-panel { background: var(--card); border-radius: 24px; padding: clamp(12px, 3vw, 28px); margin-bottom: 12px; }
+.cs-panel svg { display: block; width: 100%; height: auto; }
+.cs-scroll { overflow-x: auto; }
+@media (max-width: 699px) { .cs-scroll svg { min-width: 620px; } }
+.cs-d-node { fill: var(--tx); font-size: 13px; }
+.cs-d-cap { fill: var(--mu); font-size: 12px; font-family: var(--font-mono), ui-monospace, monospace; letter-spacing: 0; }
+
+.cs-figure { display: block; border-radius: 14px; overflow: hidden; background: var(--in); }
+.cs-figure img { display: block; width: 100%; height: auto; }
+.cs-figure-note { font-size: 13px; color: var(--mu); margin-top: 10px; }
+.cs-figure-note a { text-decoration: underline; text-underline-offset: 3px; }
+.cs-figure-note a:hover { color: var(--tx); }
+
+.cs-video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 16px; background: var(--in); }
+.cs-note { font-size: 14px; line-height: 1.6; color: var(--mu); max-width: 640px; }
+
+/* ── next case study and footer ───────────────────────────────── */
+.cs-next {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  background: var(--tile); border-radius: 24px; padding: clamp(20px, 3vw, 32px);
+  margin-top: clamp(80px, 10vw, 128px);
+  transition: translate 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+@media (hover: hover) { .cs-next:hover { translate: 0 -3px; } }
+.cs-next .cs-kick { margin-bottom: 6px; }
+.cs-next b { font-size: clamp(28px, 4vw, 40px); font-weight: 600; letter-spacing: -0.045em; }
+.cs-next .eng-cta2-dot { width: 50px; height: 50px; flex: none; background: var(--inv); color: var(--ivt); }
+.cs-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--mu); padding-block: 40px 72px; }
+.cs-foot a { text-decoration: underline; text-underline-offset: 3px; }
+.cs-foot a:hover { color: var(--tx); }
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .cs-stats, .cs-next {
+      animation: eng-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 50%;
+    }
+  }
+}
+@media (prefers-reduced-motion: reduce) { .cs-next { transition: none; } }
+.cs-fc-h { font-size: 14px; font-weight: 500; color: var(--mu); margin-bottom: 6px; }

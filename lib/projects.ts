@@ -36,7 +36,7 @@ export const PROJECTS: readonly Project[] = [
     roleDetail: 'Research, orchestration, prompt design and distribution, end to end.',
     tags: ['Agentic AI', 'Distributed systems'],
     mock: 'site',
-    link: { href: 'https://lacuriosity.com', label: 'Visit the site', external: true },
+    link: { href: '/engineering/lacuriosity', label: 'Read the case study', external: false },
     features: [
       { icon: 'layers', title: 'Five streams.', text: 'Science, Psychology, Technology, Mathematics and Ecology, each driven by its own Claude instance.' },
       { icon: 'nodes', title: 'Fifty-five nodes.', text: 'One daily trigger fans out across a chain of models.' },

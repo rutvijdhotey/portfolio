@@ -41,3 +41,9 @@ test('every project has four feature cards and a known mock', () => {
     assert.ok(p.mock === 'site' || p.mock === 'phone')
   }
 })
+
+test('every project links to its own case study on the site', () => {
+  for (const p of PROJECTS) {
+    assert.deepEqual(p.link, { href: `/engineering/${p.slug}`, label: 'Read the case study', external: false })
+  }
+})
