@@ -1,1 +1,52 @@
-{}
+{
+  "lacuriosity/pipeline": {
+    "kind": "image",
+    "w": 1855,
+    "h": 848,
+    "widths": [
+      800,
+      1400
+    ]
+  },
+  "notebound/capture": {
+    "kind": "image",
+    "w": 1206,
+    "h": 2622,
+    "widths": [
+      400,
+      800
+    ]
+  },
+  "notebound/demo": {
+    "kind": "video",
+    "w": 884,
+    "h": 1920
+  },
+  "notebound/feed": {
+    "kind": "image",
+    "w": 1206,
+    "h": 2622,
+    "widths": [
+      400,
+      800
+    ]
+  },
+  "notebound/itinerary": {
+    "kind": "image",
+    "w": 1206,
+    "h": 2622,
+    "widths": [
+      400,
+      800
+    ]
+  },
+  "notebound/story": {
+    "kind": "image",
+    "w": 1206,
+    "h": 2622,
+    "widths": [
+      400,
+      800
+    ]
+  }
+}
