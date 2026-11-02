@@ -629,3 +629,17 @@ both read "Read the case study". **All stand-ins were then deleted** (`public/im
   `public/img/engineering/**` and `lib/case-assets.json`. Until then the pages use the Supabase URLs (same as live).
 - Not checked: reduced motion, a real phone, the pages with the real PNG (its own colours may not suit both themes).
 - The checkout is a **detached HEAD at `origin/main` (`a0d3a6c`)**; create a branch before committing.
+
+## Session 9 (2026-11-02): real case-study assets fetched
+
+Rutvij opened the Supabase host in Network settings. `knlwzjvuqipjrjpgnovc.supabase.co` now answers.
+- `npm ci`, then `npm run case-assets`: all 6 real assets built into `public/img/engineering/**` (4.9 MB total;
+  demo.mp4 is 3.9 MB). The pipeline PNG came out at 800 and 1400 only: the source is narrower than 2000px and is never upscaled.
+  `lib/case-assets.json` is written.
+- Checked: tests 124/124, `tsc` clean, lint shows only the 2 old errors, build passes. Playwright on the exported `out/` at
+  1100 and 375, dark and light: AVIF picked at the right width, video poster set, **0 Supabase requests**, no overflow,
+  no console errors. Looked at the screenshots myself.
+- Note: the pipeline PNG has a black background, so in light theme it sits as a dark panel inside the light card. It reads fine,
+  but it is not themed.
+- **Not committed.** New/changed: `public/img/engineering/**`, `lib/case-assets.json`, this file.
+- Local Node is v22; `package.json` asks for >=24. It worked anyway.
