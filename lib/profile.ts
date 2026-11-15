@@ -89,7 +89,6 @@ export const STACK_GROUPS: readonly { label: string; items: readonly StackTool[]
       { name: 'Postgres', mark: null, monogram: 'Pg' },
       { name: 'Ghost CMS', mark: 'ghost', monogram: 'Gh' },
       { name: 'Make.com', mark: null, monogram: 'M' },
-      { name: 'ElevenLabs', mark: null, monogram: '11' },
     ],
   },
 ]
