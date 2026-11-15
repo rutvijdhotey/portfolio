@@ -18,7 +18,7 @@ const SECTIONS = [
 ] as const
 
 const SITE = 'https://lacuriosity.com'
-const TAGS = ['Claude API', 'Gemini API', 'Make.com', 'Ghost CMS', 'Supabase', 'ElevenLabs', 'Prompt Engineering']
+const TAGS = ['Claude API', 'Gemini API', 'Make.com', 'Ghost CMS', 'Supabase', 'Prompt Engineering']
 const PIPELINE = 'lacuriosity/pipeline'
 
 /* Copy is the old /engineering page's LaCuriosity feature, unchanged
@@ -42,9 +42,8 @@ export default function LaCuriosityPage() {
             <p className="cs-lede">
               The pipeline handles everything without human intervention: demand-signal research via
               Tavily and Reddit, multi-agent drafting and fact-checking, Risograph-style image
-              generation with Gemini, voiceover via ElevenLabs, video assembly via Creatomate, and
-              distribution through Ghost CMS, email, and social. One daily trigger. Fifty-five nodes.
-              Zero human touchpoints.
+              generation with Gemini, and distribution through Ghost CMS, email, and social. One
+              daily trigger. Fifty-five nodes. Zero human touchpoints.
             </p>
             <div className="eng-pills">
               <a className="eng-pill cs-pill-inv" href={SITE} target="_blank" rel="noopener">
